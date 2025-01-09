@@ -1,0 +1,243 @@
+[
+    {
+      "materialNumber": "20062912-U1",
+      "materialDescription": "iPhone 15 PRO Max",
+      "Stock in Hand": 50,
+      "New Stock": 50,
+      "Used Stock": 50,
+      "Status": "Available"
+    },
+    {
+      "materialNumber": "20062912-U2",
+      "materialDescription": "Dell Inspiron 15 - i7, 16GB RAM, 512GB SSD",
+      "Stock in Hand": 20,
+      "New Stock": 15,
+      "Used Stock": 5,
+      "Status": "Available"
+    },
+    {
+      "materialNumber": "20062912-U3",
+      "materialDescription": "HP Pavilion 14 - i5, 8GB RAM, 256GB SSD",
+      "Stock in Hand": 0,
+      "New Stock": 0,
+      "Used Stock": 10,
+      "Status": "Not Available"
+    },
+    {
+      "materialNumber": "20062912-U4",
+      "materialDescription": "Logitech MX Master 3S Wireless Mouse",
+      "Stock in Hand": 100,
+      "New Stock": 80,
+      "Used Stock": 20,
+      "Status": "Available"
+    },
+    {
+      "materialNumber": "20062912-U5",
+      "materialDescription": "Samsung Galaxy S23 Ultra",
+      "Stock in Hand": 15,
+      "New Stock": 10,
+      "Used Stock": 5,
+      "Status": "Available"
+    },
+    {
+      "materialNumber": "20062912-U6",
+      "materialDescription": "Sony WH-1000XM5 Noise Canceling Headphones",
+      "Stock in Hand": 0,
+      "New Stock": 0,
+      "Used Stock": 15,
+      "Status": "Not Available"
+    },
+    {
+      "materialNumber": "20062912-U7",
+      "materialDescription": "Apple MacBook Pro 16'' M2 Max",
+      "Stock in Hand": 5,
+      "New Stock": 3,
+      "Used Stock": 2,
+      "Status": "Available"
+    },
+    {
+      "materialNumber": "20062912-U8",
+      "materialDescription": "Microsoft Surface Pro 9",
+      "Stock in Hand": 12,
+      "New Stock": 7,
+      "Used Stock": 5,
+      "Status": "Available"
+    },
+    {
+      "materialNumber": "20062912-U9",
+      "materialDescription": "Asus ROG Strix Scar 15 Gaming Laptop",
+      "Stock in Hand": 0,
+      "New Stock": 0,
+      "Used Stock": 8,
+      "Status": "Not Available"
+    },
+    {
+      "materialNumber": "20062912-U10",
+      "materialDescription": "Acer Aspire 5 Slim Laptop",
+      "Stock in Hand": 25,
+      "New Stock": 15,
+      "Used Stock": 10,
+      "Status": "Available"
+    },
+    {
+      "materialNumber": "20062912-U11",
+      "materialDescription": "Lenovo ThinkPad X1 Carbon Gen 11",
+      "Stock in Hand": 30,
+      "New Stock": 20,
+      "Used Stock": 10,
+      "Status": "Available"
+    },
+    {
+      "materialNumber": "20062912-U12",
+      "materialDescription": "Google Pixel 8 Pro",
+      "Stock in Hand": 10,
+      "New Stock": 10,
+      "Used Stock": 0,
+      "Status": "Available"
+    },
+    {
+      "materialNumber": "20062912-U13",
+      "materialDescription": "Bose QuietComfort Earbuds II",
+      "Stock in Hand": 8,
+      "New Stock": 4,
+      "Used Stock": 4,
+      "Status": "Available"
+    },
+    {
+      "materialNumber": "20062912-U14",
+      "materialDescription": "Canon EOS R5 Mirrorless Camera",
+      "Stock in Hand": 2,
+      "New Stock": 0,
+      "Used Stock": 2,
+      "Status": "Not Available"
+    },
+    {
+      "materialNumber": "20062912-U15",
+      "materialDescription": "Samsung 980 Pro 1TB SSD",
+      "Stock in Hand": 50,
+      "New Stock": 30,
+      "Used Stock": 20,
+      "Status": "Available"
+    },
+    {
+      "materialNumber": "20062912-U16",
+      "materialDescription": "Corsair K70 RGB Mechanical Keyboard",
+      "Stock in Hand": 10,
+      "New Stock": 5,
+      "Used Stock": 5,
+      "Status": "Available"
+    },
+    {
+      "materialNumber": "20062912-U17",
+      "materialDescription": "LG Ultragear 27'' 4K Monitor",
+      "Stock in Hand": 0,
+      "New Stock": 0,
+      "Used Stock": 10,
+      "Status": "Not Available"
+    },
+    {
+      "materialNumber": "20062912-U18",
+      "materialDescription": "Razer BlackShark V2 Gaming Headset",
+      "Stock in Hand": 18,
+      "New Stock": 10,
+      "Used Stock": 8,
+      "Status": "Available"
+    },
+    {
+      "materialNumber": "20062912-U19",
+      "materialDescription": "Sony A7 IV Mirrorless Camera",
+      "Stock in Hand": 5,
+      "New Stock": 3,
+      "Used Stock": 2,
+      "Status": "Available"
+    },
+    {
+      "materialNumber": "20062912-U20",
+      "materialDescription": "NVIDIA GeForce RTX 4090 GPU",
+      "Stock in Hand": 0,
+      "New Stock": 0,
+      "Used Stock": 3,
+      "Status": "Not Available"
+    },
+    {
+      "materialNumber": "20062912-U21",
+      "materialDescription": "Intel Core i9-13900K Processor",
+      "Stock in Hand": 40,
+      "New Stock": 20,
+      "Used Stock": 20,
+      "Status": "Available"
+    },
+    {
+      "materialNumber": "20062912-U22",
+      "materialDescription": "Samsung Odyssey G9 Curved Gaming Monitor",
+      "Stock in Hand": 3,
+      "New Stock": 2,
+      "Used Stock": 1,
+      "Status": "Available"
+    },
+    {
+      "materialNumber": "20062912-U23",
+      "materialDescription": "HyperX Cloud II Gaming Headset",
+      "Stock in Hand": 25,
+      "New Stock": 10,
+      "Used Stock": 15,
+      "Status": "Available"
+    },
+    {
+      "materialNumber": "20062912-U24",
+      "materialDescription": "Apple iPad Pro 12.9'' 6th Gen",
+      "Stock in Hand": 8,
+      "New Stock": 5,
+      "Used Stock": 3,
+      "Status": "Available"
+    },
+    {
+      "materialNumber": "20062912-U25",
+      "materialDescription": "Dell XPS 13 Plus",
+      "Stock in Hand": 0,
+      "New Stock": 0,
+      "Used Stock": 5,
+      "Status": "Not Available"
+    },
+    {
+      "materialNumber": "20062912-U26",
+      "materialDescription": "Seagate Expansion 4TB External HDD",
+      "Stock in Hand": 100,
+      "New Stock": 50,
+      "Used Stock": 50,
+      "Status": "Available"
+    },
+    {
+      "materialNumber": "20062912-U27",
+      "materialDescription": "Roku Streaming Stick 4K",
+      "Stock in Hand": 12,
+      "New Stock": 6,
+      "Used Stock": 6,
+      "Status": "Available"
+    },
+    {
+      "materialNumber": "20062912-U28",
+      "materialDescription": "Epson EcoTank L3250 All-in-One Printer",
+      "Stock in Hand": 5,
+      "New Stock": 2,
+      "Used Stock": 3,
+      "Status": "Available"
+    },
+    {
+      "materialNumber": "20062912-U29",
+      "materialDescription": "TP-Link Archer AX55 Wi-Fi 6 Router",
+      "Stock in Hand": 15,
+      "New Stock": 10,
+      "Used Stock": 5,
+      "Status": "Available"
+    },
+    {
+      "materialNumber": "20062912-U30",
+      "materialDescription": "Amazon Kindle Paperwhite 11th Gen",
+      "Stock in Hand": 7,
+      "New Stock": 3,
+      "Used Stock": 4,
+      "Status": "Available"
+    }
+  ]
+  

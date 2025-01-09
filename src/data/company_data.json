@@ -1,0 +1,44 @@
+[
+    {
+        "companyId": "NCID000001",
+        "companyName": "Mercedes Benz",
+        "domain": "mercedes.uk",
+        "status": "Available"
+    },
+    {
+        "companyId": "NCID000002",
+        "companyName": "Infosys",
+        "domain": "infosys.org",
+        "status": "Not Available"
+    },
+    {
+        "companyId": "NCID000003",
+        "companyName": "Wipro",
+        "domain": "wipro.com",
+        "status": "Available"
+    },
+    {
+        "companyId": "NCID000004",
+        "companyName": "Tata Consultancy Service",
+        "domain": "tcs.in",
+        "status": "Not Available"
+    },
+    {
+        "companyId": "NCID000005",
+        "companyName": "Google",
+        "domain": "google.uk",
+        "status": "Available"
+    },
+    {
+        "companyId": "NCID000006",
+        "companyName": "Apple",
+        "domain": "apple.com",
+        "status": "Not Available"
+    },
+    {
+        "companyId": "NCID000007",
+        "companyName": "Microsoft",
+        "domain": "microsoft.in",
+        "status": "Available"
+    }
+]

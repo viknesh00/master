@@ -1,0 +1,902 @@
+[
+    {
+        "Delivery Number": "2017434318",
+        "Order Number": "385700XX",
+        "Inward Date": "03-Dec-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 86,
+        "Received By": "User7857",
+        "Racks Location": "E-1"
+    },
+    {
+        "Delivery Number": "2017434319",
+        "Order Number": "385728XX",
+        "Inward Date": "22-May-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 293,
+        "Received By": "User6058",
+        "Racks Location": "E-15"
+    },
+    {
+        "Delivery Number": "2017434320",
+        "Order Number": "385678XX",
+        "Inward Date": "11-Mar-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 77,
+        "Received By": "User9342",
+        "Racks Location": "E-1"
+    },
+    {
+        "Delivery Number": "2017434321",
+        "Order Number": "385660XX",
+        "Inward Date": "21-Jul-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 995,
+        "Received By": "User8100",
+        "Racks Location": "E-3"
+    },
+    {
+        "Delivery Number": "2017434322",
+        "Order Number": "385658XX",
+        "Inward Date": "25-Aug-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2898,
+        "Received By": "User5823",
+        "Racks Location": "E-3"
+    },
+    {
+        "Delivery Number": "2017434323",
+        "Order Number": "385702XX",
+        "Inward Date": "12-Jan-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2798,
+        "Received By": "User7849",
+        "Racks Location": "E-8"
+    },
+    {
+        "Delivery Number": "2017434324",
+        "Order Number": "385694XX",
+        "Inward Date": "13-Nov-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 272,
+        "Received By": "User9467",
+        "Racks Location": "E-5"
+    },
+    {
+        "Delivery Number": "2017434325",
+        "Order Number": "385690XX",
+        "Inward Date": "03-Jan-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 299,
+        "Received By": "User7690",
+        "Racks Location": "E-6"
+    },
+    {
+        "Delivery Number": "2017434326",
+        "Order Number": "385664XX",
+        "Inward Date": "28-Jun-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2397,
+        "Received By": "User4329",
+        "Racks Location": "E-4"
+    },
+    {
+        "Delivery Number": "2017434327",
+        "Order Number": "385692XX",
+        "Inward Date": "19-Sep-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1470,
+        "Received By": "User4568",
+        "Racks Location": "E-9"
+    },
+    {
+        "Delivery Number": "2017434328",
+        "Order Number": "385724XX",
+        "Inward Date": "30-Jun-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 819,
+        "Received By": "User4603",
+        "Racks Location": "E-16"
+    },
+    {
+        "Delivery Number": "2017434329",
+        "Order Number": "385656XX",
+        "Inward Date": "07-Apr-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2123,
+        "Received By": "User2048",
+        "Racks Location": "E-9"
+    },
+    {
+        "Delivery Number": "2017434330",
+        "Order Number": "385647XX",
+        "Inward Date": "25-Aug-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 150,
+        "Received By": "User4008",
+        "Racks Location": "E-14"
+    },
+    {
+        "Delivery Number": "2017434331",
+        "Order Number": "385727XX",
+        "Inward Date": "15-Oct-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1357,
+        "Received By": "User2003",
+        "Racks Location": "E-16"
+    },
+    {
+        "Delivery Number": "2017434332",
+        "Order Number": "385727XX",
+        "Inward Date": "11-Apr-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2393,
+        "Received By": "User8759",
+        "Racks Location": "E-8"
+    },
+    {
+        "Delivery Number": "2017434333",
+        "Order Number": "385726XX",
+        "Inward Date": "17-Mar-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1701,
+        "Received By": "User5893",
+        "Racks Location": "E-5"
+    },
+    {
+        "Delivery Number": "2017434334",
+        "Order Number": "385696XX",
+        "Inward Date": "18-Jul-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2597,
+        "Received By": "User7771",
+        "Racks Location": "E-8"
+    },
+    {
+        "Delivery Number": "2017434335",
+        "Order Number": "385696XX",
+        "Inward Date": "06-Jan-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1196,
+        "Received By": "User2333",
+        "Racks Location": "E-6"
+    },
+    {
+        "Delivery Number": "2017434336",
+        "Order Number": "385706XX",
+        "Inward Date": "27-Oct-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 146,
+        "Received By": "User1633",
+        "Racks Location": "E-16"
+    },
+    {
+        "Delivery Number": "2017434337",
+        "Order Number": "385695XX",
+        "Inward Date": "15-Oct-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1060,
+        "Received By": "User7257",
+        "Racks Location": "E-9"
+    },
+    {
+        "Delivery Number": "2017434338",
+        "Order Number": "385725XX",
+        "Inward Date": "22-Feb-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1132,
+        "Received By": "User6842",
+        "Racks Location": "E-8"
+    },
+    {
+        "Delivery Number": "2017434339",
+        "Order Number": "385640XX",
+        "Inward Date": "30-Dec-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1974,
+        "Received By": "User6786",
+        "Racks Location": "E-15"
+    },
+    {
+        "Delivery Number": "2017434340",
+        "Order Number": "385639XX",
+        "Inward Date": "25-Dec-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 729,
+        "Received By": "User5540",
+        "Racks Location": "E-19"
+    },
+    {
+        "Delivery Number": "2017434341",
+        "Order Number": "385691XX",
+        "Inward Date": "03-Apr-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2137,
+        "Received By": "User9219",
+        "Racks Location": "E-4"
+    },
+    {
+        "Delivery Number": "2017434342",
+        "Order Number": "385673XX",
+        "Inward Date": "04-Aug-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1323,
+        "Received By": "User8285",
+        "Racks Location": "E-13"
+    },
+    {
+        "Delivery Number": "2017434343",
+        "Order Number": "385652XX",
+        "Inward Date": "29-Sep-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1779,
+        "Received By": "User5863",
+        "Racks Location": "E-3"
+    },
+    {
+        "Delivery Number": "2017434344",
+        "Order Number": "385695XX",
+        "Inward Date": "12-May-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1728,
+        "Received By": "User7930",
+        "Racks Location": "E-2"
+    },
+    {
+        "Delivery Number": "2017434345",
+        "Order Number": "385673XX",
+        "Inward Date": "21-Dec-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 257,
+        "Received By": "User6629",
+        "Racks Location": "E-14"
+    },
+    {
+        "Delivery Number": "2017434346",
+        "Order Number": "385667XX",
+        "Inward Date": "25-Jun-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2483,
+        "Received By": "User8352",
+        "Racks Location": "E-14"
+    },
+    {
+        "Delivery Number": "2017434347",
+        "Order Number": "385648XX",
+        "Inward Date": "21-Oct-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2624,
+        "Received By": "User6081",
+        "Racks Location": "E-5"
+    },
+    {
+        "Delivery Number": "2017434348",
+        "Order Number": "385712XX",
+        "Inward Date": "21-Mar-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2711,
+        "Received By": "User6927",
+        "Racks Location": "E-3"
+    },
+    {
+        "Delivery Number": "2017434349",
+        "Order Number": "385680XX",
+        "Inward Date": "18-Oct-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2291,
+        "Received By": "User9299",
+        "Racks Location": "E-17"
+    },
+    {
+        "Delivery Number": "2017434350",
+        "Order Number": "385691XX",
+        "Inward Date": "15-Jul-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 658,
+        "Received By": "User8956",
+        "Racks Location": "E-12"
+    },
+    {
+        "Delivery Number": "2017434351",
+        "Order Number": "385697XX",
+        "Inward Date": "12-Oct-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 743,
+        "Received By": "User3396",
+        "Racks Location": "E-18"
+    },
+    {
+        "Delivery Number": "2017434352",
+        "Order Number": "385655XX",
+        "Inward Date": "24-Jan-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 171,
+        "Received By": "User1291",
+        "Racks Location": "E-5"
+    },
+    {
+        "Delivery Number": "2017434353",
+        "Order Number": "385724XX",
+        "Inward Date": "24-Jul-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1854,
+        "Received By": "User9779",
+        "Racks Location": "E-15"
+    },
+    {
+        "Delivery Number": "2017434354",
+        "Order Number": "385736XX",
+        "Inward Date": "06-Jun-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 314,
+        "Received By": "User1440",
+        "Racks Location": "E-9"
+    },
+    {
+        "Delivery Number": "2017434355",
+        "Order Number": "385686XX",
+        "Inward Date": "23-Jan-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1686,
+        "Received By": "User7216",
+        "Racks Location": "E-15"
+    },
+    {
+        "Delivery Number": "2017434356",
+        "Order Number": "385655XX",
+        "Inward Date": "27-Jan-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 182,
+        "Received By": "User1522",
+        "Racks Location": "E-6"
+    },
+    {
+        "Delivery Number": "2017434357",
+        "Order Number": "385664XX",
+        "Inward Date": "01-Dec-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 106,
+        "Received By": "User2698",
+        "Racks Location": "E-11"
+    },
+    {
+        "Delivery Number": "2017434358",
+        "Order Number": "385732XX",
+        "Inward Date": "12-Sep-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 366,
+        "Received By": "User5583",
+        "Racks Location": "E-18"
+    },
+    {
+        "Delivery Number": "2017434359",
+        "Order Number": "385724XX",
+        "Inward Date": "18-Dec-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2441,
+        "Received By": "User1618",
+        "Racks Location": "E-8"
+    },
+    {
+        "Delivery Number": "2017434360",
+        "Order Number": "385691XX",
+        "Inward Date": "08-Nov-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1465,
+        "Received By": "User2614",
+        "Racks Location": "E-19"
+    },
+    {
+        "Delivery Number": "2017434361",
+        "Order Number": "385639XX",
+        "Inward Date": "29-Jul-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 955,
+        "Received By": "User1767",
+        "Racks Location": "E-13"
+    },
+    {
+        "Delivery Number": "2017434362",
+        "Order Number": "385728XX",
+        "Inward Date": "24-Oct-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 433,
+        "Received By": "User4143",
+        "Racks Location": "E-12"
+    },
+    {
+        "Delivery Number": "2017434363",
+        "Order Number": "385693XX",
+        "Inward Date": "20-Dec-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2078,
+        "Received By": "User7801",
+        "Racks Location": "E-7"
+    },
+    {
+        "Delivery Number": "2017434364",
+        "Order Number": "385672XX",
+        "Inward Date": "28-Apr-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2557,
+        "Received By": "User1956",
+        "Racks Location": "E-7"
+    },
+    {
+        "Delivery Number": "2017434365",
+        "Order Number": "385651XX",
+        "Inward Date": "06-Oct-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2493,
+        "Received By": "User1095",
+        "Racks Location": "E-1"
+    },
+    {
+        "Delivery Number": "2017434366",
+        "Order Number": "385657XX",
+        "Inward Date": "18-Nov-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1894,
+        "Received By": "User8682",
+        "Racks Location": "E-12"
+    },
+    {
+        "Delivery Number": "2017434367",
+        "Order Number": "385693XX",
+        "Inward Date": "01-Mar-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1628,
+        "Received By": "User8406",
+        "Racks Location": "E-8"
+    },
+    {
+        "Delivery Number": "2017434368",
+        "Order Number": "385708XX",
+        "Inward Date": "14-Mar-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 204,
+        "Received By": "User7852",
+        "Racks Location": "E-5"
+    },
+    {
+        "Delivery Number": "2017434369",
+        "Order Number": "385680XX",
+        "Inward Date": "25-Sep-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1987,
+        "Received By": "User8569",
+        "Racks Location": "E-6"
+    },
+    {
+        "Delivery Number": "2017434370",
+        "Order Number": "385725XX",
+        "Inward Date": "07-Dec-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2536,
+        "Received By": "User7736",
+        "Racks Location": "E-7"
+    },
+    {
+        "Delivery Number": "2017434371",
+        "Order Number": "385665XX",
+        "Inward Date": "26-Jul-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 950,
+        "Received By": "User7903",
+        "Racks Location": "E-11"
+    },
+    {
+        "Delivery Number": "2017434372",
+        "Order Number": "385723XX",
+        "Inward Date": "12-Mar-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1795,
+        "Received By": "User2594",
+        "Racks Location": "E-8"
+    },
+    {
+        "Delivery Number": "2017434373",
+        "Order Number": "385646XX",
+        "Inward Date": "01-May-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2711,
+        "Received By": "User3513",
+        "Racks Location": "E-12"
+    },
+    {
+        "Delivery Number": "2017434374",
+        "Order Number": "385678XX",
+        "Inward Date": "05-Apr-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 369,
+        "Received By": "User4177",
+        "Racks Location": "E-12"
+    },
+    {
+        "Delivery Number": "2017434375",
+        "Order Number": "385703XX",
+        "Inward Date": "23-Feb-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2529,
+        "Received By": "User1603",
+        "Racks Location": "E-13"
+    },
+    {
+        "Delivery Number": "2017434376",
+        "Order Number": "385690XX",
+        "Inward Date": "09-Mar-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1762,
+        "Received By": "User6891",
+        "Racks Location": "E-5"
+    },
+    {
+        "Delivery Number": "2017434377",
+        "Order Number": "385731XX",
+        "Inward Date": "15-Jun-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 768,
+        "Received By": "User3271",
+        "Racks Location": "E-10"
+    },
+    {
+        "Delivery Number": "2017434378",
+        "Order Number": "385653XX",
+        "Inward Date": "23-Mar-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 293,
+        "Received By": "User4849",
+        "Racks Location": "E-6"
+    },
+    {
+        "Delivery Number": "2017434379",
+        "Order Number": "385721XX",
+        "Inward Date": "16-Jan-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 320,
+        "Received By": "User1966",
+        "Racks Location": "E-16"
+    },
+    {
+        "Delivery Number": "2017434380",
+        "Order Number": "385713XX",
+        "Inward Date": "04-Jan-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2652,
+        "Received By": "User2910",
+        "Racks Location": "E-1"
+    },
+    {
+        "Delivery Number": "2017434381",
+        "Order Number": "385708XX",
+        "Inward Date": "28-Jul-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1809,
+        "Received By": "User2644",
+        "Racks Location": "E-14"
+    },
+    {
+        "Delivery Number": "2017434382",
+        "Order Number": "385664XX",
+        "Inward Date": "04-May-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 391,
+        "Received By": "User3741",
+        "Racks Location": "E-6"
+    },
+    {
+        "Delivery Number": "2017434383",
+        "Order Number": "385678XX",
+        "Inward Date": "20-Mar-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 539,
+        "Received By": "User3450",
+        "Racks Location": "E-10"
+    },
+    {
+        "Delivery Number": "2017434384",
+        "Order Number": "385720XX",
+        "Inward Date": "18-Feb-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 995,
+        "Received By": "User7582",
+        "Racks Location": "E-14"
+    },
+    {
+        "Delivery Number": "2017434385",
+        "Order Number": "385660XX",
+        "Inward Date": "31-Oct-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2935,
+        "Received By": "User3995",
+        "Racks Location": "E-17"
+    },
+    {
+        "Delivery Number": "2017434386",
+        "Order Number": "385644XX",
+        "Inward Date": "04-Dec-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1244,
+        "Received By": "User7573",
+        "Racks Location": "E-15"
+    },
+    {
+        "Delivery Number": "2017434387",
+        "Order Number": "385707XX",
+        "Inward Date": "24-Mar-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1944,
+        "Received By": "User7247",
+        "Racks Location": "E-1"
+    },
+    {
+        "Delivery Number": "2017434388",
+        "Order Number": "385639XX",
+        "Inward Date": "29-Mar-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2465,
+        "Received By": "User7718",
+        "Racks Location": "E-7"
+    },
+    {
+        "Delivery Number": "2017434389",
+        "Order Number": "385684XX",
+        "Inward Date": "15-Dec-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2374,
+        "Received By": "User8244",
+        "Racks Location": "E-18"
+    },
+    {
+        "Delivery Number": "2017434390",
+        "Order Number": "385706XX",
+        "Inward Date": "11-Apr-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1038,
+        "Received By": "User5946",
+        "Racks Location": "E-4"
+    },
+    {
+        "Delivery Number": "2017434391",
+        "Order Number": "385706XX",
+        "Inward Date": "20-Mar-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2995,
+        "Received By": "User2129",
+        "Racks Location": "E-10"
+    },
+    {
+        "Delivery Number": "2017434392",
+        "Order Number": "385670XX",
+        "Inward Date": "07-Oct-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 321,
+        "Received By": "User2405",
+        "Racks Location": "E-2"
+    },
+    {
+        "Delivery Number": "2017434393",
+        "Order Number": "385732XX",
+        "Inward Date": "05-Nov-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 429,
+        "Received By": "User1726",
+        "Racks Location": "E-11"
+    },
+    {
+        "Delivery Number": "2017434394",
+        "Order Number": "385683XX",
+        "Inward Date": "16-Sep-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2736,
+        "Received By": "User6701",
+        "Racks Location": "E-3"
+    },
+    {
+        "Delivery Number": "2017434395",
+        "Order Number": "385673XX",
+        "Inward Date": "29-Dec-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 395,
+        "Received By": "User7994",
+        "Racks Location": "E-12"
+    },
+    {
+        "Delivery Number": "2017434396",
+        "Order Number": "385677XX",
+        "Inward Date": "04-Jan-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 461,
+        "Received By": "User9019",
+        "Racks Location": "E-18"
+    },
+    {
+        "Delivery Number": "2017434397",
+        "Order Number": "385675XX",
+        "Inward Date": "28-Jun-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1762,
+        "Received By": "User5442",
+        "Racks Location": "E-16"
+    },
+    {
+        "Delivery Number": "2017434398",
+        "Order Number": "385710XX",
+        "Inward Date": "28-Dec-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2119,
+        "Received By": "User3973",
+        "Racks Location": "E-3"
+    },
+    {
+        "Delivery Number": "2017434399",
+        "Order Number": "385736XX",
+        "Inward Date": "16-Jun-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2104,
+        "Received By": "User7693",
+        "Racks Location": "E-12"
+    },
+    {
+        "Delivery Number": "2017434400",
+        "Order Number": "385649XX",
+        "Inward Date": "25-Jul-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2205,
+        "Received By": "User4485",
+        "Racks Location": "E-13"
+    },
+    {
+        "Delivery Number": "2017434401",
+        "Order Number": "385724XX",
+        "Inward Date": "23-Aug-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 591,
+        "Received By": "User9924",
+        "Racks Location": "E-7"
+    },
+    {
+        "Delivery Number": "2017434402",
+        "Order Number": "385647XX",
+        "Inward Date": "05-Jun-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1732,
+        "Received By": "User9352",
+        "Racks Location": "E-14"
+    },
+    {
+        "Delivery Number": "2017434403",
+        "Order Number": "385706XX",
+        "Inward Date": "21-May-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2702,
+        "Received By": "User8267",
+        "Racks Location": "E-2"
+    },
+    {
+        "Delivery Number": "2017434404",
+        "Order Number": "385696XX",
+        "Inward Date": "01-Nov-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 555,
+        "Received By": "User6171",
+        "Racks Location": "E-6"
+    },
+    {
+        "Delivery Number": "2017434405",
+        "Order Number": "385727XX",
+        "Inward Date": "26-Jul-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 476,
+        "Received By": "User1023",
+        "Racks Location": "E-6"
+    },
+    {
+        "Delivery Number": "2017434406",
+        "Order Number": "385720XX",
+        "Inward Date": "08-Aug-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1478,
+        "Received By": "User9715",
+        "Racks Location": "E-17"
+    },
+    {
+        "Delivery Number": "2017434407",
+        "Order Number": "385640XX",
+        "Inward Date": "28-Aug-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1711,
+        "Received By": "User1583",
+        "Racks Location": "E-4"
+    },
+    {
+        "Delivery Number": "2017434408",
+        "Order Number": "385671XX",
+        "Inward Date": "04-Apr-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1549,
+        "Received By": "User9953",
+        "Racks Location": "E-8"
+    },
+    {
+        "Delivery Number": "2017434409",
+        "Order Number": "385651XX",
+        "Inward Date": "29-Aug-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 293,
+        "Received By": "User4294",
+        "Racks Location": "E-17"
+    },
+    {
+        "Delivery Number": "2017434410",
+        "Order Number": "385655XX",
+        "Inward Date": "29-May-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 679,
+        "Received By": "User9449",
+        "Racks Location": "E-8"
+    },
+    {
+        "Delivery Number": "2017434411",
+        "Order Number": "385652XX",
+        "Inward Date": "01-Aug-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1925,
+        "Received By": "User1253",
+        "Racks Location": "E-10"
+    },
+    {
+        "Delivery Number": "2017434412",
+        "Order Number": "385720XX",
+        "Inward Date": "15-Mar-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2482,
+        "Received By": "User1216",
+        "Racks Location": "E-2"
+    },
+    {
+        "Delivery Number": "2017434413",
+        "Order Number": "385640XX",
+        "Inward Date": "28-Dec-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 582,
+        "Received By": "User7561",
+        "Racks Location": "E-1"
+    },
+    {
+        "Delivery Number": "2017434414",
+        "Order Number": "385734XX",
+        "Inward Date": "11-Jun-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1526,
+        "Received By": "User9312",
+        "Racks Location": "E-10"
+    },
+    {
+        "Delivery Number": "2017434415",
+        "Order Number": "385658XX",
+        "Inward Date": "13-Jan-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 342,
+        "Received By": "User9500",
+        "Racks Location": "E-15"
+    },
+    {
+        "Delivery Number": "2017434416",
+        "Order Number": "385708XX",
+        "Inward Date": "20-May-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 2274,
+        "Received By": "User5781",
+        "Racks Location": "E-4"
+    },
+    {
+        "Delivery Number": "2017434417",
+        "Order Number": "385718XX",
+        "Inward Date": "23-Apr-2024",
+        "Inward From": "Rastatt MB Infosys",
+        "Quantity Received": 1683,
+        "Received By": "User3640",
+        "Racks Location": "E-1"
+    }
+]

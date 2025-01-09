@@ -1,0 +1,402 @@
+[
+    {
+        "serialNumber": "5GCXXXXX1",
+        "inwardDate": "10-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User8057",
+        "racksLocation": "E-A46",
+        "status": "New"
+    },
+    {
+        "serialNumber": "5GCXXXXX2",
+        "inwardDate": "28-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User2538",
+        "racksLocation": "E-A31",
+        "status": "New"
+    },
+    {
+        "serialNumber": "5GCXXXXX3",
+        "inwardDate": "03-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User2497",
+        "racksLocation": "E-A10",
+        "status": "New"
+    },
+    {
+        "serialNumber": "5GCXXXXX4",
+        "inwardDate": "24-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User9616",
+        "racksLocation": "E-A24",
+        "status": "New"
+    },
+    {
+        "serialNumber": "5GCXXXXX5",
+        "inwardDate": "06-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User7640",
+        "racksLocation": "E-A11",
+        "status": "Used"
+    },
+    {
+        "serialNumber": "5GCXXXXX6",
+        "inwardDate": "21-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User7650",
+        "racksLocation": "E-A25",
+        "status": "New"
+    },
+    {
+        "serialNumber": "5GCXXXXX7",
+        "inwardDate": "12-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User5168",
+        "racksLocation": "E-A42",
+        "status": "New"
+    },
+    {
+        "serialNumber": "5GCXXXXX8",
+        "inwardDate": "20-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User1710",
+        "racksLocation": "E-A13",
+        "status": "Defective"
+    },
+    {
+        "serialNumber": "5GCXXXXX9",
+        "inwardDate": "15-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User2419",
+        "racksLocation": "E-A27",
+        "status": "Defective"
+    },
+    {
+        "serialNumber": "5GCXXXXX10",
+        "inwardDate": "01-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User3537",
+        "racksLocation": "E-A15",
+        "status": "New"
+    },
+    {
+        "serialNumber": "5GCXXXXX11",
+        "inwardDate": "18-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User3265",
+        "racksLocation": "E-A29",
+        "status": "New"
+    },
+    {
+        "serialNumber": "5GCXXXXX12",
+        "inwardDate": "18-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User4410",
+        "racksLocation": "E-A42",
+        "status": "Defective"
+    },
+    {
+        "serialNumber": "5GCXXXXX13",
+        "inwardDate": "27-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User7046",
+        "racksLocation": "E-A2",
+        "status": "New"
+    },
+    {
+        "serialNumber": "5GCXXXXX14",
+        "inwardDate": "23-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User1281",
+        "racksLocation": "E-A18",
+        "status": "New"
+    },
+    {
+        "serialNumber": "5GCXXXXX15",
+        "inwardDate": "28-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User2028",
+        "racksLocation": "E-A29",
+        "status": "Used"
+    },
+    {
+        "serialNumber": "5GCXXXXX16",
+        "inwardDate": "24-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User9795",
+        "racksLocation": "E-A50",
+        "status": "Defective"
+    },
+    {
+        "serialNumber": "5GCXXXXX17",
+        "inwardDate": "17-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User6266",
+        "racksLocation": "E-A43",
+        "status": "Used"
+    },
+    {
+        "serialNumber": "5GCXXXXX18",
+        "inwardDate": "13-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User3545",
+        "racksLocation": "E-A40",
+        "status": "New"
+    },
+    {
+        "serialNumber": "5GCXXXXX19",
+        "inwardDate": "22-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User4727",
+        "racksLocation": "E-A44",
+        "status": "Used"
+    },
+    {
+        "serialNumber": "5GCXXXXX20",
+        "inwardDate": "22-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User3422",
+        "racksLocation": "E-A16",
+        "status": "New"
+    },
+    {
+        "serialNumber": "5GCXXXXX21",
+        "inwardDate": "24-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User4189",
+        "racksLocation": "E-A28",
+        "status": "New"
+    },
+    {
+        "serialNumber": "5GCXXXXX22",
+        "inwardDate": "25-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User4851",
+        "racksLocation": "E-A24",
+        "status": "New"
+    },
+    {
+        "serialNumber": "5GCXXXXX23",
+        "inwardDate": "23-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User6067",
+        "racksLocation": "E-A43",
+        "status": "Defective"
+    },
+    {
+        "serialNumber": "5GCXXXXX24",
+        "inwardDate": "20-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User9242",
+        "racksLocation": "E-A45",
+        "status": "Defective"
+    },
+    {
+        "serialNumber": "5GCXXXXX25",
+        "inwardDate": "02-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User7326",
+        "racksLocation": "E-A48",
+        "status": "Used"
+    },
+    {
+        "serialNumber": "5GCXXXXX26",
+        "inwardDate": "23-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User5919",
+        "racksLocation": "E-A27",
+        "status": "Defective"
+    },
+    {
+        "serialNumber": "5GCXXXXX27",
+        "inwardDate": "26-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User8603",
+        "racksLocation": "E-A23",
+        "status": "New"
+    },
+    {
+        "serialNumber": "5GCXXXXX28",
+        "inwardDate": "09-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User5937",
+        "racksLocation": "E-A24",
+        "status": "Used"
+    },
+    {
+        "serialNumber": "5GCXXXXX29",
+        "inwardDate": "09-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User6099",
+        "racksLocation": "E-A24",
+        "status": "Used"
+    },
+    {
+        "serialNumber": "5GCXXXXX30",
+        "inwardDate": "03-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User9982",
+        "racksLocation": "E-A45",
+        "status": "Defective"
+    },
+    {
+        "serialNumber": "5GCXXXXX31",
+        "inwardDate": "25-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User6014",
+        "racksLocation": "E-A24",
+        "status": "New"
+    },
+    {
+        "serialNumber": "5GCXXXXX32",
+        "inwardDate": "05-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User5484",
+        "racksLocation": "E-A37",
+        "status": "Used"
+    },
+    {
+        "serialNumber": "5GCXXXXX33",
+        "inwardDate": "15-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User7424",
+        "racksLocation": "E-A31",
+        "status": "Defective"
+    },
+    {
+        "serialNumber": "5GCXXXXX34",
+        "inwardDate": "24-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User3056",
+        "racksLocation": "E-A9",
+        "status": "Used"
+    },
+    {
+        "serialNumber": "5GCXXXXX35",
+        "inwardDate": "28-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User6963",
+        "racksLocation": "E-A46",
+        "status": "New"
+    },
+    {
+        "serialNumber": "5GCXXXXX36",
+        "inwardDate": "07-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User8213",
+        "racksLocation": "E-A9",
+        "status": "Defective"
+    },
+    {
+        "serialNumber": "5GCXXXXX37",
+        "inwardDate": "25-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User8957",
+        "racksLocation": "E-A42",
+        "status": "Defective"
+    },
+    {
+        "serialNumber": "5GCXXXXX38",
+        "inwardDate": "24-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User7940",
+        "racksLocation": "E-A2",
+        "status": "New"
+    },
+    {
+        "serialNumber": "5GCXXXXX39",
+        "inwardDate": "15-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User5878",
+        "racksLocation": "E-A27",
+        "status": "Defective"
+    },
+    {
+        "serialNumber": "5GCXXXXX40",
+        "inwardDate": "01-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User2778",
+        "racksLocation": "E-A22",
+        "status": "Used"
+    },
+    {
+        "serialNumber": "5GCXXXXX41",
+        "inwardDate": "09-Jan-2024",
+        "inwardFrom": "Rastatt KL Infosys",
+        "receivedBy": "User7175",
+        "racksLocation": "E-A33",
+        "status": "Defective"
+    },
+    {
+        "serialNumber": "5GCXXXXX42",
+        "inwardDate": "23-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User1879",
+        "racksLocation": "E-A34",
+        "status": "Used"
+    },
+    {
+        "serialNumber": "5GCXXXXX43",
+        "inwardDate": "27-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User2791",
+        "racksLocation": "E-A8",
+        "status": "Defective"
+    },
+    {
+        "serialNumber": "5GCXXXXX44",
+        "inwardDate": "28-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User6053",
+        "racksLocation": "E-A4",
+        "status": "New"
+    },
+    {
+        "serialNumber": "5GCXXXXX45",
+        "inwardDate": "26-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User5457",
+        "racksLocation": "E-A31",
+        "status": "New"
+    },
+    {
+        "serialNumber": "5GCXXXXX46",
+        "inwardDate": "22-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User2755",
+        "racksLocation": "E-A1",
+        "status": "New"
+    },
+    {
+        "serialNumber": "5GCXXXXX47",
+        "inwardDate": "13-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User2397",
+        "racksLocation": "E-A19",
+        "status": "New"
+    },
+    {
+        "serialNumber": "5GCXXXXX48",
+        "inwardDate": "15-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User1222",
+        "racksLocation": "E-A36",
+        "status": "Used"
+    },
+    {
+        "serialNumber": "5GCXXXXX49",
+        "inwardDate": "24-Jan-2024",
+        "inwardFrom": "Rastatt FM Infosys",
+        "receivedBy": "User7796",
+        "racksLocation": "E-A27",
+        "status": "Defective"
+    },
+    {
+        "serialNumber": "5GCXXXXX50",
+        "inwardDate": "27-Jan-2024",
+        "inwardFrom": "Rastatt MB Infosys",
+        "receivedBy": "User6451",
+        "racksLocation": "E-A47",
+        "status": "Defective"
+    }
+]

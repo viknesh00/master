@@ -1,0 +1,44 @@
+[
+    {
+        "WarehouseID": "NWID000001",
+        "WarehouseName": "Warehouse1",
+        "Location": "London",
+        "Status": "Available"
+    },
+    {
+        "WarehouseID": "NUID000002",
+        "WarehouseName": "Warehouse2",
+        "Location": "London",
+        "Status": "Not Available"
+    },
+    {
+        "WarehouseID": "NUID000003",
+        "WarehouseName": "Warehouse3",
+        "Location": "London",
+        "Status": "Available"
+    },
+    {
+        "WarehouseID": "NUID000004",
+        "WarehouseName": "Warehouse4",
+        "Location": "London",
+        "Status": "Not Available"
+    },
+    {
+        "WarehouseID": "NUID000005",
+        "WarehouseName": "Warehouse5",
+        "Location": "London",
+        "Status": "Available"
+    },
+    {
+        "WarehouseID": "NUID000006",
+        "WarehouseName": "Warehouse6",
+        "Location": "London",
+        "Status": "Not Available"
+    },
+    {
+        "WarehouseID": "NUID000007",
+        "WarehouseName": "Warehouse7",
+        "Location": "London",
+        "Status": "Available"
+    }
+]

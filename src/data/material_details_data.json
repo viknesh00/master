@@ -1,0 +1,93 @@
+{
+    "deliveryDetails": [
+      {
+        "orderNumber": "2017434301",
+        "outboundDate": "12-Jan-2024",
+        "receiverName": "User1234",
+        "targetLocation": "Rastatt MB Infosys",
+        "sendBy": "E-A3"
+      },
+      {
+        "orderNumber": "2017434302",
+        "outboundDate": "12-Jan-2024",
+        "receiverName": "User1234",
+        "targetLocation": "Rastatt MB Infosys",
+        "sendBy": "E-A4"
+      },
+      {
+        "orderNumber": "2017434303",
+        "outboundDate": "12-Jan-2024",
+        "receiverName": "User1234",
+        "targetLocation": "Rastatt MB Infosys",
+        "sendBy": "E-A3"
+      },
+      {
+        "orderNumber": "2017434304",
+        "outboundDate": "12-Jan-2024",
+        "receiverName": "User1234",
+        "targetLocation": "Rastatt MB Infosys",
+        "sendBy": "E-A4"
+      },
+      {
+        "orderNumber": "2017434305",
+        "outboundDate": "12-Jan-2024",
+        "receiverName": "User1234",
+        "targetLocation": "Rastatt MB Infosys",
+        "sendBy": "E-A3"
+      },
+      {
+        "orderNumber": "2017434306",
+        "outboundDate": "12-Jan-2024",
+        "receiverName": "User1234",
+        "targetLocation": "Rastatt MB Infosys",
+        "sendBy": "E-A4"
+      },
+      {
+        "orderNumber": "2017434307",
+        "outboundDate": "12-Jan-2024",
+        "receiverName": "User1234",
+        "targetLocation": "Rastatt MB Infosys",
+        "sendBy": "E-A3"
+      },
+      {
+        "orderNumber": "2017434308",
+        "outboundDate": "12-Jan-2024",
+        "receiverName": "User1234",
+        "targetLocation": "Rastatt MB Infosys",
+        "sendBy": "E-A4"
+      },
+      {
+        "orderNumber": "2017434309",
+        "outboundDate": "12-Jan-2024",
+        "receiverName": "User1234",
+        "targetLocation": "Rastatt MB Infosys",
+        "sendBy": "E-A3"
+      },
+      {
+        "orderNumber": "2017434310",
+        "outboundDate": "12-Jan-2024",
+        "receiverName": "User1234",
+        "targetLocation": "Rastatt MB Infosys",
+        "sendBy": "E-A4"
+      }
+    ],
+    "returnDetails": [
+      {
+        "orderNumber": "2017434301",
+        "returnLocation": "Rastatt MB Infosys",
+        "returnDate": "12-Jan-2024",
+        "receivedBy": "User1234",
+        "returnType": "Defective",
+        "reason": "-"
+      },
+      {
+        "orderNumber": "2017434302",
+        "returnLocation": "Rastatt MB Infosys",
+        "returnDate": "12-Jan-2024",
+        "receivedBy": "User1234",
+        "returnType": "Other",
+        "reason": "I dont like the color"
+      }
+    ]
+  }
+  
