@@ -26,7 +26,7 @@ const AddReturnStock = (props) => {
     };
 
     const handleAlert = () => {
-        setShowAlert(true);
+        setShowAlert(prevState => !prevState);
     };
 
     const handleSave = () => {
@@ -61,18 +61,17 @@ const AddReturnStock = (props) => {
                 });
         };
 
-    const handleInputChange = (label, value) => {
-        const formattedLabel = label.replace(/\s+/g, ""); // Removes all spaces from the label
+    const handleInputChange = (name, value) => {
         setFormData((prevData) => ({
             ...prevData,
-            [formattedLabel]: value,
+            [name]: value,
         }));
     };
 
 
     return (
         <div>
-            {showAlert && <SaveAlert value={showAlert} handleClose={handleClose} />}
+            {showAlert && <SaveAlert value={showAlert} handleAlert={handleAlert} handleClose={handleClose} />}
             <Dialog open={open} onClose={handleClose} maxWidth={"xl"}>
                 <DialogTitle sx={{ padding: "32px 32px 32px 32px" }}>
                     <div className="dialog-title-contianer">
@@ -106,43 +105,44 @@ const AddReturnStock = (props) => {
                     <div className="grid-column">
                         <Textfield
                             label="Order Number"
+                            name="OrderNumber"
                             placeholder="Enter order number"
                             onChange={handleInputChange}
                         />
                         <Textfield
-                            // label={<span>Return Location<span className="error">*</span></span>}
-                            label="Return Location"
+                            label={<span>Return Location<span className="error">*</span></span>}
+                            name="ReturnLocation"
                             placeholder="Enter return location"
                             onChange={handleInputChange}
                         />
                         <Datefield
-                            // label={<span>Return Date<span className="error">*</span></span>}
-                            label="Return Date"
+                            label={<span>Return Date<span className="error">*</span></span>}
+                            name="Return Date"
                             placeholder="Select Date"
                             onChange={handleInputChange}
                         />
                         <Textfield
-                            // label={<span>Received By<span className="error">*</span></span>}
-                            label="Received By"
+                            label={<span>Received By<span className="error">*</span></span>}
+                            name="ReceivedBy"
                             placeholder="Enter receiver name"
                             onChange={handleInputChange}
                         />
                         <Textfield
-                            // label={<span>Rack Location<span className="error">*</span></span>}
-                            label="Rack Location"
+                            label={<span>Rack Location<span className="error">*</span></span>}
+                            name="RackLocation"
                             placeholder="Enter rack location"
                             onChange={handleInputChange}
                         />
                         <Textfield
-                            // label={<span>Return Type<span className="error">*</span></span>}
-                            label="Return Type"
+                            label={<span>Return Type<span className="error">*</span></span>}
+                            name="ReturnType"
                             placeholder="Enter return quantity"
                             onChange={handleInputChange}
                         />
                         <div className="grid-span">
                             <Description
-                                // label={<span>Return<span className="error">*</span></span>}
-                                label="Return"
+                                label={<span>Return<span className="error">*</span></span>}
+                                name="Return"
                                 placeholder="Enter material description..."
                                 rows={4}
                                 onChange={handleInputChange}

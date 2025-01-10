@@ -2,7 +2,7 @@ import React from "react";
 
 const Description = (props) => {
 
-  const { label, value, placeholder, onChange, rows } = props;
+  const { label, name, value, placeholder, onChange, rows } = props;
 
   const handleChange = (event) => {
     onChange(label, event.target.value);
@@ -16,6 +16,7 @@ const Description = (props) => {
       <div className="description-box">
         <textarea
           type="text"
+          name={name}
           rows={rows}
           value={value}
           placeholder={placeholder}

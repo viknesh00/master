@@ -22,7 +22,7 @@ import FilterDateField from "../../utils/FilterDateField";
 import CustomSelect from "../../utils/CustomSelect";
 import AddStock from "../../dialog/ciistock-dialog/AddStock";
 import MovedAlert from "../../dialog/MovedAlert";
-import { getRequest } from "../../services/ApiService";
+import { getRequest, postRequest } from "../../services/ApiService";
 
 const MaterialDetail = () => {
     const navigate = useNavigate();
@@ -38,6 +38,7 @@ const MaterialDetail = () => {
     const [materialData, setMaterilaData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const rowsPerPage = 10;
+    const [selectedSerialNumber, setSelectedSerialNumber] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedRows, setSelectedRows] = useState([]);
     const [showStock, setShowStock] = useState(false);
@@ -86,6 +87,20 @@ const MaterialDetail = () => {
                         if (item.updatedDate) item.updatedDate = formatDate(item.updatedDate);
                       });
                     setMaterilaData(res.data);
+                }
+            })
+            .catch((error) => {
+                console.error("API Error:", error);
+            });
+    }
+
+    const handledeleteSerialumber = () => {
+        const url = `SmInboundStockCiis/serial/${materialNumber}/${selectedSerialNumber}`
+        postRequest(url)
+            .then((res) => {
+                if (res.status === 200) {
+                    fetchMaterialDetails();
+                    setAlertBox({ visible: false, x: 0, y: 0, data: null });
                 }
             })
             .catch((error) => {
@@ -169,7 +184,6 @@ const MaterialDetail = () => {
     }
 
     const handleApplyFilter = () => {
-        debugger
         console.log(filterValue)
         setFromDate(filterValue.fromdate)
         setToDate(filterValue.todate)
@@ -235,12 +249,16 @@ const MaterialDetail = () => {
     };
 
     const handleOpenAddStock = () => {
+        if(showStock){
+            fetchMaterialDetails();
+        }
         setShowStock(prevState => !prevState);
     }
 
     const handleVerticalDotClick = (event, item) => {
         event.stopPropagation();
         const rect = event.target.getBoundingClientRect();
+        setSelectedSerialNumber(item.serialNumber)
         setAlertBox({
             visible: true,
             x: rect.left - 100,
@@ -254,13 +272,16 @@ const MaterialDetail = () => {
     };
 
     const handlemovedtoused = () => {
+        if(showMovetoused){
+            fetchMaterialDetails(); 
+        }
         setShowMovedtoused(prevState => !prevState);
         setAlertBox({ visible: false, x: 0, y: 0, data: null });
     }
     return (
         <div>
-            {showStock && <AddStock value={showStock} handleOpenAddStock={handleOpenAddStock} />}
-            {showMovetoused && <MovedAlert value={showMovetoused} handlemovedtoused={handlemovedtoused} />}
+            {showStock && <AddStock value={showStock} materialDescription={materialDescription} materialNumber={materialNumber} handleOpenAddStock={handleOpenAddStock} />}
+            {showMovetoused && <MovedAlert value={showMovetoused} materialNumber={materialNumber} serialNumber={selectedSerialNumber} handlemovedtoused={handlemovedtoused} />}
             <Navbar breadcrumbs={breadcrumbData} />
             <div className="outersection-container">
                 <span className="main-title">{materialNumber}</span>
@@ -439,7 +460,7 @@ const MaterialDetail = () => {
                     >
                         <button
                             className="dropdown-item"
-                            onClick={() => alert(`Delete ${alertBox.data["serialNumber"]}`)}
+                            onClick={() => handledeleteSerialumber()}
                         >
                             <span><Delete /></span> Delete
                         </button>

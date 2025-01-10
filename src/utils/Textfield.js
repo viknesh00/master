@@ -1,11 +1,10 @@
 import React from "react";
 
 const Textfield = (props) => {
-
-  const { label,value, placeholder, onChange } = props;
+  const { label, value, name, placeholder, onChange } = props;
 
   const handleChange = (event) => {
-    onChange(label, event.target.value);
+    onChange(name, event.target.value);
   };
 
   return (
@@ -17,6 +16,7 @@ const Textfield = (props) => {
         <input
           type="text"
           value={value}
+          name={name}
           placeholder={placeholder}
           onChange={handleChange}
         />

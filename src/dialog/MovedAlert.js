@@ -5,17 +5,34 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { ReactComponent as FlipForward } from "../assets/svg/flip-forward.svg";
+import { postRequest } from "../services/ApiService";
 
 
 
 const MovedAlert = (props) => {
   const [open] = useState(props.value);
+  const {materialNumber, serialNumber} = props;
 
 
   const handleClose = () => {
     props.handlemovedtoused();
   };
 
+  const handleSaveMovetoUsed = () => {
+    debugger
+    const status = "Used"
+    const url = `SmInboundStockCiis/${materialNumber}/${serialNumber}/${status}`;
+    postRequest(url)
+              .then((res) => {
+                  if (res.status === 200) {
+                    alert("Product has been Moved to Used");
+                    props.handlemovedtoused();
+                  }
+              })
+              .catch((error) => {
+                  console.error("API Error:", error);
+              });
+  }
   return (
     <div>
       <Dialog open={open} onClose={handleClose}>
@@ -30,7 +47,7 @@ const MovedAlert = (props) => {
         </DialogTitle>
         <DialogActions class="dialog-alert-button">
           <button className="cancel-btn-alert" onClick={handleClose}>Cancel</button>
-          <button className="submit-btn-alert" onClick={handleClose}>Submit</button>
+          <button className="submit-btn-alert" onClick={handleSaveMovetoUsed}>Submit</button>
         </DialogActions>
       </Dialog>
     </div>

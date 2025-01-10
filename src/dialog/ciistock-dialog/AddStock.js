@@ -12,10 +12,12 @@ import Textfield from "../../utils/Textfield";
 import Datefield from "../../utils/Datefield";
 import SaveAlert from "../SaveAlert";
 import Progressbar from "../../utils/Progressbar"
+import { postRequest } from "../../services/ApiService";
 
 
 const AddStock = (props) => {
     const [open] = useState(props.value);
+    const { materialNumber, materialDescription } = props;
     const [showAlert, setShowAlert] = useState(false);
     const [formData, setFormData] = useState({});
     const [view, setView] = useState("form");
@@ -39,15 +41,41 @@ const AddStock = (props) => {
     };
 
     const handleAlert = () => {
-        setShowAlert(true);
+        setShowAlert(prevState => !prevState);
     };
 
-    const handleInputChange = (label, value) => {
+    const handleInputChange = (name, value) => {
         setFormData((prevData) => ({
             ...prevData,
-            [label]: value,
+            [name]: value,
         }));
     };
+
+    const handleAddStock = () => {
+        const data = new FormData();
+        data.append("file", files[0]); // Add the uploaded file
+        data.append("MaterialNumber", materialNumber);
+        data.append("MaterialDescription", materialDescription);
+        data.append("OrderNumber", formData.OrderNumber || "");
+        data.append("Inwarddate", new Date(formData.InwardDate).toISOString() || "");
+        data.append("ReceivedBy", formData.ReceivedBy || "");
+        data.append("RacKLocation", formData.RackLocation || "");
+        data.append("InwardFrom", formData.InwardFrom || "");
+
+        const url = `SmInboundStockCiis/import`;
+
+        postRequest(url, data)
+            .then((res) => {
+                if (res.status === 200) {
+                    alert("Stock Added Successfully");
+                    props.handleOpenAddStock();
+                }
+            })
+            .catch((error) => {
+               
+
+            });
+    }
 
     const handleUploadClick = () => {
         setView("upload");
@@ -74,7 +102,7 @@ const AddStock = (props) => {
 
     return (
         <div>
-            {showAlert && <SaveAlert value={showAlert} handleClose={handleClose} />}
+            {showAlert && <SaveAlert value={showAlert} handleAlert={handleAlert} handleClose={handleClose} />}
             <Dialog open={open} onClose={handleClose} maxWidth={"xl"}>
                 <DialogTitle sx={{ padding: "32px 32px 32px 32px" }}>
                     <div className="dialog-title-contianer">
@@ -89,13 +117,13 @@ const AddStock = (props) => {
                     <div className="addstock-details">
                         <div className="detail-item">
                             <span className="detail-label">Material Number</span>
-                            <span className="detail-description">2017434318</span>
+                            <span className="detail-description">{materialNumber}</span>
                         </div>
                         <span className="divider h-12 w-0.5 bg-[#6B7379] mx-2"></span>
                         <div className="detail-item">
                             <span className="detail-label">Material Description</span>
                             <span className="detail-description">
-                                Daa Office Standard Laptop - 14” Touch, i5, 16GB, 512GB D - HP EliteBook 840 - DE Keyboard
+                                {materialDescription}
                             </span>
                         </div>
                     </div>
@@ -103,31 +131,43 @@ const AddStock = (props) => {
                         <div className="grid-column">
                             <Textfield
                                 label="Delivery Number"
+                                name="DeliveryNumber"
+                                value={formData.DeliveryNumber}
                                 placeholder="Enter Delivery Number"
                                 onChange={handleInputChange}
                             />
                             <Textfield
                                 label="Order Number"
+                                name="OrderNumber"
+                                value={formData.OrderNumber}
                                 placeholder="Enter order number"
                                 onChange={handleInputChange}
                             />
                             <Datefield
                                 label="Inward Date"
+                                name="InwardDate"
+                                value={formData.InwardDate}
                                 placeholder="Select Date"
                                 onChange={handleInputChange}
                             />
                             <Textfield
                                 label="Inward From"
+                                name="InwardFrom"
+                                value={formData.InwardFrom}
                                 placeholder="Enter source location"
                                 onChange={handleInputChange}
                             />
                             <Textfield
                                 label="Received By"
+                                name="ReceivedBy"
+                                value={formData.ReceivedBy}
                                 placeholder="Enter receiver name"
                                 onChange={handleInputChange}
                             />
                             <Textfield
                                 label="Rack Location"
+                                name="RackLocation"
+                                value={formData.RackLocation}
                                 placeholder="Enter rack location"
                                 onChange={handleInputChange}
                             />
@@ -191,7 +231,7 @@ const AddStock = (props) => {
                             <button className="cancel-btn" onClick={() => setView("form")}>
                                 Back
                             </button>
-                            <button className="submit-btn" onClick={handleClose}>
+                            <button className="submit-btn" onClick={handleAddStock}>
                                 Submit
                             </button>
                         </>

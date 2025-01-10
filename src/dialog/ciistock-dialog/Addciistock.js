@@ -45,11 +45,11 @@ const Addciistock = (props) => {
         setShowAlert(prevState => !prevState);
     }
 
-    const handleInputChange = (label, value) => {
-        const formattedLabel = label.replace(/\s+/g, ""); // Removes all spaces from the label
+    const handleInputChange = (name, value) => {
+       
         setFormData((prevData) => ({
             ...prevData,
-            [formattedLabel]: value,
+            [name]: value,
         }));
     };
 
@@ -70,12 +70,14 @@ const Addciistock = (props) => {
                     <div className="grid-column">
                         <Textfield
                             label="Material Number"
+                            name="MaterialNumber"
                             placeholder="Enter Material Number"
                             onChange={handleInputChange}
                         />
                         <div className="grid-span">
                             <Description
                                 label="Material Description"
+                                name="MaterialDescription"
                                 placeholder="Enter Material Description"
                                 rows={4}
                                 onChange={handleInputChange}

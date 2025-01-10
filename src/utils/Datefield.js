@@ -4,10 +4,10 @@ import "react-datepicker/dist/react-datepicker.css";
 import { ReactComponent as Date } from "../assets/svg/date.svg";
 
 const Datefield = (props) => {
-  const { label, placeholder, onChange } = props;
+  const { label, name,value, placeholder, onChange } = props;
 
   // State to hold the selected date
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(props.value? props.value : null);
 
   // Reference for the DatePicker
   const datePickerRef = useRef(null);
@@ -16,7 +16,7 @@ const Datefield = (props) => {
   const handleChange = (date) => {
     setSelectedDate(date);
     // Pass the selected date back to the parent component
-    onChange(label, date);
+    onChange(name, date);
   };
 
   // Handle opening the date picker when the box is clicked

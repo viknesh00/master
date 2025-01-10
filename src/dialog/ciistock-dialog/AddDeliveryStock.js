@@ -54,21 +54,20 @@ const AddDeliveryStock = (props) => {
     };
 
     const handleAlert = () => {
-        setShowAlert(true);
+        setShowAlert(prevState => !prevState);
     };
 
-    const handleInputChange = (label, value) => {
-        const formattedLabel = label.replace(/\s+/g, ""); // Removes all spaces from the label
+    const handleInputChange = (name, value) => {
         setFormData((prevData) => ({
             ...prevData,
-            [formattedLabel]: value,
+            [name]: value,
         }));
     };
 
 
     return (
         <div>
-            {showAlert && <SaveAlert value={showAlert} handleClose={handleClose} />}
+            {showAlert && <SaveAlert value={showAlert} handleAlert={handleAlert} handleClose={handleClose} />}
             <Dialog open={open} onClose={handleClose} maxWidth={"xl"}>
                 <DialogTitle sx={{ padding: "32px 32px 32px 32px" }}>
                     <div className="dialog-title-contianer">
@@ -102,30 +101,31 @@ const AddDeliveryStock = (props) => {
                     <div className="grid-column">
                         <Textfield
                             label="Order Number"
+                            name="Order Number"
                             placeholder="Enter order number"
                             onChange={handleInputChange}
                         />
                         <Datefield
-                            // label={<span>OutBound Date<span className="error">*</span></span>}
-                            label="OutBound Date"
+                            label={<span>OutBound Date<span className="error">*</span></span>}
+                            name="OutBoundDate"
                             placeholder="Select Date"
                             onChange={handleInputChange}
                         />
                         <Textfield
-                            // label={<span>Receiver Name<span className="error">*</span></span>}
-                            label="Receiver Name"
+                            label={<span>Receiver Name<span className="error">*</span></span>}
+                            name="ReceiverName"
                             placeholder="Enter receiver name"
                             onChange={handleInputChange}
                         />
                         <Textfield
-                            // label={<span>Target Location<span className="error">*</span></span>}
-                            label="Target Location"
+                            label={<span>Target Location<span className="error">*</span></span>}
+                            name="TargetLocation"
                             placeholder="Enter target location"
                             onChange={handleInputChange}
                         />
                         <Textfield
-                            // label={<span>Sent By<span className="error">*</span></span>}
-                            label="Sent By"
+                            label={<span>Sent By<span className="error">*</span></span>}
+                            name="SentBy"
                             placeholder="Enter sender name"
                             onChange={handleInputChange}
                         />
