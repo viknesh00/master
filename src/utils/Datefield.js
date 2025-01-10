@@ -4,10 +4,10 @@ import "react-datepicker/dist/react-datepicker.css";
 import { ReactComponent as Date } from "../assets/svg/date.svg";
 
 const Datefield = (props) => {
-  const { label, name,value, placeholder, onChange } = props;
+  const { label, name, value, placeholder, onChange } = props;
 
   // State to hold the selected date
-  const [selectedDate, setSelectedDate] = useState(props.value? props.value : null);
+  const [selectedDate, setSelectedDate] = useState(null);
 
   // Reference for the DatePicker
   const datePickerRef = useRef(null);
@@ -34,7 +34,7 @@ const Datefield = (props) => {
         <DatePicker
           ref={datePickerRef}
           className="cursor"
-          selected={selectedDate}
+          selected={value ? value : selectedDate}
           onChange={handleChange}
           placeholderText={placeholder} // Display placeholder text
           dateFormat="dd/MM/yyyy" // Optional: format for the displayed date

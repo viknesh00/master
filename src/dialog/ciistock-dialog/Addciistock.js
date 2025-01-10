@@ -21,7 +21,6 @@ const Addciistock = (props) => {
 
     const handleClose = () => {
         props.handleOpenAddMaterial();
-        debugger
         console.log(formData)
     };
 

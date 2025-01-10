@@ -19,7 +19,6 @@ const MovedAlert = (props) => {
   };
 
   const handleSaveMovetoUsed = () => {
-    debugger
     const status = "Used"
     const url = `SmInboundStockCiis/${materialNumber}/${serialNumber}/${status}`;
     postRequest(url)

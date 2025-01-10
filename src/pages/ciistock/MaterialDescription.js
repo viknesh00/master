@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import { ReactComponent as Download } from "../../assets/svg/download.svg";
 import { ReactComponent as Delete } from "../../assets/svg/delete.svg";
@@ -22,6 +22,7 @@ import UpdateReturnDetails from "../../dialog/ciistock-dialog/UpdateReturnDetail
 import { postRequest } from "../../services/ApiService";
 
 const MaterialDescription = () => {
+    const navigate = useNavigate();
     const location = useLocation();
     const [materialNumber, serialNumber] = location.pathname.split('/').slice(-2);
     const { serialData, materialDescription } = location.state || {};
@@ -274,10 +275,16 @@ const MaterialDescription = () => {
     }
 
     const handleDeliveryDetails = () => {
+        if(showDeliveryDetails){
+            FetchSerialData();
+        }
         setShowDeliveryDetails(prevState => !prevState);
     }
 
     const handleReturnDetails = () => {
+        if(showReturnDetails){
+            FetchSerialData();
+        }
         setShowReturnDetails(prevState => !prevState);
     }
 
@@ -297,20 +304,33 @@ const MaterialDescription = () => {
         });
     };
 
+    const handledeleteSerialumber = () => {
+        const url = `SmInboundStockCiis/serial/${materialNumber}/${serialNumber}`
+        postRequest(url)
+            .then((res) => {
+                if (res.status === 200) {
+                    navigate(`/cii-stock/${materialNumber}`, { state: { materialDescription } });
+                }
+            })
+            .catch((error) => {
+                console.error("API Error:", error);
+            });
+    }
+
     return (
         <div>
             {showReturnDelivery && <AddReturnStock value={showReturnDelivery} serialData={serialData} handleReturnDelivery={handleReturnDelivery} />}
             {showAddDelivery && <AddDeliveryStock value={showAddDelivery} serialData={serialData} handleAddDelivery={handleAddDelivery} />}
-            {showProductDetails && <UpdateProductDetails value={showProductDetails} handleProductDetails={handleProductDetails} />}
+            {showProductDetails && <UpdateProductDetails value={showProductDetails} serialData={serialData} handleProductDetails={handleProductDetails} />}
             {showInwardDetails && <UpdateStockInwardDetails value={showInwardDetails} handleInwardDetails={handleInwardDetails} />}
-            {showDeliveryDetails && <UpdateDeliveryDetails value={showDeliveryDetails} handleDeliveryDetails={handleDeliveryDetails} />}
-            {showReturnDetails && <UpdateReturnDetails value={showReturnDetails} handleReturnDetails={handleReturnDetails} />}
+            {showDeliveryDetails && <UpdateDeliveryDetails value={showDeliveryDetails} selectedRow={alertBox.data} serialData={serialData}  handleDeliveryDetails={handleDeliveryDetails} />}
+            {showReturnDetails && <UpdateReturnDetails value={showReturnDetails} selectedRow={alertBox.data} serialData={serialData} handleReturnDetails={handleReturnDetails} />}
             <Navbar breadcrumbs={breadcrumbData} />
             <div className="outersection-container">
                 <div className="header-wrapper">
                     <span className="main-title">{serialNumber}</span>
                     <div className="button-container">
-                        <div className="print-btn"><Delete /></div>
+                        <div className="print-btn" onClick={handledeleteSerialumber}><Delete /></div>
                         <div className="print-btn" onClick={handlepdfDownload}><Download /></div>
 
                         <button className="outer-firstsection-download" onClick={handleReturnDelivery}>
@@ -525,9 +545,9 @@ const MaterialDescription = () => {
                                 returnSortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[15%]" onClick={() => handleReturnSort("reason")}>
+                        <div className="table-header text-left w-[15%]" onClick={() => handleReturnSort("returnedReason")}>
                             Reason
-                            {returnSortConfig.key === "reason" && (
+                            {returnSortConfig.key === "returnedReason" && (
                                 returnSortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
@@ -549,7 +569,7 @@ const MaterialDescription = () => {
                             <div className="table-data text-left w-[15%]">{item["returnedDate"]}</div>
                             <div className="table-data text-left w-[15%]">{item["returnedBy"]}</div>
                             <div className="table-data text-left w-[15%]">{item["returnType"]}</div>
-                            <div className="table-data text-left w-[15%]">{item["reason"]}</div>
+                            <div className="table-data text-left w-[15%]">{item["returnedReason"]}</div>
                             <div className="table-data text-center w-[5%]"><VerticalDot onClick={(event) => handleVerticalDotClick(event, item, "return")} /></div>
                         </div>
                     ))}

@@ -17,14 +17,13 @@ const EditList = (props) => {
     const [open] = useState(props.value);
     const [showAlert, setShowAlert] = useState(false);
     const [formData, setFormData] = useState({});
-    
+
     useEffect(() => {
         console.log(formData)
     }, [formData]);
 
     const handleClose = () => {
         props.handleOpenEditList();
-        debugger
         console.log(formData)
     };
 
@@ -40,7 +39,7 @@ const EditList = (props) => {
             })
             .catch((error) => {
                 alert("Entered Material Number Already Exists");
-                
+
             });
     }
 

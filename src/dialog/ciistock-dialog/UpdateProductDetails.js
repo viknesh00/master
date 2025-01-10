@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Dialog,
     DialogActions,
@@ -9,12 +9,20 @@ import { ReactComponent as Packageplus } from "../../assets/svg/packageplus.svg"
 import { ReactComponent as Closebutton } from "../../assets/svg/closebutton.svg";
 import Textfield from "../../utils/Textfield";
 import SaveAlert from "../SaveAlert";
+import { postRequest } from "../../services/ApiService";
 
 
 const UpdateProductDetails = (props) => {
     const [open] = useState(props.value);
+    const { serialData } = props;
     const [showAlert, setShowAlert] = useState(false);
     const [formData, setFormData] = useState({});
+
+    useEffect(() => {
+        if (serialData) {
+            setFormData(serialData);
+        }
+    }, [serialData]);
 
     const handleClose = () => {
         props.handleProductDetails();
@@ -25,12 +33,39 @@ const UpdateProductDetails = (props) => {
         setShowAlert(true);
     };
 
-    const handleInputChange = (label, value) => {
+    const handleInputChange = (name, value) => {
         setFormData((prevData) => ({
             ...prevData,
-            [label]: value,
+            [name]: value,
         }));
     };
+
+    const handleUpdate = () => {
+        let data = {};
+        data = {
+            ...data,
+            materialNumber: formData.materialNumber,
+            serialNumber: formData.serialNumber,
+            existSerialNumber: serialData.serialNumber,
+            rackLocation: formData.rackLocation,
+            deliveryNumber: formData.deliveryNumber,
+            orderNumber: formData.orderNumber,
+            inwardDate: new Date(formData.inwardDate).toISOString(),
+            inwardFrom: formData.inwardFrom ||  "temp",
+            receivedBy: formData.receivedBy
+        }
+        const url = `SmInboundStockCiis/UpdateInbounddata`
+        postRequest(url, data)
+            .then((res) => {
+                if (res.status === 200) {
+                    alert("Product Details Updated Successfully")
+                    props.handleProductDetails();
+                }
+            })
+            .catch((error) => {
+                console.error("API Error:", error);
+            });
+    }
 
 
     return (
@@ -50,18 +85,18 @@ const UpdateProductDetails = (props) => {
                     <div className="addstock-details">
                         <div className="detail-item">
                             <span className="detail-label">Material Number</span>
-                            <span className="detail-description">2017434318</span>
+                            <span className="detail-description">{serialData.materialNumber}</span>
                         </div>
                         <span className="divider h-12 w-0.5 bg-[#6B7379] mx-2"></span>
                         <div className="detail-item">
                             <span className="detail-label">Serial Number</span>
-                            <span className="detail-description">5CGXXXX11</span>
+                            <span className="detail-description">{serialData.serialNumber}</span>
                         </div>
                         <span className="divider h-12 w-0.5 bg-[#6B7379] mx-2"></span>
                         <div className="detail-item">
                             <span className="detail-label">Material Description</span>
                             <span className="detail-description">
-                                Daa Office Standard Laptop - 14” Touch, i5, 16GB, 512GB D - HP EliteBook 840 - DE Keyboard
+                                {serialData.materialDescription}
                             </span>
                         </div>
                     </div>
@@ -69,11 +104,15 @@ const UpdateProductDetails = (props) => {
                     <div className="grid-column">
                         <Textfield
                             label={<span>Serial Number<span className="error">*</span></span>}
+                            name={"serialNumber"}
+                            value={formData.serialNumber}
                             placeholder="Enter serial number"
                             onChange={handleInputChange}
                         />
                         <Textfield
                             label={<span>Rack Location<span className="error">*</span></span>}
+                            name={"rackLocation"}
+                            value={formData.rackLocation}
                             placeholder="Enter rack location"
                             onChange={handleInputChange}
                         />
@@ -85,7 +124,7 @@ const UpdateProductDetails = (props) => {
                     <button className="cancel-btn" onClick={handleAlert}>
                         Cancel
                     </button>
-                    <button className="submit-btn" onClick={handleClose}>
+                    <button className="submit-btn" onClick={handleUpdate}>
                         Update
                     </button>
 

@@ -101,7 +101,7 @@ const AddDeliveryStock = (props) => {
                     <div className="grid-column">
                         <Textfield
                             label="Order Number"
-                            name="Order Number"
+                            name="OrderNumber"
                             placeholder="Enter order number"
                             onChange={handleInputChange}
                         />

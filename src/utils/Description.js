@@ -5,7 +5,7 @@ const Description = (props) => {
   const { label, name, value, placeholder, onChange, rows } = props;
 
   const handleChange = (event) => {
-    onChange(label, event.target.value);
+    onChange(name, event.target.value);
   };
 
   return (

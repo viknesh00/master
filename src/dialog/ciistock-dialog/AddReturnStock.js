@@ -16,7 +16,7 @@ import { postRequest } from "../../services/ApiService";
 
 const AddReturnStock = (props) => {
     const [open] = useState(props.value);
-    const {serialData} = props
+    const { serialData } = props
     const [showAlert, setShowAlert] = useState(false);
     const [formData, setFormData] = useState({});
 
@@ -30,36 +30,35 @@ const AddReturnStock = (props) => {
     };
 
     const handleSave = () => {
-        debugger
-            let Data = {};
-            Data = {
-                ...Data,
-                deliveryNumber:  Math.floor((Math.abs(Math.sin(new Date().getTime())) * 100) % 100).toString().padStart(2, '0'),
-                materialNumber: serialData.materialNumber,
-                serialNumber: serialData.serialNumber,
-                materialDescription: serialData.materialDescription,
-                orderNumber: formData.OrderNumber,
-                locationReturnedFrom: formData.ReturnLocation,
-                returneddate: new Date(formData.ReturnDate).toISOString(),
-                returnedBy: formData.ReceivedBy,
-                rackLocation: formData.RackLocation,
-                returnType: formData.ReturnType,
-                returns: formData.Return,
-            }
-    
-            const url = `SmOutboundStockCiis/AddReturnData`;
-    
-            postRequest(url,Data)
-                .then((res) => {
-                    if (res.status === 200) {
-                        alert("Material Returned Successfully");
-                        props.handleReturnDelivery();
-                    }
-                })
-                .catch((error) => {
-                    console.error("API Error:", error);
-                });
-        };
+        let Data = {};
+        Data = {
+            ...Data,
+            deliveryNumber: Math.floor((Math.abs(Math.sin(new Date().getTime())) * 100) % 100).toString().padStart(2, '0'),
+            materialNumber: serialData.materialNumber,
+            serialNumber: serialData.serialNumber,
+            materialDescription: serialData.materialDescription,
+            orderNumber: formData.OrderNumber,
+            locationReturnedFrom: formData.ReturnLocation,
+            returneddate: new Date(formData.ReturnDate).toISOString(),
+            returnedBy: formData.ReceivedBy,
+            rackLocation: formData.RackLocation,
+            returnType: formData.ReturnType,
+            returns: formData.Return,
+        }
+
+        const url = `SmOutboundStockCiis/AddReturnData`;
+
+        postRequest(url, Data)
+            .then((res) => {
+                if (res.status === 200) {
+                    alert("Material Returned Successfully");
+                    props.handleReturnDelivery();
+                }
+            })
+            .catch((error) => {
+                console.error("API Error:", error);
+            });
+    };
 
     const handleInputChange = (name, value) => {
         setFormData((prevData) => ({
@@ -97,7 +96,7 @@ const AddReturnStock = (props) => {
                         <div className="detail-item">
                             <span className="detail-label">Material Description</span>
                             <span className="detail-description">
-                            {serialData.materialDescription}
+                                {serialData.materialDescription}
                             </span>
                         </div>
                     </div>
@@ -117,7 +116,7 @@ const AddReturnStock = (props) => {
                         />
                         <Datefield
                             label={<span>Return Date<span className="error">*</span></span>}
-                            name="Return Date"
+                            name="ReturnDate"
                             placeholder="Select Date"
                             onChange={handleInputChange}
                         />

@@ -19,7 +19,6 @@ import EditMaterial from "../../dialog/ciistock-dialog/EditMaterial";
 const WarehouseManagement = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    debugger
     const companyId = location.pathname.split('/').pop();
     const { companyName } = location.state || {};
     const breadcrumbData = [

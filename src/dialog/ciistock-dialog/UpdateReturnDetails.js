@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Dialog,
     DialogActions,
@@ -11,12 +11,31 @@ import Textfield from "../../utils/Textfield";
 import Datefield from "../../utils/Datefield";
 import SaveAlert from "../SaveAlert";
 import Description from "../../utils/Description";
+import { postRequest } from "../../services/ApiService";
 
 
 const UpdateReturnDetails = (props) => {
     const [open] = useState(props.value);
+    const { selectedRow, serialData } = props;
     const [showAlert, setShowAlert] = useState(false);
     const [formData, setFormData] = useState({});
+
+    useEffect(() => {
+        if (selectedRow && serialData) {
+            setFormData({
+                "materialNumber": serialData.materialNumber || "",
+                "serialNumber": serialData.serialNumber || "",
+                "materialDescription": serialData.materialDescription || "",
+                "OrderNumber": selectedRow.orderNumber || "",
+                "ReturnLocation": selectedRow.locationReturnedFrom || "",
+                "ReturnDate": new Date(selectedRow.returnedDate.split('/').reverse().join('-')) || "",
+                "ReceivedBy": selectedRow.returnedBy || "",
+                "RackLocation": selectedRow.RackLocation || "",
+                "ReturnType": selectedRow.returnType || "",
+                "Return": selectedRow.returnedReason || "",
+            });
+        }
+    }, [selectedRow, serialData]);
 
     const handleClose = () => {
         props.handleReturnDetails();
@@ -32,6 +51,36 @@ const UpdateReturnDetails = (props) => {
             ...prevData,
             [label]: value,
         }));
+    };
+
+    const handleSave = () => {
+        let Data = {};
+        Data = {
+            ...Data,
+            materialNumber: serialData.materialNumber,
+            serialNumber: serialData.serialNumber,
+            materialDescription: serialData.materialDescription,
+            orderNumber: formData.OrderNumber,
+            locationReturnedFrom: formData.ReturnLocation,
+            returneddate: new Date(formData.ReturnDate).toISOString(),
+            returnedBy: formData.ReceivedBy,
+            rackLocation: formData.RackLocation,
+            returnType: formData.ReturnType,
+            returns: formData.Return,
+        }
+
+        const url = `SmOutboundStockCiis/UpdateReturnData`;
+
+        postRequest(url, Data)
+            .then((res) => {
+                if (res.status === 200) {
+                    alert("Material Returned Successfully");
+                    props.handleReturnDetails();
+                }
+            })
+            .catch((error) => {
+                console.error("API Error:", error);
+            });
     };
 
 
@@ -52,18 +101,18 @@ const UpdateReturnDetails = (props) => {
                     <div className="addstock-details">
                         <div className="detail-item">
                             <span className="detail-label">Material Number</span>
-                            <span className="detail-description">2017434318</span>
+                            <span className="detail-description">{serialData.materialNumber}</span>
                         </div>
                         <span className="divider h-12 w-0.5 bg-[#6B7379] mx-2"></span>
                         <div className="detail-item">
                             <span className="detail-label">Serial Number</span>
-                            <span className="detail-description">5CGXXXX11</span>
+                            <span className="detail-description">{serialData.serialNumber}</span>
                         </div>
                         <span className="divider h-12 w-0.5 bg-[#6B7379] mx-2"></span>
                         <div className="detail-item">
                             <span className="detail-label">Material Description</span>
                             <span className="detail-description">
-                                Daa Office Standard Laptop - 14” Touch, i5, 16GB, 512GB D - HP EliteBook 840 - DE Keyboard
+                                {serialData.materialDescription}
                             </span>
                         </div>
                     </div>
@@ -71,37 +120,51 @@ const UpdateReturnDetails = (props) => {
                     <div className="grid-column">
                         <Textfield
                             label="Order Number"
+                            name="OrderNumber"
+                            value={formData.OrderNumber}
                             placeholder="Enter order number"
                             onChange={handleInputChange}
                         />
                         <Textfield
                             label={<span>Return Location<span className="error">*</span></span>}
+                            name="ReturnLocation"
+                            value={formData.ReturnLocation}
                             placeholder="Enter return location"
                             onChange={handleInputChange}
                         />
                         <Datefield
                             label={<span>Return Date<span className="error">*</span></span>}
+                            name="ReturnDate"
+                            value={formData.ReturnDate}
                             placeholder="Select Date"
                             onChange={handleInputChange}
                         />
                         <Textfield
-                            label={<span>Receiver By<span className="error">*</span></span>}
+                            label={<span>Received By<span className="error">*</span></span>}
+                            name="ReceivedBy"
+                            value={formData.ReceivedBy}
                             placeholder="Enter receiver name"
                             onChange={handleInputChange}
                         />
                         <Textfield
                             label={<span>Rack Location<span className="error">*</span></span>}
+                            name="RackLocation"
+                            value={formData.RackLocation}
                             placeholder="Enter rack location"
                             onChange={handleInputChange}
                         />
                         <Textfield
                             label={<span>Return Type<span className="error">*</span></span>}
+                            name="ReturnType"
+                            value={formData.ReturnType}
                             placeholder="Enter return quantity"
                             onChange={handleInputChange}
                         />
                         <div className="grid-span">
                             <Description
                                 label={<span>Return<span className="error">*</span></span>}
+                                name="Return"
+                                value={formData.Return}
                                 placeholder="Enter material description..."
                                 rows={4}
                                 onChange={handleInputChange}
@@ -115,7 +178,7 @@ const UpdateReturnDetails = (props) => {
                     <button className="cancel-btn" onClick={handleAlert}>
                         Cancel
                     </button>
-                    <button className="submit-btn" onClick={handleClose}>
+                    <button className="submit-btn" onClick={handleSave}>
                         Submit
                     </button>
 

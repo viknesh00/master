@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Dialog,
     DialogActions,
@@ -10,12 +10,27 @@ import { ReactComponent as Closebutton } from "../../assets/svg/closebutton.svg"
 import Textfield from "../../utils/Textfield";
 import SaveAlert from "../SaveAlert";
 import Datefield from "../../utils/Datefield";
+import { postRequest } from "../../services/ApiService";
 
 
 const UpdateDeliveryDetails = (props) => {
     const [open] = useState(props.value);
+    const {selectedRow,serialData} = props;
     const [showAlert, setShowAlert] = useState(false);
     const [formData, setFormData] = useState({});
+
+     useEffect(() => {
+        if (selectedRow && serialData) {
+            setFormData({
+                "materialNumber": serialData.materialNumber || "",
+                "serialNumber": serialData.serialNumber,
+                "orderNumber": selectedRow.outBoundOrderNumber,
+                "outbounddate": new Date(selectedRow.outBoundDate.split('/').reverse().join('-')),
+                "targetLocation": selectedRow.targetLocation,
+                "sentBy": selectedRow.sentby
+            });
+        }
+      }, [selectedRow,serialData]);
 
     const handleClose = () => {
         props.handleDeliveryDetails();
@@ -26,10 +41,36 @@ const UpdateDeliveryDetails = (props) => {
         setShowAlert(true);
     };
 
-    const handleInputChange = (label, value) => {
+    const handleSave = () => {
+            let Data = {};
+            Data = {
+                ...Data,
+                materialNumber: serialData.materialNumber,
+                serialNumber: serialData.serialNumber,
+                orderNumber: formData.orderNumber,
+                outBounddate: new Date(formData.outbounddate).toISOString(),
+                targetLocation: formData.targetLocation,
+                sentBy: formData.sentBy,
+            }
+    
+            const url = `SmOutboundStockCiis/UpdatedeliveryData`;
+    
+            postRequest(url,Data)
+                .then((res) => {
+                    if (res.status === 200) {
+                        alert(" Deliverd Record Updated Successfully");
+                        props.handleDeliveryDetails();
+                    }
+                })
+                .catch((error) => {
+                    console.error("API Error:", error);
+                });
+        };
+
+    const handleInputChange = (name, value) => {
         setFormData((prevData) => ({
             ...prevData,
-            [label]: value,
+            [name]: value,
         }));
     };
 
@@ -51,18 +92,18 @@ const UpdateDeliveryDetails = (props) => {
                     <div className="addstock-details">
                         <div className="detail-item">
                             <span className="detail-label">Material Number</span>
-                            <span className="detail-description">2017434318</span>
+                            <span className="detail-description">{serialData.materialNumber}</span>
                         </div>
                         <span className="divider h-12 w-0.5 bg-[#6B7379] mx-2"></span>
                         <div className="detail-item">
                             <span className="detail-label">Serial Number</span>
-                            <span className="detail-description">5CGXXXX11</span>
+                            <span className="detail-description">{serialData.serialNumber}</span>
                         </div>
                         <span className="divider h-12 w-0.5 bg-[#6B7379] mx-2"></span>
                         <div className="detail-item">
                             <span className="detail-label">Material Description</span>
                             <span className="detail-description">
-                                Daa Office Standard Laptop - 14” Touch, i5, 16GB, 512GB D - HP EliteBook 840 - DE Keyboard
+                            {serialData.materialDescription}
                             </span>
                         </div>
                     </div>
@@ -71,26 +112,36 @@ const UpdateDeliveryDetails = (props) => {
                         <Textfield
                             label="Order Nummber"
                             placeholder="Enter order number"
+                            name="orderNumber"
+                            value={formData.orderNumber}
                             onChange={handleInputChange}
                         />
                         <Datefield
                             label={<span>Outbound Date<span className="error">*</span></span>}
                             placeholder="Select Date"
+                            name="outbounddate"
+                            value={formData.outbounddate}
                             onChange={handleInputChange}
                         />
                         <Textfield
                             label={<span>Receiver Name<span className="error">*</span></span>}
                             placeholder="Enter receiver name"
+                            name="receivedBy"
+                            value={formData.receivedBy}
                             onChange={handleInputChange}
                         />
                         <Textfield
                             label={<span>Target Location<span className="error">*</span></span>}
                             placeholder="Enter target location"
+                            name="targetLocation"
+                            value={formData.targetLocation}
                             onChange={handleInputChange}
                         />
                         <Textfield
                             label={<span>Sent By<span className="error">*</span></span>}
                             placeholder="Enter sender name"
+                            name="sentBy"
+                            value={formData.sentBy}
                             onChange={handleInputChange}
                         />
                     </div>
@@ -101,7 +152,7 @@ const UpdateDeliveryDetails = (props) => {
                     <button className="cancel-btn" onClick={handleAlert}>
                         Cancel
                     </button>
-                    <button className="submit-btn" onClick={handleClose}>
+                    <button className="submit-btn" onClick={handleSave}>
                         Update
                     </button>
 
