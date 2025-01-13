@@ -54,13 +54,13 @@ const EditMaterial = (props) => {
   }
 
 
-  const handleInputChange = (label, value) => {
-    const formattedLabel = label.replace(/\s+/g, ""); // Removes all spaces from the label
+  const handleInputChange = (name, value) => {
+       
     setFormData((prevData) => ({
-      ...prevData,
-      [formattedLabel]: value,
+        ...prevData,
+        [name]: value,
     }));
-  };
+};
   
 
   return (
@@ -84,6 +84,7 @@ const EditMaterial = (props) => {
               value={formData.MaterialNumber}
               placeholder="Enter Material Number"
               onChange={handleInputChange}
+              name="MaterialNumber"
             />
             <div className="grid-span">
               <Description
@@ -92,6 +93,7 @@ const EditMaterial = (props) => {
                 placeholder="Enter Material Description"
                 rows={4}
                 onChange={handleInputChange}
+                name="MaterialDescription"
               />
             </div>
 
