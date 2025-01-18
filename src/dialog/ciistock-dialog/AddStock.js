@@ -54,6 +54,7 @@ const AddStock = (props) => {
     const handleAddStock = () => {
         const data = new FormData();
         data.append("file", files[0]); // Add the uploaded file
+        data.append("DeliveryNumber", formData.DeliveryNumber || "");
         data.append("MaterialNumber", materialNumber);
         data.append("MaterialDescription", materialDescription);
         data.append("OrderNumber", formData.OrderNumber || "");
