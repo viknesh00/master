@@ -30,7 +30,7 @@ const UpdateReturnDetails = (props) => {
                 "ReturnLocation": selectedRow.locationReturnedFrom || "",
                 "ReturnDate": new Date(selectedRow.returnedDate.split('/').reverse().join('-')) || "",
                 "ReceivedBy": selectedRow.returnedBy || "",
-                "RackLocation": selectedRow.RackLocation || "",
+                "RackLocation": selectedRow.rackLocation || "",
                 "ReturnType": selectedRow.returnType || "",
                 "Return": selectedRow.returnedReason || "",
             });
@@ -43,7 +43,7 @@ const UpdateReturnDetails = (props) => {
     };
 
     const handleAlert = () => {
-        setShowAlert(true);
+        setShowAlert(prevState => !prevState);
     };
 
     const handleInputChange = (label, value) => {
@@ -86,7 +86,7 @@ const UpdateReturnDetails = (props) => {
 
     return (
         <div>
-            {showAlert && <SaveAlert value={showAlert} handleClose={handleClose} />}
+            {showAlert && <SaveAlert value={showAlert} handleAlert={handleAlert} handleClose={handleClose} />}
             <Dialog open={open} onClose={handleClose} maxWidth={"xl"}>
                 <DialogTitle sx={{ padding: "32px 32px 32px 32px" }}>
                     <div className="dialog-title-contianer">

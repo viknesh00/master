@@ -35,6 +35,7 @@ const AddDeliveryStock = (props) => {
             orderNumber: formData.OrderNumber,
             outBounddate: new Date(formData.OutBoundDate).toISOString(),
             targetLocation: formData.TargetLocation,
+            receiverName: formData.ReceiverName,
             sentBy: formData.SentBy,
             fk_Inbound_StockCII_DeliveryNumber: serialData.deliveryNumber
         }

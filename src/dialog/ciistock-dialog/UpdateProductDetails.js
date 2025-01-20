@@ -30,7 +30,7 @@ const UpdateProductDetails = (props) => {
     };
 
     const handleAlert = () => {
-        setShowAlert(true);
+        setShowAlert(prevState => !prevState);
     };
 
     const handleInputChange = (name, value) => {
@@ -70,7 +70,7 @@ const UpdateProductDetails = (props) => {
 
     return (
         <div>
-            {showAlert && <SaveAlert value={showAlert} handleClose={handleClose} />}
+            {showAlert && <SaveAlert value={showAlert} handleAlert={handleAlert} handleClose={handleClose} />}
             <Dialog open={open} onClose={handleClose} maxWidth={"xl"}>
                 <DialogTitle sx={{ padding: "32px 32px 32px 32px" }}>
                     <div className="dialog-title-contianer">

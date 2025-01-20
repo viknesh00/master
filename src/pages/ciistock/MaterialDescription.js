@@ -31,6 +31,7 @@ const MaterialDescription = () => {
     const rowsPerPage = 10;
     const [deliveryData, setDeliveryData] = useState([]);
     const [returnData, setReturnData] = useState([]);
+    const [ciidata, setCiiData] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedRows, setSelectedRows] = useState([]);
     const [showAddDelivery, setShowAddDelivery] = useState(false)
@@ -80,7 +81,7 @@ const MaterialDescription = () => {
       };
 
      const FetchSerialData = () => {
-            const url = `SmOutboundStockCiis/${materialNumber}/${serialNumber}`;
+            const url = `SmOutboundStockCiis/${materialNumber}/${serialNumber}/${serialData.orderNumber}`;
             
             postRequest(url)
               .then((res) => {
@@ -94,6 +95,7 @@ const MaterialDescription = () => {
                       }); 
                    setDeliveryData(res.data.deliveryData)
                    setReturnData(res.data.inboundData)
+                   setCiiData(res.data.ciiData);
                   }
               })
               .catch((error) => {
@@ -267,10 +269,17 @@ const MaterialDescription = () => {
     }
 
     const handleProductDetails = () => {
+        debugger
+        if(showProductDetails){
+            FetchSerialData();
+        }
         setShowProductDetails(prevState => !prevState)
     }
 
     const handleInwardDetails = () => {
+        if(showInwardDetails){
+            FetchSerialData();
+        }
         setShowInwardDetails(prevState => !prevState)
     }
 
@@ -322,8 +331,8 @@ const MaterialDescription = () => {
             {showReturnDelivery && <AddReturnStock value={showReturnDelivery} serialData={serialData} handleReturnDelivery={handleReturnDelivery} />}
             {showAddDelivery && <AddDeliveryStock value={showAddDelivery} serialData={serialData} handleAddDelivery={handleAddDelivery} />}
             {showProductDetails && <UpdateProductDetails value={showProductDetails} serialData={serialData} handleProductDetails={handleProductDetails} />}
-            {showInwardDetails && <UpdateStockInwardDetails value={showInwardDetails} handleInwardDetails={handleInwardDetails} />}
-            {showDeliveryDetails && <UpdateDeliveryDetails value={showDeliveryDetails} selectedRow={alertBox.data} serialData={serialData}  handleDeliveryDetails={handleDeliveryDetails} />}
+            {showInwardDetails && <UpdateStockInwardDetails value={showInwardDetails} serialData={serialData} handleInwardDetails={handleInwardDetails} />}
+            {showDeliveryDetails && <UpdateDeliveryDetails value={showDeliveryDetails} selectedRow={alertBox.data} serialData={serialData}  handleDeliveryDetails={handleDeliveryDetails} deliveryData={deliveryData} />}
             {showReturnDetails && <UpdateReturnDetails value={showReturnDetails} selectedRow={alertBox.data} serialData={serialData} handleReturnDetails={handleReturnDetails} />}
             <Navbar breadcrumbs={breadcrumbData} />
             <div className="outersection-container">
@@ -386,11 +395,11 @@ const MaterialDescription = () => {
                         </div>
                         <div class="detail-item">
                             <span class="detail-label">Inward Date</span>
-                            <span class="detail-value">{serialData.inwardDate}</span>
+                            <span class="detail-value">{formatDate(serialData.inwardDate)}</span>
                         </div>
                         <div class="detail-item">
                             <span class="detail-label">Inward From</span>
-                            <span class="detail-value"></span>
+                            <span class="detail-value">{serialData.sourceLocation}</span>
                         </div>
                         <div class="detail-item">
                             <span class="detail-label">Received By</span>
@@ -463,7 +472,7 @@ const MaterialDescription = () => {
                             </div>
                             <div className="table-data text-left w-[15%]">{item["outBoundOrderNumber"]}</div>
                             <div className="table-data text-left w-[15%]">{item["outBoundDate"]}</div>
-                            <div className="table-data text-left w-[15%]">{item["receivedBy"]}</div>
+                            <div className="table-data text-left w-[15%]">{item["receiverName"]}</div>
                             <div className="table-data text-left w-[20%]">{item["targetLocation"]}</div>
                             <div className="table-data text-left w-[20%]">{item["sentby"]}</div>
                             <div className="table-data text-center w-[10%]"><VerticalDot onClick={(event) => handleVerticalDotClick(event, item, "delivery")} /></div>

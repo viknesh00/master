@@ -82,7 +82,7 @@ const MaterialDetail = () => {
             .then((res) => {
                 if (res.status === 200) {
                     res.data.forEach((item) => {
-                        if (item.inwardDate) item.inwardDate = formatDate(item.inwardDate);
+                        if (item.inwardDate) item.inwardDate = item.inwardDate;
                         if (item.createdDate) item.createdDate = formatDate(item.createdDate);
                         if (item.updatedDate) item.updatedDate = formatDate(item.updatedDate);
                       });
@@ -437,8 +437,8 @@ const MaterialDetail = () => {
                                     onChange={() => handleCheckboxChange(item["serialNumber"])}
                                 />
                             </div>
-                            <div className="table-data text-hyper text-left w-[15%]" onClick={() => handleMaterialClick(item["serialNumber"], item)}>{item["serialNumber"]}</div>
-                            <div className="table-data text-left w-[25%]">{item["inwardDate"]}</div>
+                            <div className="table-data text-hyper text-left w-[15%]" onClick={() => handleMaterialClick(item["serialNumber"], item,item["orderNumber"])}>{item["serialNumber"]}</div>
+                            <div className="table-data text-left w-[25%]">{formatDate(item["inwardDate"])}</div>
                             <div className="table-data text-left w-[15%]">{item["inwardFrom"]}</div>
                             <div className="table-data text-left w-[10%]">{item["receivedBy"]}</div>
                             <div className="table-data text-left w-[10%]">{item["rackLocation"]}</div>

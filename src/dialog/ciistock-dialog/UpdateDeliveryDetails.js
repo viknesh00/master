@@ -15,7 +15,7 @@ import { postRequest } from "../../services/ApiService";
 
 const UpdateDeliveryDetails = (props) => {
     const [open] = useState(props.value);
-    const {selectedRow,serialData} = props;
+    const {selectedRow,serialData,deliveryData} = props;
     const [showAlert, setShowAlert] = useState(false);
     const [formData, setFormData] = useState({});
 
@@ -24,9 +24,10 @@ const UpdateDeliveryDetails = (props) => {
             setFormData({
                 "materialNumber": serialData.materialNumber || "",
                 "serialNumber": serialData.serialNumber,
-                "orderNumber": selectedRow.outBoundOrderNumber,
+                "orderNumber": deliveryData[0].outBoundOrderNumber,
                 "outbounddate": new Date(selectedRow.outBoundDate.split('/').reverse().join('-')),
                 "targetLocation": selectedRow.targetLocation,
+                "receiverName": selectedRow.receivedName,
                 "sentBy": selectedRow.sentby
             });
         }
@@ -38,7 +39,7 @@ const UpdateDeliveryDetails = (props) => {
     };
 
     const handleAlert = () => {
-        setShowAlert(true);
+        setShowAlert(prevState => !prevState);
     };
 
     const handleSave = () => {
@@ -47,9 +48,11 @@ const UpdateDeliveryDetails = (props) => {
                 ...Data,
                 materialNumber: serialData.materialNumber,
                 serialNumber: serialData.serialNumber,
-                orderNumber: formData.orderNumber,
+                orderNumber: formData.orderNumber, 
+                ExistOrderNumber: deliveryData[0].outBoundOrderNumber,
                 outBounddate: new Date(formData.outbounddate).toISOString(),
                 targetLocation: formData.targetLocation,
+                receiverName: formData.receivedName,
                 sentBy: formData.sentBy,
             }
     
@@ -77,7 +80,7 @@ const UpdateDeliveryDetails = (props) => {
 
     return (
         <div>
-            {showAlert && <SaveAlert value={showAlert} handleClose={handleClose} />}
+            {showAlert && <SaveAlert value={showAlert} handleAlert={handleAlert} handleClose={handleClose} />}
             <Dialog open={open} onClose={handleClose} maxWidth={"xl"}>
                 <DialogTitle sx={{ padding: "32px 32px 32px 32px" }}>
                     <div className="dialog-title-contianer">
@@ -126,8 +129,8 @@ const UpdateDeliveryDetails = (props) => {
                         <Textfield
                             label={<span>Receiver Name<span className="error">*</span></span>}
                             placeholder="Enter receiver name"
-                            name="receivedBy"
-                            value={formData.receivedBy}
+                            name="receivedName"
+                            value={formData.receivedName}
                             onChange={handleInputChange}
                         />
                         <Textfield
