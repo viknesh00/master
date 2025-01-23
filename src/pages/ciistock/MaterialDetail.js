@@ -400,9 +400,9 @@ const MaterialDetail = () => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("inwardFrom")}>
+                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("sourceLocation")}>
                             Inward From
-                            {sortConfig.key === "inwardFrom" && (
+                            {sortConfig.key === "sourceLocation" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
@@ -439,7 +439,7 @@ const MaterialDetail = () => {
                             </div>
                             <div className="table-data text-hyper text-left w-[15%]" onClick={() => handleMaterialClick(item["serialNumber"], item,item["orderNumber"])}>{item["serialNumber"]}</div>
                             <div className="table-data text-left w-[25%]">{formatDate(item["inwardDate"])}</div>
-                            <div className="table-data text-left w-[15%]">{item["inwardFrom"]}</div>
+                            <div className="table-data text-left w-[15%]">{item["sourceLocation"]}</div>
                             <div className="table-data text-left w-[10%]">{item["receivedBy"]}</div>
                             <div className="table-data text-left w-[10%]">{item["rackLocation"]}</div>
                             <div className="table-data text-left w-[10%]">
