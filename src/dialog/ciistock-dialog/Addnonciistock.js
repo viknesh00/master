@@ -10,6 +10,7 @@ import { ReactComponent as Closebutton } from "../../assets/svg/closebutton.svg"
 import Textfield from "../../utils/Textfield";
 import Description from "../../utils/Description";
 import SaveAlert from "../SaveAlert";
+import { postRequest } from "../../services/ApiService";
 
 
 const Addnonciistock = (props) => {
@@ -18,27 +19,43 @@ const Addnonciistock = (props) => {
   const [formData, setFormData] = useState({});
 
 
+  const handleAddnonciistock = () => {
+          const url = `SmInboundStockNonCiis/NonStockCIIMaterial/${formData.MaterialNumber}/${formData.MaterialDescription}`;
+  
+          postRequest(url)
+              .then((res) => {
+                  if (res.status === 200) {
+                      alert("Material Added Successfully");
+                      props.handleOpenAddMaterial();
+                  }
+              })
+              .catch((error) => {
+                  alert("Entered Material Number Already Exists");
+                  
+              });
+      }
+
   const handleClose = () => {
     props.handleOpenAddMaterial();
     console.log(formData)
   };
 
   const handleAlert = () => {
-    setShowAlert(true);
-  }
+    setShowAlert(prevState => !prevState);
+}
 
 
 
-  const handleInputChange = (label, value) => {
+  const handleInputChange = (name, value) => {
     setFormData((prevData) => ({
       ...prevData,
-      [label]: value,
+      [name]: value,
     }));
   };
 
   return (
     <div>
-      {showAlert && <SaveAlert value={showAlert} handleClose={handleClose} />}
+      {showAlert && <SaveAlert value={showAlert} handleAlert={handleAlert} handleClose={handleClose} />}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle sx={{ padding: '32px 32px 40px 32px' }}>
           <div className="dialog-title-contianer">
@@ -53,12 +70,14 @@ const Addnonciistock = (props) => {
           <div className="grid-column">
             <Textfield
               label="Material Number"
+              name="MaterialNumber"
               placeholder="Enter Material Number"
               onChange={handleInputChange}
             />
             <div className="grid-span">
               <Description
                 label="Material Description"
+                name="MaterialDescription"
                 placeholder="Enter Material Description"
                 rows={4}
                 onChange={handleInputChange}
@@ -68,7 +87,7 @@ const Addnonciistock = (props) => {
         </DialogContent>
         <DialogActions sx={{ padding: '0px 32px 32px 32px' }}>
           <button className="cancel-btn" onClick={handleAlert}>Cancel</button>
-          <button className="submit-btn" onClick={handleClose}>Submit</button>
+          <button className="submit-btn" onClick={handleAddnonciistock}>Submit</button>
         </DialogActions>
       </Dialog>
     </div>

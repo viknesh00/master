@@ -269,13 +269,13 @@ const Ciistock = () => {
                             />
                         </div>
                         <div className="table-header text-left w-[15%]" onClick={() => handleSort("materialNumber")}>
-                            materialNumber
+                            Material Number
                             {sortConfig.key === "materialNumber" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
                         <div className="table-header text-left w-[25%]" onClick={() => handleSort("materialDescription")}>
-                            materialDescription
+                            Material Description
                             {sortConfig.key === "materialDescription" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}

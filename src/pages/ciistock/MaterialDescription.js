@@ -30,6 +30,7 @@ const MaterialDescription = () => {
     const [returnCurrentPage, setReturnCurrentPage] = useState(1);
     const rowsPerPage = 10;
     const [deliveryData, setDeliveryData] = useState([]);
+    const [selectedMaterialData, setSelectedMaterialData] = useState("");
     const [returnData, setReturnData] = useState([]);
     const [ciidata, setCiiData] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
@@ -304,6 +305,7 @@ const MaterialDescription = () => {
     const handleVerticalDotClick = (event, item, name) => {
         event.stopPropagation();
         const rect = event.target.getBoundingClientRect();
+        setSelectedMaterialData(item);
         setAlertBox({
             visible: true,
             x: rect.left - 100,
@@ -332,8 +334,8 @@ const MaterialDescription = () => {
             {showAddDelivery && <AddDeliveryStock value={showAddDelivery} serialData={serialData} handleAddDelivery={handleAddDelivery} />}
             {showProductDetails && <UpdateProductDetails value={showProductDetails} serialData={serialData} handleProductDetails={handleProductDetails} />}
             {showInwardDetails && <UpdateStockInwardDetails value={showInwardDetails} serialData={serialData} handleInwardDetails={handleInwardDetails} />}
-            {showDeliveryDetails && <UpdateDeliveryDetails value={showDeliveryDetails} selectedRow={alertBox.data} serialData={serialData}  handleDeliveryDetails={handleDeliveryDetails} deliveryData={deliveryData} />}
-            {showReturnDetails && <UpdateReturnDetails value={showReturnDetails} selectedRow={alertBox.data} serialData={serialData} handleReturnDetails={handleReturnDetails} />}
+            {showDeliveryDetails && <UpdateDeliveryDetails value={showDeliveryDetails} selectedRow={alertBox.data} serialData={serialData}  handleDeliveryDetails={handleDeliveryDetails} selectedMaterialData={selectedMaterialData} deliveryData={deliveryData} />}
+            {showReturnDetails && <UpdateReturnDetails value={showReturnDetails} selectedRow={alertBox.data} serialData={serialData}selectedMaterialData={selectedMaterialData} handleReturnDetails={handleReturnDetails} />}
             <Navbar breadcrumbs={breadcrumbData} />
             <div className="outersection-container">
                 <div className="header-wrapper">

@@ -14,12 +14,14 @@ import { ReactComponent as Delete } from "../../assets/svg/delete.svg";
 import { useNavigate } from "react-router-dom";
 import Addnonciistock from '../../dialog/ciistock-dialog/Addnonciistock'
 import EditMaterial from "../../dialog/ciistock-dialog/EditMaterial";
+import { getRequest, postRequest } from "../../services/ApiService";
 
 const Nonciistock = () => {
     const navigate = useNavigate();
     const breadcrumbData = [
         { label: "Non-CII Stock", path: "" },
     ];
+    const [nonciiStockData, setNonCiiStockData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const rowsPerPage = 10;
     const [showAddMaterial, setShowAddMaterial] = useState(false);
@@ -31,8 +33,10 @@ const Nonciistock = () => {
     });
     const [alertBox, setAlertBox] = useState({ visible: false, x: 0, y: 0, data: null });
     const [showEditMaterial, setShowEditMaterial] = useState(false);
+     const [activeTab, setActiveTab] = useState("View all");
 
     useEffect(() => {
+        fetchnonciistockdata();
         const handleClickOutside = (event) => {
             if (!event.target.closest(".alert-box")) {
                 handleCloseAlert();
@@ -44,19 +48,58 @@ const Nonciistock = () => {
         };
     }, []);
 
+        const fetchnonciistockdata = () => {
+            const url = `SmInboundStockNonCiis`;
+            
+            getRequest(url)
+              .then((res) => {
+                  if (res.status === 200) {
+                    const updatedData = res.data.map(item => {
+                        const newStock = item.newstock || 0;
+                        const usedStock = item.usedstock || 0;
+                        const stockinHand = newStock + usedStock;
+                        const status = stockinHand > 0 ? 'Available' : 'Not Available';
+                        return { ...item, stockinHand, status };
+                      });
+                      setNonCiiStockData(updatedData)
+                  }
+              })
+              .catch((error) => {
+                  console.error("API Error:", error);
+              });
+        };
+
 
     const handleOpenAddMaterial = () => {
+        if(showAddMaterial){
+            fetchnonciistockdata();
+        }
         setShowAddMaterial(prevState => !prevState);
     };
 
     const handleOpenEditMaterial = () => {
+        if(showEditMaterial){
+            fetchnonciistockdata();
+        }
         setShowEditMaterial(prevState => !prevState);
     };
 
 
-    const filteredData = Ciistock_data.filter((item) =>
-        item["materialDescription"].toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filteredData = nonciiStockData.filter((item) => {
+        const query = searchQuery.toLowerCase();
+
+        const matchesSearch = Object.values(item).some((value) =>
+            String(value).toLowerCase().includes(query)
+        );
+
+        if (activeTab === "Available") {
+            return matchesSearch && item["status"] === "Available";
+        } else if (activeTab === "Not Available") {
+            return matchesSearch && item["status"] === "Not Available";
+        }
+
+        return matchesSearch;
+    });
 
     const isValidDate = (value) => {
         const date = new Date(value);
@@ -137,9 +180,24 @@ const Nonciistock = () => {
         setSortConfig({ key, direction });
     };
 
-    const handleMaterialClick = (materialNumber) => {
-        navigate(`/non-cii-stock/${materialNumber}`);
+    const handleMaterialClick = (materialNumber, materialDescription) => {
+        debugger
+        navigate(`/non-cii-stock/${materialNumber}`, { state: { materialDescription } });
     };
+
+    const handleRemoveMaterial = (value) => {
+            const url = `SmInboundStockCiis/${value}/${false}`
+            postRequest(url)
+              .then((res) => {
+                  if (res.status === 200) {
+                    alert("Deleted Successfuly");
+                    fetchnonciistockdata();
+                  }
+              })
+              .catch((error) => {
+                  console.error("API Error:", error);
+              });
+    }
 
     const handleVerticalDotClick = (event, item) => {
         event.stopPropagation();
@@ -160,7 +218,7 @@ const Nonciistock = () => {
     return (
         <div>
             {showAddMaterial && <Addnonciistock value={showAddMaterial} handleOpenAddMaterial={handleOpenAddMaterial} />}
-            {showEditMaterial && <EditMaterial value={showEditMaterial} handleOpenEditMaterial={handleOpenEditMaterial} />}
+            {showEditMaterial && <EditMaterial value={showEditMaterial} selectedrow={alertBox.data} handleOpenEditMaterial={handleOpenEditMaterial} />}
             <Navbar breadcrumbs={breadcrumbData} />
             <div className="outersection-container">
                 <span className="main-title">Non-CII Stock</span>
@@ -182,10 +240,25 @@ const Nonciistock = () => {
                     </div>
                 </div>
                 <div className="outer-secondsection">
-                    <div className="tabs">
-                        <button className="tab-button active">View all</button>
-                        <button className="tab-button">Available</button>
-                        <button className="tab-button">Not Available</button>
+                <div className="tabs">
+                        <button
+                            className={`tab-button ${activeTab === "View all" ? "active" : ""}`}
+                            onClick={() => setActiveTab("View all")}
+                        >
+                            View all
+                        </button>
+                        <button
+                            className={`tab-button ${activeTab === "Available" ? "active" : ""}`}
+                            onClick={() => setActiveTab("Available")}
+                        >
+                            Available
+                        </button>
+                        <button
+                            className={`tab-button ${activeTab === "Not Available" ? "active" : ""}`}
+                            onClick={() => setActiveTab("Not Available")}
+                        >
+                            Not Available
+                        </button>
                     </div>
                     <Search placeholder="Search" onChange={handleInputChange} />
                 </div>
@@ -207,30 +280,30 @@ const Nonciistock = () => {
                             )}
                         </div>
                         <div className="table-header text-left w-[25%]" onClick={() => handleSort("materialDescription")}>
-                            materialDescription
+                            Material Description
                             {sortConfig.key === "materialDescription" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("Stock in Hand")}>
+                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("stockinHand")}>
                             Stock In Hand
                             {sortConfig.key === "Stock in Hand" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[10%]" onClick={() => handleSort("New Stock")}>
+                        <div className="table-header text-left w-[10%]" onClick={() => handleSort("newstock")}>
                             New Stock
                             {sortConfig.key === "New Stock" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[10%]" onClick={() => handleSort("Used Stock")}>
+                        <div className="table-header text-left w-[10%]" onClick={() => handleSort("usedstock")}>
                             Used Stock
                             {sortConfig.key === "Used Stock" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[10%]" onClick={() => handleSort("Status")}>
+                        <div className="table-header text-left w-[10%]" onClick={() => handleSort("status")}>
                             Status
                             {sortConfig.key === "Status" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
@@ -249,13 +322,13 @@ const Nonciistock = () => {
                                     onChange={() => handleCheckboxChange(item["materialNumber"])}
                                 />
                             </div>
-                            <div className="table-data text-hyper text-left w-[15%]" onClick={() => handleMaterialClick(item["materialNumber"])}>{item["materialNumber"]}</div>
+                            <div className="table-data text-hyper text-left w-[15%]" onClick={() => handleMaterialClick(item["materialNumber"], item["materialDescription"])}>{item["materialNumber"]}</div>
                             <div className="table-data text-left w-[25%]">{item["materialDescription"]}</div>
-                            <div className="table-data text-left w-[15%]">{item["Stock in Hand"]}</div>
-                            <div className="table-data text-left w-[10%]">{item["New Stock"]}</div>
-                            <div className="table-data text-left w-[10%]">{item["Used Stock"]}</div>
+                            <div className="table-data text-left w-[15%]">{item["stockinHand"]}</div>
+                            <div className="table-data text-left w-[10%]">{item["newstock"]}</div>
+                            <div className="table-data text-left w-[10%]">{item["usedstock"]}</div>
                             <div className="table-data text-left w-[10%]">
-                                <span className={`${item["Status"] === "Available" ? "status-available" : item["Status"] === "Not Available" ? "status-not-available" : "status-unknown"}`}>{item["Status"]}</span>
+                                <span className={`${item["status"] === "Available" ? "status-available" : item["status"] === "Not Available" ? "status-not-available" : "status-unknown"}`}>{item["status"]}</span>
                             </div>
                             <div className="table-data text-center w-[10%]"><VerticalDot onClick={(event) => handleVerticalDotClick(event, item)} /></div>
                         </div>
@@ -278,7 +351,7 @@ const Nonciistock = () => {
                         </button>
                         <button
                             className="dropdown-item"
-                            onClick={() => alert(`Delete ${alertBox.data["materialNumber"]}`)}
+                            onClick={() => handleRemoveMaterial(alertBox.data["materialNumber"])}
                         >
                             <span><Delete /></span> Delete
                         </button>

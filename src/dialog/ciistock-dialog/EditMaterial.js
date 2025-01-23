@@ -55,7 +55,7 @@ const EditMaterial = (props) => {
 
 
   const handleInputChange = (name, value) => {
-       
+    
     setFormData((prevData) => ({
         ...prevData,
         [name]: value,

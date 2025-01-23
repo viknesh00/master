@@ -4,6 +4,7 @@ import { ReactComponent as CloseButton } from "../../assets/svg/closebutton.svg"
 import Search from "../../utils/Search";
 import Pagination from "@mui/material/Pagination";
 import * as XLSX from "xlsx";
+import { useLocation } from "react-router-dom";
 import { ReactComponent as UpArrow } from "../../assets/svg/up-arrow.svg";
 import { ReactComponent as DownArrow } from "../../assets/svg/down-arrow.svg";
 import { ReactComponent as VerticalDot } from "../../assets/svg/vertical-dot.svg";
@@ -16,9 +17,15 @@ import FilterDateField from "../../utils/FilterDateField";
 import CustomSelect from "../../utils/CustomSelect";
 import AddStockUsed from "../../dialog/nonciistock-dialog/AddStockUsed";
 import UpdateStockUsed from "../../dialog/nonciistock-dialog/UpdateStockUsed";
+import { getRequest, postRequest } from "../../services/ApiService";
 
 const StockUsed = () => {
+    const location = useLocation();
+    const materialNumber = location.pathname.split('/').pop();
+    const { materialDescription } = location.state || {};
     const [showUpdateStockUsed, setShowUpdateStockUsed] = useState(false);
+    const [materialData, setMaterilaData] = useState([]);
+    const [selectedMaterialData, setSelectedMaterialData] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const rowsPerPage = 10;
     const [searchQuery, setSearchQuery] = useState("");
@@ -39,6 +46,7 @@ const StockUsed = () => {
     ];
 
     useEffect(() => {
+        fetchMaterialDetails();
         const handleClickOutside = (event) => {
             if (!event.target.closest(".alert-box")) {
                 handleCloseAlert();
@@ -50,9 +58,30 @@ const StockUsed = () => {
         };
     }, []);
 
-    const filteredData = StockUsed_Data.filter((item) =>
-        item["OrderNumber"].toLowerCase().includes(searchQuery.toLowerCase())
+    const fetchMaterialDetails = () => {
+        const url = `SmInboundStockNonCiis/GetNonStockUsedData/${materialNumber}`
+        postRequest(url)
+            .then((res) => {
+                if (res.status === 200) {
+                    setMaterilaData(res.data);
+                }
+            })
+            .catch((error) => {
+                console.error("API Error:", error);
+            });
+    }
+
+    const filteredData = materialData.filter((item) =>
+        item["orderNumber"].toLowerCase().includes(searchQuery.toLowerCase())
     );
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+      };
 
     const isValidDate = (value) => {
         const date = new Date(value);
@@ -97,7 +126,7 @@ const StockUsed = () => {
 
     const handleSelectAllChange = (event) => {
         if (event.target.checked) {
-            setSelectedRows(paginatedData.map((item) => item["OrderNumber"]));
+            setSelectedRows(paginatedData.map((item) => item["orderNumber"]));
         } else {
             setSelectedRows([]);
         }
@@ -112,12 +141,12 @@ const StockUsed = () => {
     };
 
     const isAllSelected = selectedRows.length > 0 && paginatedData.every((item) =>
-        selectedRows.includes(item["OrderNumber"])
+        selectedRows.includes(item["orderNumber"])
     );
 
     const handleDownload = () => {
         const dataToExport = selectedRows.length
-            ? filteredData.filter((item) => selectedRows.includes(item["OrderNumber"]))
+            ? filteredData.filter((item) => selectedRows.includes(item["orderNumber"]))
             : filteredData;
         const worksheet = XLSX.utils.json_to_sheet(dataToExport);
         const workbook = XLSX.utils.book_new();
@@ -134,12 +163,29 @@ const StockUsed = () => {
     };
 
     const handleOpenAddStockUsed = () => {
+        if(showStockUsed){
+            fetchMaterialDetails();
+        }
         setShowStockUsed(prevState => !prevState);
+    }
+    const handleRemoveMaterial = (orderNumber) => {
+        const url = `SmInboundStockNonCiis/DeleteNonStockUsedData/${materialNumber}/${orderNumber}`
+        postRequest(url)
+            .then((res) => {
+                if (res.status === 200) {
+                    alert("Deleted Successfuly");
+                    fetchMaterialDetails();
+                }
+            })
+            .catch((error) => {
+                console.error("API Error:", error);
+            });
     }
 
     const handleVerticalDotClick = (event, item) => {
         event.stopPropagation();
         const rect = event.target.getBoundingClientRect();
+        setSelectedMaterialData(item);
         setAlertBox({
             visible: true,
             x: rect.left - 100,
@@ -153,17 +199,20 @@ const StockUsed = () => {
     };
 
     const handleUpdateStockUsed = () => {
+        if(showUpdateStockUsed){
+            fetchMaterialDetails();
+        }
         setShowUpdateStockUsed(prevState => !prevState);
         setAlertBox({ visible: false, x: 0, y: 0, data: null });
     }
     return (
         <div>
-            {showStockUsed && <AddStockUsed value={showStockUsed} handleOpenAddStockUsed={handleOpenAddStockUsed} />}
-            {showUpdateStockUsed && <UpdateStockUsed value={showUpdateStockUsed} handleUpdateStockUsed={handleUpdateStockUsed} />}
+            {showStockUsed && <AddStockUsed value={showStockUsed} materialNumber={materialNumber} materialDescription={materialDescription} handleOpenAddStockUsed={handleOpenAddStockUsed} />}
+            {showUpdateStockUsed && <UpdateStockUsed value={showUpdateStockUsed} materialNumber={materialNumber} materialDescription={materialDescription} selectedMaterialData={selectedMaterialData} handleUpdateStockUsed={handleUpdateStockUsed} />}
 
             <div className="outer-firstsection">
                 <div className="outer-firstsection-header">
-                    <span className="outer-firstsection-title">Daa Office Standard Laptop - 14” Touch, i5, 16GB, 512GB D - HP EliteBook 840 - DE Keyboard</span>
+                    <span className="outer-firstsection-title">{ materialDescription }</span>
                 </div>
                 <div className="outer-firstsection-actions">
                     <button className="outer-firstsection-download" onClick={handleDownload}>
@@ -221,27 +270,27 @@ const StockUsed = () => {
                             onChange={handleSelectAllChange}
                         />
                     </div>
-                    <div className="table-header text-left w-[20%]" onClick={() => handleSort("OrderNumber")}>
+                    <div className="table-header text-left w-[20%]" onClick={() => handleSort("orderNumber")}>
                         OrderNumber
-                        {sortConfig.key === "OrderNumber" && (
+                        {sortConfig.key === "orderNumber" && (
                             sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                         )}
                     </div>
-                    <div className="table-header text-left w-[20%]" onClick={() => handleSort("ReturnLocation")}>
+                    <div className="table-header text-left w-[20%]" onClick={() => handleSort("returnLocation")}>
                         ReturnLocation
-                        {sortConfig.key === "ReturnLocation" && (
+                        {sortConfig.key === "returnLocation" && (
                             sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                         )}
                     </div>
-                    <div className="table-header text-left w-[20%]" onClick={() => handleSort("ReturnDate")}>
+                    <div className="table-header text-left w-[20%]" onClick={() => handleSort("returnDate")}>
                         ReturnDate
-                        {sortConfig.key === "ReturnDate" && (
+                        {sortConfig.key === "returnDate" && (
                             sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                         )}
                     </div>
-                    <div className="table-header text-left w-[20%]" onClick={() => handleSort("ItemQuantity")}>
+                    <div className="table-header text-left w-[20%]" onClick={() => handleSort("itemQuantity")}>
                         ItemQuantity
-                        {sortConfig.key === "ItemQuantity" && (
+                        {sortConfig.key === "itemQuantity" && (
                             sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                         )}
                     </div>
@@ -254,14 +303,14 @@ const StockUsed = () => {
                             <input
                                 type="checkbox"
                                 className="table-checkbox"
-                                checked={selectedRows.includes(item["OrderNumber"])}
-                                onChange={() => handleCheckboxChange(item["OrderNumber"])}
+                                checked={selectedRows.includes(item["orderNumber"])}
+                                onChange={() => handleCheckboxChange(item["orderNumber"])}
                             />
                         </div>
-                        <div className="table-data text-left w-[20%]">{item["OrderNumber"]}</div>
-                        <div className="table-data text-left w-[20%]">{item["ReturnLocation"]}</div>
-                        <div className="table-data text-left w-[20%]">{item["ReturnDate"]}</div>
-                        <div className="table-data text-left w-[20%]">{item["ItemQuantity"]}</div>
+                        <div className="table-data text-left w-[20%]">{item["orderNumber"]}</div>
+                        <div className="table-data text-left w-[20%]">{item["returnLocation"]}</div>
+                        <div className="table-data text-left w-[20%]">{formatDate(item["returnDate"])}</div>
+                        <div className="table-data text-left w-[20%]">{item["itemQuantity"]}</div>
                         <div className="table-data text-center w-[10%]"><VerticalDot onClick={(event) => handleVerticalDotClick(event, item)} /></div>
                     </div>
                 ))}
@@ -283,7 +332,7 @@ const StockUsed = () => {
                     </button>
                     <button
                         className="dropdown-item"
-                        onClick={() => alert(`Delete ${alertBox.data["OrderNumber"]}`)}
+                        onClick={() => handleRemoveMaterial(alertBox.data["orderNumber"])}
                     >
                         <span><Delete /></span> Delete
                     </button>

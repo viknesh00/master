@@ -41,7 +41,7 @@ const UpdateStockInwardDetails = (props) => {
             deliveryNumber: formData.deliveryNumber,
             orderNumber: formData.orderNumber,
             inwardDate: new Date(formData.inwardDate).toISOString(),
-            inwardFrom: formData.inwardFrom ||  "temp",
+            inwardFrom: formData.sourceLocation ||  "temp",
             receivedBy: formData.receivedBy
         }
         const url = `SmInboundStockCiis/UpdateInbounddata`
@@ -127,10 +127,10 @@ const UpdateStockInwardDetails = (props) => {
                         />
                         <Textfield
                             label={<span>Inward From<span className="error">*</span></span>}
-                            name={"inwardFrom"}
+                            name={"sourceLocation"}
                             placeholder="Enter source location"
                             onChange={handleInputChange}
-                            value={formData.inwardFrom}
+                            value={formData.sourceLocation}
                         />
                         <Textfield
                             label={<span>Received By<span className="error">*</span></span>}

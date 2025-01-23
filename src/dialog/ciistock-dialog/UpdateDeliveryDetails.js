@@ -14,8 +14,9 @@ import { postRequest } from "../../services/ApiService";
 
 
 const UpdateDeliveryDetails = (props) => {
+
     const [open] = useState(props.value);
-    const {selectedRow,serialData,deliveryData} = props;
+    const {selectedRow,serialData,deliveryData,selectedMaterialData} = props;
     const [showAlert, setShowAlert] = useState(false);
     const [formData, setFormData] = useState({});
 
@@ -24,10 +25,10 @@ const UpdateDeliveryDetails = (props) => {
             setFormData({
                 "materialNumber": serialData.materialNumber || "",
                 "serialNumber": serialData.serialNumber,
-                "orderNumber": deliveryData[0].outBoundOrderNumber,
+                "orderNumber": selectedMaterialData.outBoundOrderNumber,
                 "outbounddate": new Date(selectedRow.outBoundDate.split('/').reverse().join('-')),
                 "targetLocation": selectedRow.targetLocation,
-                "receiverName": selectedRow.receivedName,
+                "receiverName": selectedRow.receiverName,
                 "sentBy": selectedRow.sentby
             });
         }
@@ -49,10 +50,10 @@ const UpdateDeliveryDetails = (props) => {
                 materialNumber: serialData.materialNumber,
                 serialNumber: serialData.serialNumber,
                 orderNumber: formData.orderNumber, 
-                ExistOrderNumber: deliveryData[0].outBoundOrderNumber,
+                ExistOrderNumber: selectedMaterialData.outBoundOrderNumber,
                 outBounddate: new Date(formData.outbounddate).toISOString(),
                 targetLocation: formData.targetLocation,
-                receiverName: formData.receivedName,
+                receiverName: formData.receiverName,
                 sentBy: formData.sentBy,
             }
     
@@ -129,8 +130,8 @@ const UpdateDeliveryDetails = (props) => {
                         <Textfield
                             label={<span>Receiver Name<span className="error">*</span></span>}
                             placeholder="Enter receiver name"
-                            name="receivedName"
-                            value={formData.receivedName}
+                            name="receiverName"
+                            value={formData.receiverName}
                             onChange={handleInputChange}
                         />
                         <Textfield

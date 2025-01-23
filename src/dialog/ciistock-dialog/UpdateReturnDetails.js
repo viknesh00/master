@@ -16,7 +16,7 @@ import { postRequest } from "../../services/ApiService";
 
 const UpdateReturnDetails = (props) => {
     const [open] = useState(props.value);
-    const { selectedRow, serialData } = props;
+    const { selectedRow, serialData,selectedMaterialData} = props;
     const [showAlert, setShowAlert] = useState(false);
     const [formData, setFormData] = useState({});
 
@@ -61,6 +61,7 @@ const UpdateReturnDetails = (props) => {
             serialNumber: serialData.serialNumber,
             materialDescription: serialData.materialDescription,
             orderNumber: formData.OrderNumber,
+            existOrderNumber: selectedMaterialData.orderNumber,
             locationReturnedFrom: formData.ReturnLocation,
             returneddate: new Date(formData.ReturnDate).toISOString(),
             returnedBy: formData.ReceivedBy,

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ReactComponent as TickButton } from "../../assets/svg/tickbutton.svg";
 import { ReactComponent as CloseButton } from "../../assets/svg/closebutton.svg";
+import { useLocation } from "react-router-dom";
 import Search from "../../utils/Search";
 import Pagination from "@mui/material/Pagination";
 import * as XLSX from "xlsx";
@@ -16,11 +17,18 @@ import FilterDateField from "../../utils/FilterDateField";
 import CustomSelect from "../../utils/CustomSelect";
 import AddStockDelivered from "../../dialog/nonciistock-dialog/AddStockDelivered";
 import UpdateStockDelivered from "../../dialog/nonciistock-dialog/UpdateStockDelivered";
+import { getRequest, postRequest } from "../../services/ApiService";
 
 const StockDelivered = () => {
+    const location = useLocation();
+    const materialNumber = location.pathname.split('/').pop();
+    const { materialDescription } = location.state || {};
     const [showUpdateStockDelivered, setShowUpdateStockDelivered] = useState(false);
+    const [selectedMaterialData, setSelectedMaterialData] = useState("");
+    const [materialData, setMaterilaData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const rowsPerPage = 10;
+    const [showStock, setShowStock] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedRows, setSelectedRows] = useState([]);
     const [showAddDelivered, setShowAddDelivered] = useState(false);
@@ -39,6 +47,7 @@ const StockDelivered = () => {
     ];
 
     useEffect(() => {
+        fetchMaterialDetails();
         const handleClickOutside = (event) => {
             if (!event.target.closest(".alert-box")) {
                 handleCloseAlert();
@@ -50,8 +59,27 @@ const StockDelivered = () => {
         };
     }, []);
 
-    const filteredData = StockDelivered_Data.filter((item) =>
-        item["Order Number"].toLowerCase().includes(searchQuery.toLowerCase())
+    const fetchMaterialDetails = () => {
+                debugger
+                const url = `SmInboundStockNonCiis/DeliveredDataList/${materialNumber}`
+                getRequest(url)
+                    .then((res) => {
+                        if (res.status === 200) {
+                            // res.data.forEach((item) => {
+                            //     if (item.inwardDate) item.inwardDate = item.inwardDate;
+                            //     if (item.createdDate) item.createdDate = formatDate(item.createdDate);
+                            //     if (item.updatedDate) item.updatedDate = formatDate(item.updatedDate);
+                            //   });
+                            setMaterilaData(res.data);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("API Error:", error);
+                    });
+    }
+
+    const filteredData = materialData.filter((item) =>
+        item["deliveryNumber"].toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const isValidDate = (value) => {
@@ -97,7 +125,7 @@ const StockDelivered = () => {
 
     const handleSelectAllChange = (event) => {
         if (event.target.checked) {
-            setSelectedRows(paginatedData.map((item) => item["Order Number"]));
+            setSelectedRows(paginatedData.map((item) => item["deliveryNumber"]));
         } else {
             setSelectedRows([]);
         }
@@ -112,12 +140,20 @@ const StockDelivered = () => {
     };
 
     const isAllSelected = selectedRows.length > 0 && paginatedData.every((item) =>
-        selectedRows.includes(item["Order Number"])
+        selectedRows.includes(item["deliveryNumber"])
     );
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+      };
 
     const handleDownload = () => {
         const dataToExport = selectedRows.length
-            ? filteredData.filter((item) => selectedRows.includes(item["Order Number"]))
+            ? filteredData.filter((item) => selectedRows.includes(item["deliveryNumber"]))
             : filteredData;
         const worksheet = XLSX.utils.json_to_sheet(dataToExport);
         const workbook = XLSX.utils.book_new();
@@ -134,12 +170,31 @@ const StockDelivered = () => {
     };
 
     const handleOpenAddDelivery = () => {
+        if(showAddDelivered){
+            fetchMaterialDetails();
+        }
         setShowAddDelivered(prevState => !prevState);
+    }
+    const handleRemoveMaterial = (deliveryNumber,orderNumber) => {
+            debugger
+                    const url = `SmInboundStockNonCiis/DeleteNonStockDeliverdata/${materialNumber}/${deliveryNumber}/${orderNumber}`
+                    postRequest(url)
+                      .then((res) => {
+                          if (res.status === 200) {
+                            alert("Deleted Successfuly");
+                            fetchMaterialDetails();
+                          }
+                      })
+                      .catch((error) => {
+                          console.error("API Error:", error);
+                      });
     }
 
     const handleVerticalDotClick = (event, item) => {
+        debugger
         event.stopPropagation();
         const rect = event.target.getBoundingClientRect();
+        setSelectedMaterialData(item)
         setAlertBox({
             visible: true,
             x: rect.left - 100,
@@ -153,17 +208,20 @@ const StockDelivered = () => {
     };
 
     const handleUpdateStockDelivered = () => {
+        if(showUpdateStockDelivered){
+            fetchMaterialDetails();
+        }
         setShowUpdateStockDelivered(prevState => !prevState);
         setAlertBox({ visible: false, x: 0, y: 0, data: null });
     }
     return (
         <div>
-            {showAddDelivered && <AddStockDelivered value={showAddDelivered} handleOpenAddDelivery={handleOpenAddDelivery} />}
-            {showUpdateStockDelivered && <UpdateStockDelivered value={showUpdateStockDelivered} handleUpdateStockDelivered={handleUpdateStockDelivered} />}
+            {showAddDelivered && <AddStockDelivered value={showAddDelivered} materialDescription={materialDescription} handleOpenAddDelivery={handleOpenAddDelivery} />}
+            {showUpdateStockDelivered && <UpdateStockDelivered value={showUpdateStockDelivered} materialDescription={materialDescription} selectedMaterialData={selectedMaterialData} handleUpdateStockDelivered={handleUpdateStockDelivered} />}
 
             <div className="outer-firstsection">
                 <div className="outer-firstsection-header">
-                    <span className="outer-firstsection-title">Daa Office Standard Laptop - 14” Touch, i5, 16GB, 512GB D - HP EliteBook 840 - DE Keyboard</span>
+                    <span className="outer-firstsection-title">{ materialDescription }</span>
                 </div>
                 <div className="outer-firstsection-actions">
                     <button className="outer-firstsection-download" onClick={handleDownload}>
@@ -216,37 +274,43 @@ const StockDelivered = () => {
                             onChange={handleSelectAllChange}
                         />
                     </div>
-                    <div className="table-header text-left w-[15%]" onClick={() => handleSort("Order Number")}>
+                    <div className="table-header text-left w-[15%]" onClick={() => handleSort("deliveryNumber")}>
+                        Delivery Number
+                        {sortConfig.key === "Order Number" && (
+                            sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
+                        )}
+                    </div>
+                    <div className="table-header text-left w-[15%]" onClick={() => handleSort("orderNumber")}>
                         Order Number
                         {sortConfig.key === "Order Number" && (
                             sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                         )}
                     </div>
-                    <div className="table-header text-left w-[15%]" onClick={() => handleSort("Outbound Date")}>
+                    <div className="table-header text-left w-[15%]" onClick={() => handleSort("outboundDate")}>
                         Outbound Date
                         {sortConfig.key === "Outbound Date" && (
                             sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                         )}
                     </div>
-                    <div className="table-header text-left w-[15%]" onClick={() => handleSort("Receiver Name")}>
+                    <div className="table-header text-left w-[15%]" onClick={() => handleSort("receiverName")}>
                         Receiver Name
                         {sortConfig.key === "Receiver Name" && (
                             sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                         )}
                     </div>
-                    <div className="table-header text-left w-[15%]" onClick={() => handleSort("Target Location")}>
+                    <div className="table-header text-left w-[15%]" onClick={() => handleSort("targetLocation")}>
                         Target Location
                         {sortConfig.key === "Target Location" && (
                             sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                         )}
                     </div>
-                    <div className="table-header text-left w-[15%]" onClick={() => handleSort("Quantity Delivered")}>
+                    <div className="table-header text-left w-[15%]" onClick={() => handleSort("deliveredQuantity")}>
                         Quantity Delivered
                         {sortConfig.key === "Quantity Delivered" && (
                             sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                         )}
                     </div>
-                    <div className="table-header text-left w-[15%]" onClick={() => handleSort("Sent By")}>
+                    <div className="table-header text-left w-[15%]" onClick={() => handleSort("sentBy")}>
                         Sent By
                         {sortConfig.key === "Sent By" && (
                             sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
@@ -261,16 +325,17 @@ const StockDelivered = () => {
                             <input
                                 type="checkbox"
                                 className="table-checkbox"
-                                checked={selectedRows.includes(item["Order Number"])}
-                                onChange={() => handleCheckboxChange(item["Order Number"])}
+                                checked={selectedRows.includes(item["orderNumber"])}
+                                onChange={() => handleCheckboxChange(item["orderNumber"])}
                             />
                         </div>
-                        <div className="table-data text-left w-[15%]">{item["Order Number"]}</div>
-                        <div className="table-data text-left w-[15%]">{item["Outbound Date"]}</div>
-                        <div className="table-data text-left w-[15%]">{item["Receiver Name"]}</div>
-                        <div className="table-data text-left w-[15%]">{item["Target Location"]}</div>
-                        <div className="table-data text-left w-[15%]">{item["Quantity Delivered"]}</div>
-                        <div className="table-data text-left w-[15%]">{item["Sent By"]}</div>
+                        <div className="table-data text-left w-[15%]">{item["deliveryNumber"]}</div>
+                        <div className="table-data text-left w-[15%]">{item["orderNumber"]}</div>
+                        <div className="table-data text-left w-[15%]">{formatDate(item["outboundDate"])}</div>
+                        <div className="table-data text-left w-[15%]">{item["receiverName"]}</div>
+                        <div className="table-data text-left w-[15%]">{item["targetLocation"]}</div>
+                        <div className="table-data text-left w-[15%]">{item["deliveredQuantity"]}</div>
+                        <div className="table-data text-left w-[15%]">{item["sentBy"]}</div>
                         <div className="table-data text-center w-[5%]"><VerticalDot onClick={(event) => handleVerticalDotClick(event, item)} /></div>
                     </div>
                 ))}
@@ -292,7 +357,7 @@ const StockDelivered = () => {
                     </button>
                     <button
                         className="dropdown-item"
-                        onClick={() => alert(`Delete ${alertBox.data["Delivery Number"]}`)}
+                        onClick={() => handleRemoveMaterial(alertBox.data["deliveryNumber"],alertBox.data["orderNumber"])}
                     >
                         <span><Delete /></span> Delete
                     </button>
