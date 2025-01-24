@@ -55,6 +55,7 @@ const UpdateStockDelivered = (props) => {
                     receiverName:formData.receiverName,
                     targetLocation:formData.targetLocation,
                     deliveredQuantity:formData.deliveredQuantity,
+                    existDeliveredQuantity: selectedMaterialData.deliveredQuantity,
                     sentBy:formData.sentBy,
                     deliveryNumber_inbound: formData.deliveryNumber
                 }
@@ -117,6 +118,7 @@ const UpdateStockDelivered = (props) => {
                             placeholder="Enter delivery number"
                             onChange={handleInputChange}
                             value={formData.deliveryNumber}
+                            readOnly={true}
                         />
                         <Textfield
                             name="orderNumber"

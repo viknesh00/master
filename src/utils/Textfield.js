@@ -1,10 +1,13 @@
 import React from "react";
 
 const Textfield = (props) => {
-  const { label, value, name, placeholder, onChange } = props;
+  const { label, value, name, placeholder, onChange, readOnly } = props;
 
   const handleChange = (event) => {
-    onChange(name, event.target.value);
+    debugger
+    if (!readOnly) {
+      onChange(name, event.target.value);
+    }
   };
 
   return (
@@ -19,6 +22,7 @@ const Textfield = (props) => {
           name={name}
           placeholder={placeholder}
           onChange={handleChange}
+          readOnly={readOnly}
         />
       </div>
     </div>

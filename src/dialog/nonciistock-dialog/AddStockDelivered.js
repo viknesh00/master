@@ -28,6 +28,10 @@ const AddStockDelivered = (props) => {
     };
 
     const handleAddDeliveredciistock = () => {
+        if (!formData.deliveryNumber || !formData.orderNumber) {
+            alert("Delivery Number and Order Number should not be empty");
+            return; // Stop further execution if validation fails
+        }
         let Data = {};
         Data = {
             ...Data,
@@ -98,14 +102,14 @@ const AddStockDelivered = (props) => {
                     <div className="grid-column">
                         <Textfield
                             name="deliveryNumber"
-                            label="Delivery Number"
+                            label={<span>Delivery Number<span className="error">*</span></span>}
                             placeholder="Enter delivery number"
                             onChange={handleInputChange}
                             value={formData.deliveryNumber}
                         />
                         <Textfield
                             name="orderNumber"
-                            label="Order Number"
+                            label={<span>Order Number<span className="error">*</span></span>}
                             placeholder="Enter order number"
                             onChange={handleInputChange}
                             value={formData.orderNumber}
