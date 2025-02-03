@@ -490,6 +490,30 @@ code {
   justify-content: space-between;
 }
 
+.search-box-dashboard {
+  display: flex;
+  /* width: 150px; */
+  align-items: center;
+  margin-right: 12px;
+  overflow: hidden;
+  padding: 10px 14px;
+  border: 1px solid #DFE2E4;
+  border-radius: 8px;
+  justify-content: space-between;
+}
+
+.search-box-dashboarddate {
+  display: flex;
+  width: 120px;
+  align-items: center;
+  margin-right: 12px;
+  overflow: hidden;
+  padding: 10px 14px;
+  border: 1px solid #DFE2E4;
+  border-radius: 8px;
+  justify-content: space-between;
+}
+
 .date-box {
   display: flex;
   width: 240px;
@@ -801,6 +825,18 @@ input:focus, textarea:focus {
 }
 
 .outer-firstsection {
+  margin-top: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border: 1px solid #E6E6E6;
+  border-bottom: none;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.outer-firstsection-dashboard {
   margin-top: 32px;
   display: flex;
   justify-content: space-between;
