@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 //import { Card, CardContent } from "../components/ui/card";
 import Datefielddashboard from "../utils/Datefielddashboard";
@@ -9,6 +9,7 @@ import { CircularProgressbarWithChildren, CircularProgressbar, buildStyles } fro
 import "react-circular-progressbar/dist/styles.css";
 import { Margin } from "@mui/icons-material";
 import { ReactComponent as Packageplus } from "../assets/svg/packageplus.svg";
+import { getRequest, postRequest } from "../services/ApiService";
 
 const Card = ({ children }) => (
     <div className="shadow-md rounded-md border p-4">{children}</div>
@@ -30,15 +31,68 @@ const Input = (props) => (
 const Dashboard = () => {
 
     const [formData, setFormData] = useState({});
+    const [pieCiiData, setCiiPieData] = useState([
+        { name: "In Hand", value: 0, color: "#009E4C",totalStock : "" + "" + "" },
+        { name: "Used", value: 0, color: "#F28C00" },
+        { name: "Defective", value: 0, color: "#E60000" },
+    ]);
+    const [pieNonCiiData, setNonCiiPieData] = useState([
+        { name: "In Hand", value: 0, color: "#009E4C",totalStock : "" + "" + ""  },
+        { name: "Used", value: 0, color: "#F28C00" },
+        { name: "Defective", value: 0, color: "#E60000" },
+    ]);
+    const [stockData, setStockData] = useState([
+        { title: "CII Stock", delivered: 0, returned: 0 },
+        { title: "Non-CII Stock", delivered: 0, returned: 0 }
+    ]);
+
     const breadcrumbData = [
         { label: "Dashboard", path: "" },
     ];
 
-    const pieData = [
-        { name: "In Hand", value: 65, color: "#009E4C" },
-        { name: "Used", value: 25, color: "#F28C00" },
-        { name: "Defective", value: 10, color: "#E60000" },
-    ];
+    
+    useEffect(() => {
+        fetchDashboarddata();
+    },[]);
+
+        const fetchDashboarddata = () => {  
+            const url = `SmInboundStockNonCiis/DashBoard`;
+            
+            postRequest(url)
+              .then((res) => {
+                  if (res.status === 200) {
+
+                    let ciiInhand = res.data.ciiCounts[0].inhandstock;
+                    let ciiUsed = res.data.ciiCounts[0].usedstock;
+                    let ciiDefective = res.data.ciiCounts[0].defectivestock;
+                    setCiiPieData([
+                        { name: "In Hand", value: ciiInhand, color: "#009E4C",totalStock : ciiInhand + ciiUsed + ciiDefective },
+                        { name: "Used", value: ciiUsed, color: "#F28C00", totalStock : ciiInhand + ciiUsed + ciiDefective },
+                        { name: "Defective", value: ciiDefective, color: "#E60000", totalStock : ciiInhand + ciiUsed + ciiDefective }
+                    ]);
+                    let nonCiiInhand = res.data.nonCIICounts[0].inhandstock;
+                    let nonCiiUsed = res.data.nonCIICounts[0].usedstock;
+                    let nonCiiDefective = res.data.nonCIICounts[0].defectivestock;
+                    setNonCiiPieData([
+                        { name: "In Hand", value: nonCiiInhand, color: "#009E4C", totalStock : nonCiiInhand + nonCiiUsed + nonCiiDefective },
+                        { name: "Used", value: nonCiiUsed, color: "#F28C00", totalStock : nonCiiInhand + nonCiiUsed + nonCiiDefective },
+                        { name: "Defective", value: nonCiiDefective, color: "#E60000", totalStock : nonCiiInhand + nonCiiUsed + nonCiiDefective },
+                    ])
+                    let ciiDeliveredCount = res.data.deliveryReturnCounts[0].ciiDeliveryCount;
+                    let ciiReturnCount = res.data.deliveryReturnCounts[0].ciiReturnCount;
+                    let nonCiiDeliveredCount = res.data.deliveryReturnCounts[0].nonCIIDeliveryCount;
+                    let nonCiiReturnCount = res.data.deliveryReturnCounts[0].nonCIIReturnCount;
+                    setStockData([
+                        { title: "CII Stock", delivered: ciiDeliveredCount, returned: ciiReturnCount },
+                        { title: "Non-CII Stock", delivered: nonCiiDeliveredCount, returned: nonCiiReturnCount },
+                    ])
+                  }
+              })
+              .catch((error) => {
+                  console.error("API Error:", error);
+              });
+        };
+
 
     const circularData = [
         { label: "In Hand Stock", value: 4085, color: "#009E4C" },
@@ -46,18 +100,18 @@ const Dashboard = () => {
         { label: "Defective Stock", value: 379, color: "#E60000" },
     ];
 
-    const stockData = [
-        {
-          title: "CII Stock",
-          delivered: 4085,
-          returned: 475,
-        },
-        {
-          title: "Non-CII Stock",
-          delivered: 3974,
-          returned: 286,
-        },
-      ];
+    // const stockData = [
+    //     {
+    //       title: "CII Stock",
+    //       delivered: 4085,
+    //       returned: 475,
+    //     },
+    //     {
+    //       title: "Non-CII Stock",
+    //       delivered: 3974,
+    //       returned: 286,
+    //     },
+    //   ];
 
     const handleInputChange = (name, value) => {
         setFormData((prevData) => ({
@@ -104,13 +158,13 @@ const Dashboard = () => {
                                     <ResponsiveContainer width="100%" height={150}>
                                         <PieChart>
                                             <Pie
-                                                data={pieData}
+                                                data={pieCiiData}
                                                 dataKey="value"
                                                 innerRadius={50}
                                                 outerRadius={70}
                                                 paddingAngle={5}
                                             >
-                                                {pieData.map((entry, index) => (
+                                                {pieCiiData.map((entry, index) => (
                                                     <Cell key={`cell-${index}`} fill={entry.color} />
                                                 ))}
                                             </Pie>
@@ -118,11 +172,11 @@ const Dashboard = () => {
                                     </ResponsiveContainer>
                                 </div>
 
-                                {circularData.map((item, index) => (
+                                {pieCiiData.map((item, index) => (
                                     <div key={index} className="flex flex-col items-center">
                                         <div className="w-32 h-32">
                                             <CircularProgressbarWithChildren
-                                                value={(item.value / 5000) * 100}
+                                                value={(item.value / item.totalStock) * 100}
                                                 styles={{
                                                     path: {
                                                         stroke: item.color,
@@ -133,7 +187,7 @@ const Dashboard = () => {
                                                 }}
                                             >
                                                 <div className="text-center">
-                                                    <p className="text-sm text-gray-500">{item.label}</p>
+                                                    <p className="text-sm text-gray-500">{item.name}</p>
                                                     <p className="font-semibold text-lg">{item.value}</p>
                                                 </div>
                                             </CircularProgressbarWithChildren>
@@ -175,13 +229,13 @@ const Dashboard = () => {
                                     <ResponsiveContainer width="100%" height={150}>
                                         <PieChart>
                                             <Pie
-                                                data={pieData}
+                                                data={pieNonCiiData}
                                                 dataKey="value"
                                                 innerRadius={50}
                                                 outerRadius={70}
                                                 paddingAngle={5}
                                             >
-                                                {pieData.map((entry, index) => (
+                                                {pieNonCiiData.map((entry, index) => (
                                                     <Cell key={`cell-${index}`} fill={entry.color} />
                                                 ))}
                                             </Pie>
@@ -189,11 +243,11 @@ const Dashboard = () => {
                                     </ResponsiveContainer>
                                 </div>
 
-                                {circularData.map((item, index) => (
+                                {pieNonCiiData.map((item, index) => (
                                     <div key={index} className="flex flex-col items-center">
                                         <div className="w-32 h-32">
                                             <CircularProgressbarWithChildren
-                                                value={(item.value / 5000) * 100}
+                                                value={(item.value / item.totalStock) * 100}
                                                 styles={{
                                                     path: {
                                                         stroke: item.color,
@@ -204,7 +258,7 @@ const Dashboard = () => {
                                                 }}
                                             >
                                                 <div className="text-center">
-                                                    <p className="text-sm text-gray-500">{item.label}</p>  
+                                                    <p className="text-sm text-gray-500">{item.name}</p>  
                                                     <p className="font-semibold text-lg">{item.value}</p>
                                                 </div>
                                             </CircularProgressbarWithChildren>
@@ -274,7 +328,7 @@ const Dashboard = () => {
                             </div>
                             <div className="w-32">
                                 <CircularProgressbarWithChildren
-                                    value={30}
+                                    value={100}
                                     styles={buildStyles({
                                         pathColor: "#5D36FF",
                                         textColor: "#000",
