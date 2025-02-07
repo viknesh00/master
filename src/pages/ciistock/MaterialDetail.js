@@ -36,6 +36,7 @@ const MaterialDetail = () => {
         { label: `${materialNumber}`, path: "" },
     ];
     const [materialData, setMaterilaData] = useState([]);
+    const [analyticsData, setAnalyticsData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const rowsPerPage = 10;
     const [selectedSerialNumber, setSelectedSerialNumber] = useState("");
@@ -56,6 +57,7 @@ const MaterialDetail = () => {
 
     useEffect(() => {
         fetchMaterialDetails();
+        fetchMaterialAnalysiticsCiiData();
         
         const handleClickOutside = (event) => {
             if (!event.target.closest(".alert-box")) {
@@ -75,6 +77,19 @@ const MaterialDetail = () => {
         const year = date.getFullYear();
         return `${day}/${month}/${year}`;
       };
+
+      const fetchMaterialAnalysiticsCiiData = () => {
+        const url = `SmInboundStockNonCiis/AnalyticsCII/${materialNumber}`
+        postRequest(url)
+            .then((res) => {
+                if (res.status === 200) {
+                    setAnalyticsData(res.data);
+                }
+            })
+            .catch((error) => {
+                console.error("API Error:", error);
+            });
+    }
 
     const fetchMaterialDetails = () => {
         const url = `SmInboundStockCiis/${materialNumber}`
@@ -295,12 +310,12 @@ const MaterialDetail = () => {
 
                     {isPanelVisible && (
                         <div className="grid-container">
-                            <StockCard title="Total Stock" value="0" bgColor="card1" />
-                            <StockCard title="Total Stock in Hand" value="0" bgColor="card2" />
-                            <StockCard title="Total Stock Delivered" value="0" bgColor="card3" />
-                            <StockCard title="Total Returned Stock" value="0" bgColor="card4" />
-                            <StockCard title="Total Stock Used in Hand" value="0" bgColor="card5" />
-                            <StockCard title="Total Defective Item" value="0" bgColor="card6" />
+                            <StockCard title="Total Stock" value={analyticsData[0]?.totalstock || 0} bgColor="card1" />
+                            <StockCard title="Total Stock in Hand" value={analyticsData[0]?.inhandstock || 0} bgColor="card2" />
+                            <StockCard title="Total Stock Delivered" value={analyticsData[0]?.deliverycount || 0} bgColor="card3" />
+                            <StockCard title="Total Returned Stock" value={analyticsData[0]?.returncount || 0} bgColor="card4" />
+                            <StockCard title="Total Stock Used in Hand" value={analyticsData[0]?.usedstock || 0} bgColor="card5" />
+                            <StockCard title="Total Defective Item" value={analyticsData[0]?.defectivestock || 0} bgColor="card6" />
                         </div>
                     )}
                 </div>
