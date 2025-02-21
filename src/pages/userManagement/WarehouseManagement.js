@@ -13,7 +13,7 @@ import { ReactComponent as VerticalDot } from "../../assets/svg/vertical-dot.svg
 import { ReactComponent as Edit } from "../../assets/svg/edit.svg";
 import { ReactComponent as Delete } from "../../assets/svg/delete.svg";
 import { useNavigate } from "react-router-dom";
-import Addnonciistock from '../../dialog/ciistock-dialog/Addnonciistock'
+import AddWarehouse from '../../dialog/usermanagement-dialog/AddWarehouse';
 import EditMaterial from "../../dialog/ciistock-dialog/EditMaterial";
 
 const WarehouseManagement = () => {
@@ -39,7 +39,7 @@ const WarehouseManagement = () => {
 
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (!event.target.closest(".alert-box")) {
+            if (!event.target.closest(".alert-box")) { 
                 handleCloseAlert();
             }
         };
@@ -164,7 +164,7 @@ const WarehouseManagement = () => {
 
     return (
         <div>
-            {showAddMaterial && <Addnonciistock value={showAddMaterial} handleOpenAddMaterial={handleOpenAddMaterial} />}
+            {showAddMaterial && <AddWarehouse value={showAddMaterial} handleOpenAddMaterial={handleOpenAddMaterial} />}
             {showEditMaterial && <EditMaterial value={showEditMaterial} handleOpenEditMaterial={handleOpenEditMaterial} />}
             <Navbar breadcrumbs={breadcrumbData} />
             <div className="outersection-container">
@@ -182,7 +182,7 @@ const WarehouseManagement = () => {
                             <Download /> Download
                         </button>
                         <button className="outer-firstsection-add" onClick={handleOpenAddMaterial}>
-                            <Plus /> Add Company
+                            <Plus /> Add Warehouse
                         </button>
                     </div>
                 </div>

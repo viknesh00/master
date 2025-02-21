@@ -12,8 +12,8 @@ import { ReactComponent as VerticalDot } from "../../assets/svg/vertical-dot.svg
 import { ReactComponent as Edit } from "../../assets/svg/edit.svg";
 import { ReactComponent as Delete } from "../../assets/svg/delete.svg";
 import { useNavigate } from "react-router-dom";
-import Addnonciistock from '../../dialog/ciistock-dialog/Addnonciistock'
-import EditMaterial from "../../dialog/ciistock-dialog/EditMaterial";
+import AddCompany from '../../dialog/usermanagement-dialog/AddCompany';
+import EditCompany from "../../dialog/usermanagement-dialog/EditCompany";
 
 const CompanyManagement = () => {
     const navigate = useNavigate();
@@ -45,11 +45,11 @@ const CompanyManagement = () => {
     }, []);
 
 
-    const handleOpenAddMaterial = () => {
+    const handleOpenAddCompany = () => {
         setShowAddMaterial(prevState => !prevState);
     };
 
-    const handleOpenEditMaterial = () => {
+    const handleOpenEditCompany = () => {
         setShowEditMaterial(prevState => !prevState);
     };
 
@@ -142,6 +142,7 @@ const CompanyManagement = () => {
     };
 
     const handleVerticalDotClick = (event, item) => {
+        debugger
         event.stopPropagation();
         const rect = event.target.getBoundingClientRect();
         setAlertBox({
@@ -159,8 +160,8 @@ const CompanyManagement = () => {
 
     return (
         <div>
-            {showAddMaterial && <Addnonciistock value={showAddMaterial} handleOpenAddMaterial={handleOpenAddMaterial} />}
-            {showEditMaterial && <EditMaterial value={showEditMaterial} handleOpenEditMaterial={handleOpenEditMaterial} />}
+            {showAddMaterial && <AddCompany value={showAddMaterial} handleOpenAddCompany={handleOpenAddCompany} />}
+            {showEditMaterial && <EditCompany value={showEditMaterial} selectedrow={alertBox.data} handleOpenEditCompany={handleOpenEditCompany} />}
             <Navbar breadcrumbs={breadcrumbData} />
             <div className="outersection-container">
                 <span className="main-title">Company Management</span>
@@ -176,7 +177,7 @@ const CompanyManagement = () => {
                         <button className="outer-firstsection-download" onClick={handleDownload}>
                             <Download /> Download
                         </button>
-                        <button className="outer-firstsection-add" onClick={handleOpenAddMaterial}>
+                        <button className="outer-firstsection-add" onClick={handleOpenAddCompany}>
                             <Plus /> Add Company
                         </button>
                     </div>

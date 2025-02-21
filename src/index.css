@@ -616,6 +616,13 @@ input:focus, textarea:focus {
   row-gap: 6px; /* Sets the gap between rows */
 }
 
+.grid-column-one{
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  column-gap: 35px; /* Sets the gap between columns */
+  row-gap: 6px; /* Sets the gap between rows */
+}
+
 .grid-column-two{
   display: grid;
   grid-template-columns: repeat(2, 1fr);

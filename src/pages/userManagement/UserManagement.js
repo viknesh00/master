@@ -184,7 +184,7 @@ const UserManagement = () => {
                             <Download /> Download
                         </button>
                         <button className="outer-firstsection-add" onClick={handleOpenAddMaterial}>
-                            <Plus /> Add Company
+                            <Plus /> Add Warehouse
                         </button>
                     </div>
                 </div>
