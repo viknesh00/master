@@ -12,6 +12,7 @@ import { ReactComponent as VerticalDot } from "../../assets/svg/vertical-dot.svg
 import { ReactComponent as Edit } from "../../assets/svg/edit.svg";
 import { ReactComponent as Delete } from "../../assets/svg/delete.svg";
 import { useNavigate } from "react-router-dom";
+import { getRequest, postRequest } from "../../services/ApiService";
 import AddCompany from '../../dialog/usermanagement-dialog/AddCompany';
 import EditCompany from "../../dialog/usermanagement-dialog/EditCompany";
 
@@ -21,6 +22,8 @@ const CompanyManagement = () => {
         { label: "Company Management", path: "" },
     ];
     const [currentPage, setCurrentPage] = useState(1);
+    const [companyData, setCompanyData] = useState([]);
+    const [selectedcompanyData, setSelectedCompanyData] = useState([]);
     const rowsPerPage = 10;
     const [showAddMaterial, setShowAddMaterial] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
@@ -33,6 +36,7 @@ const CompanyManagement = () => {
     const [showEditMaterial, setShowEditMaterial] = useState(false);
 
     useEffect(() => {
+        fetchCompanyDetails();
         const handleClickOutside = (event) => {
             if (!event.target.closest(".alert-box")) {
                 handleCloseAlert();
@@ -44,17 +48,48 @@ const CompanyManagement = () => {
         };
     }, []);
 
+    const fetchCompanyDetails = () => {
+            const url = `UserManagement`
+            getRequest(url)
+                .then((res) => {
+                    if (res.status === 200) {
+                        setCompanyData(res.data);
+                    }
+                })
+                .catch((error) => {
+                    console.error("API Error:", error);
+                });
+    }
+
+    const handleDeleteCompany = (companyId) => {
+            const url = `UserManagement/DeleteCompanyUserManagement/${companyId}`
+            postRequest(url)
+              .then((res) => {
+                  if (res.status === 200) {
+                    fetchCompanyDetails();
+                  }
+              })
+              .catch((error) => {
+                  console.error("API Error:", error);
+              });
+    }
 
     const handleOpenAddCompany = () => {
+        if(showAddMaterial){
+        fetchCompanyDetails();
+        }
         setShowAddMaterial(prevState => !prevState);
     };
 
     const handleOpenEditCompany = () => {
+        if(showEditMaterial){
+        fetchCompanyDetails();
+        }
         setShowEditMaterial(prevState => !prevState);
     };
 
 
-    const filteredData = Company_data.filter((item) =>
+    const filteredData = companyData.filter((item) =>
         item["companyName"].toLowerCase().includes(searchQuery.toLowerCase())
     );
 
@@ -101,7 +136,7 @@ const CompanyManagement = () => {
 
     const handleSelectAllChange = (event) => {
         if (event.target.checked) {
-            setSelectedRows(paginatedData.map((item) => item["companyId"]));
+            setSelectedRows(paginatedData.map((item) => item["pk_CompanyCode"]));
         } else {
             setSelectedRows([]);
         }
@@ -116,12 +151,12 @@ const CompanyManagement = () => {
     };
 
     const isAllSelected = selectedRows.length > 0 && paginatedData.every((item) =>
-        selectedRows.includes(item["companyId"])
+        selectedRows.includes(item["pk_CompanyCode"])
     );
 
     const handleDownload = () => {
         const dataToExport = selectedRows.length
-            ? filteredData.filter((item) => selectedRows.includes(item["companyId"]))
+            ? filteredData.filter((item) => selectedRows.includes(item["pk_CompanyCode"]))
             : filteredData;
         const worksheet = XLSX.utils.json_to_sheet(dataToExport);
         const workbook = XLSX.utils.book_new();
@@ -145,6 +180,7 @@ const CompanyManagement = () => {
         debugger
         event.stopPropagation();
         const rect = event.target.getBoundingClientRect();
+        setSelectedCompanyData(item);
         setAlertBox({
             visible: true,
             x: rect.left - 100,
@@ -161,7 +197,7 @@ const CompanyManagement = () => {
     return (
         <div>
             {showAddMaterial && <AddCompany value={showAddMaterial} handleOpenAddCompany={handleOpenAddCompany} />}
-            {showEditMaterial && <EditCompany value={showEditMaterial} selectedrow={alertBox.data} handleOpenEditCompany={handleOpenEditCompany} />}
+            {showEditMaterial && <EditCompany value={showEditMaterial} selectedrow={alertBox.data} selectedcompanyData={selectedcompanyData} handleOpenEditCompany={handleOpenEditCompany} />}
             <Navbar breadcrumbs={breadcrumbData} />
             <div className="outersection-container">
                 <span className="main-title">Company Management</span>
@@ -201,9 +237,9 @@ const CompanyManagement = () => {
                                 onChange={handleSelectAllChange}
                             />
                         </div>
-                        <div className="table-header text-left w-[20%]" onClick={() => handleSort("companyId")}>
+                        <div className="table-header text-left w-[20%]" onClick={() => handleSort("pk_CompanyCode")}>
                             Company ID
-                            {sortConfig.key === "companyId" && (
+                            {sortConfig.key === "pk_CompanyCode" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
@@ -213,15 +249,15 @@ const CompanyManagement = () => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[25%]" onClick={() => handleSort("domain")}>
+                        <div className="table-header text-left w-[25%]" onClick={() => handleSort("domainName")}>
                             Company Domain
-                            {sortConfig.key === "domain" && (
+                            {sortConfig.key === "domainName" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[20%]" onClick={() => handleSort("status")}>
+                        <div className="table-header text-left w-[20%]" onClick={() => handleSort("companyStatus")}>
                             Status
-                            {sortConfig.key === "status" && (
+                            {sortConfig.key === "companyStatus" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
@@ -234,15 +270,22 @@ const CompanyManagement = () => {
                                 <input
                                     type="checkbox"
                                     className="table-checkbox"
-                                    checked={selectedRows.includes(item["companyId"])}
-                                    onChange={() => handleCheckboxChange(item["companyId"])}
+                                    checked={selectedRows.includes(item["pk_CompanyCode"])}
+                                    onChange={() => handleCheckboxChange(item["pk_CompanyCode"])}
                                 />
                             </div>
-                            <div className="table-data text-hyper text-left w-[20%]" onClick={() => handleMaterialClick(item["companyId"], item["companyName"])}>{item["companyId"]}</div>
+                            <div
+                                className={`table-data text-hyper text-left w-[20%] ${item["companyStatus"] === false ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                                onClick={() => item["companyStatus"] !== false && handleMaterialClick(item["pk_CompanyCode"], item["companyName"])}
+                            >
+                                {item["pk_CompanyCode"]}
+                            </div>
                             <div className="table-data text-left w-[25%]">{item["companyName"]}</div>
-                            <div className="table-data text-left w-[25%]">{item["domain"]}</div>
+                            <div className="table-data text-left w-[25%]">{item["domainName"]}</div>
                             <div className="table-data text-left w-[20%]">
-                                <span className={`${item["status"] === "Available" ? "status-available" : item["status"] === "Not Available" ? "status-not-available" : "status-unknown"}`}>{item["status"]}</span>
+                                <span className={`${item["companyStatus"] === true ? "status-available" : "status-not-available"}`}>
+                                    {item["companyStatus"] === true ? "Active" : "Inactive"}
+                                </span>
                             </div>
                             <div className="table-data text-center w-[5%]"><VerticalDot onClick={(event) => handleVerticalDotClick(event, item)} /></div>
                         </div>
@@ -265,7 +308,7 @@ const CompanyManagement = () => {
                         </button>
                         <button
                             className="dropdown-item"
-                            onClick={() => alert(`Delete ${alertBox.data["companyId"]}`)}
+                            onClick={()=> handleDeleteCompany(alertBox.data["pk_CompanyCode"])}
                         >
                             <span><Delete /></span> Delete
                         </button>

@@ -14,7 +14,7 @@ import { ReactComponent as Edit } from "../../assets/svg/edit.svg";
 import { ReactComponent as Delete } from "../../assets/svg/delete.svg";
 import { useNavigate } from "react-router-dom";
 import AddWarehouse from '../../dialog/usermanagement-dialog/AddWarehouse';
-import EditMaterial from "../../dialog/ciistock-dialog/EditMaterial";
+import EditWarehouse from "../../dialog/usermanagement-dialog/EditWarehouse";
 
 const WarehouseManagement = () => {
     const navigate = useNavigate();
@@ -50,11 +50,11 @@ const WarehouseManagement = () => {
     }, []);
 
 
-    const handleOpenAddMaterial = () => {
+    const handleOpenAddWarehouse = () => {
         setShowAddMaterial(prevState => !prevState);
     };
 
-    const handleOpenEditMaterial = () => {
+    const handleOpenEditWarehouse = () => {
         setShowEditMaterial(prevState => !prevState);
     };
 
@@ -147,6 +147,7 @@ const WarehouseManagement = () => {
     };
 
     const handleVerticalDotClick = (event, item) => {
+        debugger
         event.stopPropagation();
         const rect = event.target.getBoundingClientRect();
         setAlertBox({
@@ -164,8 +165,8 @@ const WarehouseManagement = () => {
 
     return (
         <div>
-            {showAddMaterial && <AddWarehouse value={showAddMaterial} handleOpenAddMaterial={handleOpenAddMaterial} />}
-            {showEditMaterial && <EditMaterial value={showEditMaterial} handleOpenEditMaterial={handleOpenEditMaterial} />}
+            {showAddMaterial && <AddWarehouse value={showAddMaterial} handleOpenAddWarehouse={handleOpenAddWarehouse} />}
+            {showEditMaterial && <EditWarehouse value={showEditMaterial} selectedrow={alertBox.data} handleOpenEditWarehouse={handleOpenEditWarehouse} />}
             <Navbar breadcrumbs={breadcrumbData} />
             <div className="outersection-container">
                 <span className="main-title">{companyName}</span>
@@ -181,7 +182,7 @@ const WarehouseManagement = () => {
                         <button className="outer-firstsection-download" onClick={handleDownload}>
                             <Download /> Download
                         </button>
-                        <button className="outer-firstsection-add" onClick={handleOpenAddMaterial}>
+                        <button className="outer-firstsection-add" onClick={handleOpenAddWarehouse}>
                             <Plus /> Add Warehouse
                         </button>
                     </div>

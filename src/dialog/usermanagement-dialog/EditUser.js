@@ -13,7 +13,7 @@ import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
 
 
-const EditCompany = (props) => {
+const EditUser = (props) => {
   const [open] = useState(props.value);
   const {selectedrow,selectedcompanyData} = props;
   const [showAlert, setShowAlert] = useState(false);
@@ -33,7 +33,7 @@ const EditCompany = (props) => {
   }, [selectedrow]);
 
   const handleClose = () => {
-    props.handleOpenEditCompany();
+    props.handleOpenEditMaterial();
     console.log(formData)
   };
 
@@ -54,8 +54,8 @@ const EditCompany = (props) => {
     postRequest(url,Data)
       .then((res) => {
         if (res.status === 200) {
-          alert("Company Updated Successfully");
-          props.handleOpenEditCompany();
+          alert("User Updated Successfully");
+          props.handleOpenEditMaterial();
         }
       })
       .catch((error) => {
@@ -77,7 +77,7 @@ const EditCompany = (props) => {
     <div>
       {showAlert && <SaveAlert value={showAlert} handleAlert={handleAlert} handleClose={handleClose} />}
 
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose} maxWidth={"xl"}>
         <DialogTitle sx={{ padding: '32px 32px 40px 32px' }}>
           <div className="dialog-title-contianer">
             <div className="dialog-icon">
@@ -85,32 +85,45 @@ const EditCompany = (props) => {
             </div>
             <Closebutton className="cursor" onClick={handleClose} />
           </div>
-          <div className="dialog-title">Update Company</div>
+          <div className="dialog-title">Update User</div>
         </DialogTitle>
         <DialogContent sx={{ padding: '0px 32px 40px 32px' }}>
-          <div className="grid-column-one">
+          <div className="grid-column">
             <Textfield
-              label="Company ID"
-              value={formData.companyId}
-              placeholder="Enter Company ID"
+              label="User ID"
+              value={formData.userId}
+              placeholder="Enter User ID"
               onChange={handleInputChange}
-              name="companyId"
+              name="userId"
             />
             <Textfield
-              label="Company Name"
-              value={formData.companyName}
-              placeholder="Enter Company Name"
+              label="User Name"
+              value={formData.userName}
+              placeholder="Enter User Name"
               onChange={handleInputChange}
-              name="companyName"
+              name="userName"
             />
             <Textfield
-              label="Domain Name"
+              label="Email"
+              value={formData.email}
+              placeholder="Enter Email"
+              onChange={handleInputChange}
+              name="email"
+            />
+            <Textfield
+              label="User Type"
+              value={formData.userType}
+              placeholder="Enter user Type"
+              onChange={handleInputChange}
+              name="userType"
+            />
+             <Textfield
+              label="Access Level"
               value={formData.domainName}
-              placeholder="Enter Domain Name"
+              placeholder="Enter Access Level"
               onChange={handleInputChange}
-              name="domainName"
+              name="accessLevel"
             />
-
           </div>
         </DialogContent>
         <DialogActions sx={{ padding: '0px 32px 32px 32px' }}>
@@ -122,4 +135,4 @@ const EditCompany = (props) => {
   );
 };
 
-export default EditCompany;
+export default EditUser;

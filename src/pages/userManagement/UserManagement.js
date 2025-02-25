@@ -13,8 +13,8 @@ import { ReactComponent as VerticalDot } from "../../assets/svg/vertical-dot.svg
 import { ReactComponent as Edit } from "../../assets/svg/edit.svg";
 import { ReactComponent as Delete } from "../../assets/svg/delete.svg";
 import { useNavigate } from "react-router-dom";
-import Addnonciistock from '../../dialog/ciistock-dialog/Addnonciistock'
-import EditMaterial from "../../dialog/ciistock-dialog/EditMaterial";
+import AddUser from '../../dialog/usermanagement-dialog/AddUser';
+import EditUser from "../../dialog/usermanagement-dialog/EditUser";
 
 const UserManagement = () => {
     const navigate = useNavigate();
@@ -166,8 +166,8 @@ const UserManagement = () => {
 
     return (
         <div>
-            {showAddMaterial && <Addnonciistock value={showAddMaterial} handleOpenAddMaterial={handleOpenAddMaterial} />}
-            {showEditMaterial && <EditMaterial value={showEditMaterial} handleOpenEditMaterial={handleOpenEditMaterial} />}
+            {showAddMaterial && <AddUser value={showAddMaterial} handleOpenAddMaterial={handleOpenAddMaterial} />}
+            {showEditMaterial && <EditUser value={showEditMaterial} handleOpenEditMaterial={handleOpenEditMaterial} />}
             <Navbar breadcrumbs={breadcrumbData} />
             <div className="outersection-container">
                 <span className="main-title">{WarehouseName}</span>
@@ -184,7 +184,7 @@ const UserManagement = () => {
                             <Download /> Download
                         </button>
                         <button className="outer-firstsection-add" onClick={handleOpenAddMaterial}>
-                            <Plus /> Add Warehouse
+                            <Plus /> Add User
                         </button>
                     </div>
                 </div>
@@ -208,19 +208,31 @@ const UserManagement = () => {
                             />
                         </div>
                         <div className="table-header text-left w-[20%]" onClick={() => handleSort("WarehouseID")}>
-                            Warehouse ID
+                            User ID
                             {sortConfig.key === "WarehouseID" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
                         <div className="table-header text-left w-[25%]" onClick={() => handleSort("WarehouseName")}>
-                            Warehouse Name
+                            User Name
                             {sortConfig.key === "WarehouseName" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
                         <div className="table-header text-left w-[25%]" onClick={() => handleSort("Location")}>
-                            Location
+                            Email
+                            {sortConfig.key === "Location" && (
+                                sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
+                            )}
+                        </div>
+                        <div className="table-header text-left w-[25%]" onClick={() => handleSort("Location")}>
+                            User Type
+                            {sortConfig.key === "Location" && (
+                                sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
+                            )}
+                        </div>
+                        <div className="table-header text-left w-[25%]" onClick={() => handleSort("Location")}>
+                            Access Level
                             {sortConfig.key === "Location" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
@@ -245,6 +257,8 @@ const UserManagement = () => {
                                 />
                             </div>
                             <div className="table-data text-hyper text-left w-[20%]" onClick={() => handleMaterialClick(item["WarehouseID"])}>{item["WarehouseID"]}</div>
+                            <div className="table-data text-left w-[25%]">{item["WarehouseName"]}</div>
+                            <div className="table-data text-left w-[25%]">{item["WarehouseName"]}</div>
                             <div className="table-data text-left w-[25%]">{item["WarehouseName"]}</div>
                             <div className="table-data text-left w-[25%]">{item["Location"]}</div>
                             <div className="table-data text-left w-[20%]">

@@ -13,9 +13,9 @@ import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
 
 
-const EditCompany = (props) => {
+const EditWarehouse = (props) => {
   const [open] = useState(props.value);
-  const {selectedrow,selectedcompanyData} = props;
+  const {selectedrow} = props;
   const [showAlert, setShowAlert] = useState(false);
   const [formData, setFormData] = useState({});
 
@@ -24,16 +24,15 @@ const EditCompany = (props) => {
     debugger
     if (selectedrow) {
       setFormData({
-        "ExistCompanyId": selectedrow.pk_CompanyCode || "",
-        "companyId" : selectedrow.pk_CompanyCode || "",
-        "companyName": selectedrow.companyName || "",
-        "domainName": selectedrow.domainName || "",
+        "warehouseId" : selectedrow.WarehouseID || "",
+        "warehouseName": selectedrow.WarehouseName || "",
+        "location": selectedrow.Location || "",
       });
     }
   }, [selectedrow]);
 
   const handleClose = () => {
-    props.handleOpenEditCompany();
+    props.handleOpenEditWarehouse();
     console.log(formData)
   };
 
@@ -42,25 +41,17 @@ const EditCompany = (props) => {
   }
 
   const handleUpdate = () => {
-    debugger
-    let Data = {};
-     Data = {...Data,
-        ExistCompanyId: selectedcompanyData.pk_CompanyCode,
-        CompanyId: formData.companyId,
-        CompanyName: formData.companyName,
-        DomainName: formData.domainName
-     }
-    const url = `UserManagement/UpdateCompanyUserManagement`;
-    postRequest(url,Data)
-      .then((res) => {
-        if (res.status === 200) {
-          alert("Company Updated Successfully");
-          props.handleOpenEditCompany();
-        }
-      })
-      .catch((error) => {
-        console.error("API Error:", error);
-      });
+    // const url = `SmInboundStockCiis/update/${formData.ExistingNumber}/${formData.MaterialNumber}/${formData.MaterialDescription}`;
+    // postRequest(url)
+    //   .then((res) => {
+    //     if (res.status === 200) {
+    //       alert("Material Updated Successfully");
+    //       props.handleOpenEditCompany();
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error("API Error:", error);
+    //   });
   }
 
 
@@ -85,30 +76,30 @@ const EditCompany = (props) => {
             </div>
             <Closebutton className="cursor" onClick={handleClose} />
           </div>
-          <div className="dialog-title">Update Company</div>
+          <div className="dialog-title">Update Warehouse</div>
         </DialogTitle>
         <DialogContent sx={{ padding: '0px 32px 40px 32px' }}>
           <div className="grid-column-one">
             <Textfield
-              label="Company ID"
-              value={formData.companyId}
-              placeholder="Enter Company ID"
+              label="Warehouse ID"
+              value={formData.warehouseId}
+              placeholder="Enter Warehouse ID"
               onChange={handleInputChange}
-              name="companyId"
+              name="warehouseId"
             />
             <Textfield
-              label="Company Name"
-              value={formData.companyName}
-              placeholder="Enter Company Name"
+              label="Warehouse Name"
+              value={formData.warehouseName}
+              placeholder="Enter Warehouse Name"
               onChange={handleInputChange}
-              name="companyName"
+              name="warehouseName"
             />
             <Textfield
-              label="Domain Name"
-              value={formData.domainName}
-              placeholder="Enter Domain Name"
+              label="Location"
+              value={formData.location}
+              placeholder="Enter Location"
               onChange={handleInputChange}
-              name="domainName"
+              name="location"
             />
 
           </div>
@@ -122,4 +113,4 @@ const EditCompany = (props) => {
   );
 };
 
-export default EditCompany;
+export default EditWarehouse;
