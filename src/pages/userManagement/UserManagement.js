@@ -12,6 +12,7 @@ import { ReactComponent as DownArrow } from "../../assets/svg/down-arrow.svg";
 import { ReactComponent as VerticalDot } from "../../assets/svg/vertical-dot.svg";
 import { ReactComponent as Edit } from "../../assets/svg/edit.svg";
 import { ReactComponent as Delete } from "../../assets/svg/delete.svg";
+import { getRequest, postRequest } from "../../services/ApiService";
 import { useNavigate } from "react-router-dom";
 import AddUser from '../../dialog/usermanagement-dialog/AddUser';
 import EditUser from "../../dialog/usermanagement-dialog/EditUser";
@@ -28,8 +29,10 @@ const UserManagement = () => {
         { label: `${WarehouseName}`, path: "" },
     ];
     const [currentPage, setCurrentPage] = useState(1);
+    const [userData, setUserData] = useState([]);
     const rowsPerPage = 10;
     const [showAddMaterial, setShowAddMaterial] = useState(false);
+    const [selectedUserData, setSelectedUserData] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedRows, setSelectedRows] = useState([]);
     const [sortConfig, setSortConfig] = useState({
@@ -40,6 +43,7 @@ const UserManagement = () => {
     const [showEditMaterial, setShowEditMaterial] = useState(false);
 
     useEffect(() => {
+        fetchuserDetails();
         const handleClickOutside = (event) => {
             if (!event.target.closest(".alert-box")) {
                 handleCloseAlert();
@@ -52,18 +56,37 @@ const UserManagement = () => {
     }, []);
 
 
-    const handleOpenAddMaterial = () => {
+    const handleOpenAddUser = () => {
+        if(showAddMaterial){
+            fetchuserDetails();
+            }
         setShowAddMaterial(prevState => !prevState);
     };
 
-    const handleOpenEditMaterial = () => {
+    const handleOpenEditUser = () => {
+        if(showEditMaterial){
+            fetchuserDetails();
+        }
         setShowEditMaterial(prevState => !prevState);
     };
 
 
-    const filteredData = Warehouse_data.filter((item) =>
-        item["WarehouseName"].toLowerCase().includes(searchQuery.toLowerCase())
+    const filteredData = userData.filter((item) =>
+        item["userName"].toLowerCase().includes(searchQuery.toLowerCase())
     );
+
+    const handleDeleteUser = (userId) => {
+                    const url = `UserManagement/DeleteUser/${userId}`
+                    postRequest(url)
+                      .then((res) => {
+                          if (res.status === 200) {
+                            fetchuserDetails();
+                          }
+                      })
+                      .catch((error) => {
+                          console.error("API Error:", error);
+                      });
+    }
 
     const isValidDate = (value) => {
         const date = new Date(value);
@@ -96,6 +119,19 @@ const UserManagement = () => {
         currentPage * rowsPerPage
     );
 
+    const fetchuserDetails = () => {
+                    const url = `UserManagement/GetUserList/${companyId}`
+                    getRequest(url)
+                        .then((res) => {
+                            if (res.status === 200) {
+                                setUserData(res.data);
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("API Error:", error);
+                        });
+    }
+
     const handleInputChange = (value) => {
         setSearchQuery(value);
         setCurrentPage(1);
@@ -108,7 +144,7 @@ const UserManagement = () => {
 
     const handleSelectAllChange = (event) => {
         if (event.target.checked) {
-            setSelectedRows(paginatedData.map((item) => item["WarehouseID"]));
+            setSelectedRows(paginatedData.map((item) => item["userCode"]));
         } else {
             setSelectedRows([]);
         }
@@ -123,12 +159,12 @@ const UserManagement = () => {
     };
 
     const isAllSelected = selectedRows.length > 0 && paginatedData.every((item) =>
-        selectedRows.includes(item["WarehouseID"])
+        selectedRows.includes(item["userCode"])
     );
 
     const handleDownload = () => {
         const dataToExport = selectedRows.length
-            ? filteredData.filter((item) => selectedRows.includes(item["WarehouseID"]))
+            ? filteredData.filter((item) => selectedRows.includes(item["userCode"]))
             : filteredData;
         const worksheet = XLSX.utils.json_to_sheet(dataToExport);
         const workbook = XLSX.utils.book_new();
@@ -149,8 +185,10 @@ const UserManagement = () => {
     };
 
     const handleVerticalDotClick = (event, item) => {
+        debugger
         event.stopPropagation();
         const rect = event.target.getBoundingClientRect();
+        setSelectedUserData(item);
         setAlertBox({
             visible: true,
             x: rect.left - 100,
@@ -166,8 +204,8 @@ const UserManagement = () => {
 
     return (
         <div>
-            {showAddMaterial && <AddUser value={showAddMaterial} handleOpenAddMaterial={handleOpenAddMaterial} />}
-            {showEditMaterial && <EditUser value={showEditMaterial} handleOpenEditMaterial={handleOpenEditMaterial} />}
+            {showAddMaterial && <AddUser value={showAddMaterial} handleOpenAddUser={handleOpenAddUser} />}
+            {showEditMaterial && <EditUser value={showEditMaterial} selectedrow={alertBox.data} selectedUserData={selectedUserData} handleOpenEditUser={handleOpenEditUser} />}
             <Navbar breadcrumbs={breadcrumbData} />
             <div className="outersection-container">
                 <span className="main-title">{WarehouseName}</span>
@@ -183,7 +221,7 @@ const UserManagement = () => {
                         <button className="outer-firstsection-download" onClick={handleDownload}>
                             <Download /> Download
                         </button>
-                        <button className="outer-firstsection-add" onClick={handleOpenAddMaterial}>
+                        <button className="outer-firstsection-add" onClick={handleOpenAddUser}>
                             <Plus /> Add User
                         </button>
                     </div>
@@ -207,39 +245,39 @@ const UserManagement = () => {
                                 onChange={handleSelectAllChange}
                             />
                         </div>
-                        <div className="table-header text-left w-[20%]" onClick={() => handleSort("WarehouseID")}>
+                        <div className="table-header text-left w-[20%]" onClick={() => handleSort("userCode")}>
                             User ID
-                            {sortConfig.key === "WarehouseID" && (
+                            {sortConfig.key === "userCode" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[25%]" onClick={() => handleSort("WarehouseName")}>
+                        <div className="table-header text-left w-[25%]" onClick={() => handleSort("userName")}>
                             User Name
-                            {sortConfig.key === "WarehouseName" && (
+                            {sortConfig.key === "userName" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[25%]" onClick={() => handleSort("Location")}>
+                        <div className="table-header text-left w-[25%]" onClick={() => handleSort("email")}>
                             Email
-                            {sortConfig.key === "Location" && (
+                            {sortConfig.key === "email" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[25%]" onClick={() => handleSort("Location")}>
+                        <div className="table-header text-left w-[25%]" onClick={() => handleSort("userType")}>
                             User Type
-                            {sortConfig.key === "Location" && (
+                            {sortConfig.key === "userType" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[25%]" onClick={() => handleSort("Location")}>
+                        <div className="table-header text-left w-[25%]" onClick={() => handleSort("accessLevel")}>
                             Access Level
-                            {sortConfig.key === "Location" && (
+                            {sortConfig.key === "accessLevel" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[20%]" onClick={() => handleSort("Status")}>
+                        <div className="table-header text-left w-[20%]" onClick={() => handleSort("isActive")}>
                             Status
-                            {sortConfig.key === "Status" && (
+                            {sortConfig.key === "isActive" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
@@ -252,17 +290,19 @@ const UserManagement = () => {
                                 <input
                                     type="checkbox"
                                     className="table-checkbox"
-                                    checked={selectedRows.includes(item["WarehouseID"])}
-                                    onChange={() => handleCheckboxChange(item["WarehouseID"])}
+                                    checked={selectedRows.includes(item["userCode"])}
+                                    onChange={() => handleCheckboxChange(item["userCode"])}
                                 />
                             </div>
-                            <div className="table-data text-hyper text-left w-[20%]" onClick={() => handleMaterialClick(item["WarehouseID"])}>{item["WarehouseID"]}</div>
-                            <div className="table-data text-left w-[25%]">{item["WarehouseName"]}</div>
-                            <div className="table-data text-left w-[25%]">{item["WarehouseName"]}</div>
-                            <div className="table-data text-left w-[25%]">{item["WarehouseName"]}</div>
-                            <div className="table-data text-left w-[25%]">{item["Location"]}</div>
+                            <div className="table-data text-hyper text-left w-[20%]" onClick={() => handleMaterialClick(item["userCode"])}>{item["userCode"]}</div>
+                            <div className="table-data text-left w-[25%]">{item["userName"]}</div>
+                            <div className="table-data text-left w-[25%]">{item["email"]}</div>
+                            <div className="table-data text-left w-[25%]">{item["userType"]}</div>
+                            <div className="table-data text-left w-[25%]">{item["accessLevel"]}</div>
                             <div className="table-data text-left w-[20%]">
-                                <span className={`${item["Status"] === "Available" ? "status-available" : item["Status"] === "Not Available" ? "status-not-available" : "status-unknown"}`}>{item["Status"]}</span>
+                                <span className={`${item["isActive"] === true ? "status-available" : item["isActive"] === false ? "status-not-available" : "status-reset"}`}>
+                                    {item["isActive"] === true ? "Active" : item["isActive"] === false ? "Inactive" : "Need to reset password"}
+                                </span>
                             </div>
                             <div className="table-data text-center w-[5%]"><VerticalDot onClick={(event) => handleVerticalDotClick(event, item)} /></div>
                         </div>
@@ -285,7 +325,7 @@ const UserManagement = () => {
                         </button>
                         <button
                             className="dropdown-item"
-                            onClick={() => alert(`Delete ${alertBox.data["WarehouseID"]}`)}
+                            onClick={() => handleDeleteUser(alertBox.data["userCode"])}
                         >
                             <span><Delete /></span> Delete
                         </button>

@@ -5,45 +5,58 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
+import { useLocation } from "react-router-dom";
 import { ReactComponent as Packageplus } from "../../assets/svg/packageplus.svg";
 import { ReactComponent as Closebutton } from "../../assets/svg/closebutton.svg";
 import Textfield from "../../utils/Textfield";
+import DropdownField from "../../utils/DropDown";
 import Description from "../../utils/Description";
 import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
+import { Password } from "@mui/icons-material";
 
 
 const AddUser = (props) => {
+  const location = useLocation();
+  const WarehouseId = location.pathname.split('/').pop();
   const [open] = useState(props.value);
   const [showAlert, setShowAlert] = useState(false);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    userType: "",
+    accessLevel: "",
+    password: "Natoasset@123"
+  });
 
 
   const handleAddUser = () => {
     debugger
           let Data = {};
           Data = { ...Data,
-            CompanyId :formData.companyId,
-            CompanyName :formData.companyName,
-            DomainName :formData.domainName
+            UserCode :parseInt(formData.userId),
+            UserName :formData.userName,
+            Email :formData.email,
+            UserType :formData.userType,
+            accessLevel: formData.accessLevel,
+            Password: formData.password,
+            TenentCode: WarehouseId
           }
-          const url = `UserManagement/AddCompanyUserManagement`;
+          const url = `UserManagement/AddUser`;
 
           postRequest(url,Data)
               .then((res) => {
                   if (res.status === 200) {
-                      alert("Company Added Successfully");
-                      props.handleOpenAddMaterial();
+                      alert("User Added Successfully");
+                      props.handleOpenAddUser();
                   }
               })
               .catch((error) => {
-                  alert("Entered Company ID Already Exists");
+                  alert("Entered User ID Already Exists");
                   
               });
       }
 
   const handleClose = () => {
-    props.handleOpenAddMaterial();
+    props.handleOpenAddUser();
     console.log(formData)
   };
 
@@ -57,6 +70,16 @@ const AddUser = (props) => {
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
+      accessLevel:
+        name === "userType"
+          ? value === "Admin"
+            ? "Admin role"
+            : value === "Viewer"
+            ? "Read-only access"
+            : value === "Contributor"
+            ? "Read and write access"
+            : ""
+          : prevData.accessLevel,
     }));
   };
 
@@ -94,16 +117,27 @@ const AddUser = (props) => {
                 rows={4}
                 onChange={handleInputChange}
               />
-               <Textfield
+               <DropdownField
                 label="User Type"
                 name="userType"
-                placeholder="Enter User Type"
+                value={formData.userType}
+                placeholder="Select User Type"
                 onChange={handleInputChange}
+                options={["Select User Type","Admin", "Viewer", "Contributor"]}
               />
               <Textfield
                 label="Access Level"
                 name="accessLevel"
                 placeholder="Enter Access Level"
+                value={formData.accessLevel}
+                onChange={handleInputChange}
+                disabled
+              />
+              <Textfield
+                label="Password"
+                name="password"
+                placeholder="Enter Password"
+                value={formData.password}
                 onChange={handleInputChange}
               />
             {/* </div> */}

@@ -13,6 +13,7 @@ import { ReactComponent as VerticalDot } from "../../assets/svg/vertical-dot.svg
 import { ReactComponent as Edit } from "../../assets/svg/edit.svg";
 import { ReactComponent as Delete } from "../../assets/svg/delete.svg";
 import { useNavigate } from "react-router-dom";
+import { getRequest, postRequest } from "../../services/ApiService";
 import AddWarehouse from '../../dialog/usermanagement-dialog/AddWarehouse';
 import EditWarehouse from "../../dialog/usermanagement-dialog/EditWarehouse";
 
@@ -26,6 +27,8 @@ const WarehouseManagement = () => {
         { label: `${companyName}`, path: "" },
     ];
     const [currentPage, setCurrentPage] = useState(1);
+    const [warehouseData, setWarehouseData] = useState([]);
+    const [selectedWarehouseData, setSelectedWarehouseData] = useState([]);
     const rowsPerPage = 10;
     const [showAddMaterial, setShowAddMaterial] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
@@ -38,6 +41,7 @@ const WarehouseManagement = () => {
     const [showEditMaterial, setShowEditMaterial] = useState(false);
 
     useEffect(() => {
+        fetchWarehouseDetails();
         const handleClickOutside = (event) => {
             if (!event.target.closest(".alert-box")) { 
                 handleCloseAlert();
@@ -49,19 +53,50 @@ const WarehouseManagement = () => {
         };
     }, []);
 
+        const fetchWarehouseDetails = () => {
+                const url = `UserManagement/GetTenetList/${companyId}`
+                getRequest(url)
+                    .then((res) => {
+                        if (res.status === 200) {
+                            setWarehouseData(res.data);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("API Error:", error);
+                    });
+        }
 
     const handleOpenAddWarehouse = () => {
+        if(showAddMaterial){
+            fetchWarehouseDetails();
+            }
         setShowAddMaterial(prevState => !prevState);
     };
 
     const handleOpenEditWarehouse = () => {
+        if(showEditMaterial){
+            fetchWarehouseDetails();
+            }
         setShowEditMaterial(prevState => !prevState);
     };
 
 
-    const filteredData = Warehouse_data.filter((item) =>
-        item["WarehouseName"].toLowerCase().includes(searchQuery.toLowerCase())
+    const filteredData = warehouseData.filter((item) =>
+        item["tenentName"]?.toLowerCase().includes(searchQuery.toLowerCase())
     );
+
+    const handleDeleteWarehouse = (companyId,tenentId) => {
+                const url = `UserManagement/DeleteTenet/${companyId}/${tenentId}`
+                postRequest(url)
+                  .then((res) => {
+                      if (res.status === 200) {
+                        fetchWarehouseDetails();
+                      }
+                  })
+                  .catch((error) => {
+                      console.error("API Error:", error);
+                  });
+    }
 
     const isValidDate = (value) => {
         const date = new Date(value);
@@ -106,7 +141,7 @@ const WarehouseManagement = () => {
 
     const handleSelectAllChange = (event) => {
         if (event.target.checked) {
-            setSelectedRows(paginatedData.map((item) => item["WarehouseID"]));
+            setSelectedRows(paginatedData.map((item) => item["tenentCode"]));
         } else {
             setSelectedRows([]);
         }
@@ -121,12 +156,12 @@ const WarehouseManagement = () => {
     };
 
     const isAllSelected = selectedRows.length > 0 && paginatedData.every((item) =>
-        selectedRows.includes(item["WarehouseID"])
+        selectedRows.includes(item["tenentCode"])
     );
 
     const handleDownload = () => {
         const dataToExport = selectedRows.length
-            ? filteredData.filter((item) => selectedRows.includes(item["WarehouseID"]))
+            ? filteredData.filter((item) => selectedRows.includes(item["tenentCode"]))
             : filteredData;
         const worksheet = XLSX.utils.json_to_sheet(dataToExport);
         const workbook = XLSX.utils.book_new();
@@ -150,6 +185,7 @@ const WarehouseManagement = () => {
         debugger
         event.stopPropagation();
         const rect = event.target.getBoundingClientRect();
+        setSelectedWarehouseData(item);
         setAlertBox({
             visible: true,
             x: rect.left - 100,
@@ -166,7 +202,7 @@ const WarehouseManagement = () => {
     return (
         <div>
             {showAddMaterial && <AddWarehouse value={showAddMaterial} handleOpenAddWarehouse={handleOpenAddWarehouse} />}
-            {showEditMaterial && <EditWarehouse value={showEditMaterial} selectedrow={alertBox.data} handleOpenEditWarehouse={handleOpenEditWarehouse} />}
+            {showEditMaterial && <EditWarehouse value={showEditMaterial} selectedrow={alertBox.data} selectedWarehouseData={selectedWarehouseData} handleOpenEditWarehouse={handleOpenEditWarehouse} />}
             <Navbar breadcrumbs={breadcrumbData} />
             <div className="outersection-container">
                 <span className="main-title">{companyName}</span>
@@ -206,27 +242,27 @@ const WarehouseManagement = () => {
                                 onChange={handleSelectAllChange}
                             />
                         </div>
-                        <div className="table-header text-left w-[20%]" onClick={() => handleSort("WarehouseID")}>
+                        <div className="table-header text-left w-[20%]" onClick={() => handleSort("tenentCode")}>
                             Warehouse ID
-                            {sortConfig.key === "WarehouseID" && (
+                            {sortConfig.key === "tenentCode" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[25%]" onClick={() => handleSort("WarehouseName")}>
+                        <div className="table-header text-left w-[25%]" onClick={() => handleSort("tenentName")}>
                             Warehouse Name
-                            {sortConfig.key === "WarehouseName" && (
+                            {sortConfig.key === "tenentName" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[25%]" onClick={() => handleSort("Location")}>
+                        <div className="table-header text-left w-[25%]" onClick={() => handleSort("tenentLocation")}>
                             Location
-                            {sortConfig.key === "Location" && (
+                            {sortConfig.key === "tenentLocation" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[20%]" onClick={() => handleSort("Status")}>
+                        <div className="table-header text-left w-[20%]" onClick={() => handleSort("tenentStatus")}>
                             Status
-                            {sortConfig.key === "Status" && (
+                            {sortConfig.key === "tenentStatus" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
@@ -239,15 +275,17 @@ const WarehouseManagement = () => {
                                 <input
                                     type="checkbox"
                                     className="table-checkbox"
-                                    checked={selectedRows.includes(item["WarehouseID"])}
-                                    onChange={() => handleCheckboxChange(item["WarehouseID"])}
+                                    checked={selectedRows.includes(item["tenentCode"])}
+                                    onChange={() => handleCheckboxChange(item["tenentCode"])}
                                 />
                             </div>
-                            <div className="table-data text-hyper text-left w-[20%]" onClick={() => handleMaterialClick(item["WarehouseID"], item["WarehouseName"])}>{item["WarehouseID"]}</div>
-                            <div className="table-data text-left w-[25%]">{item["WarehouseName"]}</div>
-                            <div className="table-data text-left w-[25%]">{item["Location"]}</div>
+                            <div className="table-data text-hyper text-left w-[20%]" onClick={() => handleMaterialClick(item["tenentCode"], item["tenentName"])}>{item["tenentCode"]}</div>
+                            <div className="table-data text-left w-[25%]">{item["tenentName"]}</div>
+                            <div className="table-data text-left w-[25%]">{item["tenentLocation"]}</div>
                             <div className="table-data text-left w-[20%]">
-                                <span className={`${item["Status"] === "Available" ? "status-available" : item["Status"] === "Not Available" ? "status-not-available" : "status-unknown"}`}>{item["Status"]}</span>
+                                <span className={`${item["tenentStatus"] === true ? "status-available" : "status-not-available"}`}>
+                                    {item["tenentStatus"] === true ? "Active" : "Inactive"}
+                                </span>
                             </div>
                             <div className="table-data text-center w-[5%]"><VerticalDot onClick={(event) => handleVerticalDotClick(event, item)} /></div>
                         </div>
@@ -270,7 +308,7 @@ const WarehouseManagement = () => {
                         </button>
                         <button
                             className="dropdown-item"
-                            onClick={() => alert(`Delete ${alertBox.data["WarehouseID"]}`)}
+                            onClick={() => handleDeleteWarehouse(alertBox.data["companyCode"],alertBox.data["tenentCode"])}
                         >
                             <span><Delete /></span> Delete
                         </button>

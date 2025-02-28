@@ -9,13 +9,16 @@ import { ReactComponent as Packageplus } from "../../assets/svg/packageplus.svg"
 import { ReactComponent as Closebutton } from "../../assets/svg/closebutton.svg";
 import Textfield from "../../utils/Textfield";
 import Description from "../../utils/Description";
+import { useLocation } from "react-router-dom";
 import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
 
 
 const EditWarehouse = (props) => {
+  const location = useLocation();
   const [open] = useState(props.value);
-  const {selectedrow} = props;
+  const companyId = location.pathname.split('/').pop();
+  const {selectedrow, selectedWarehouseData} = props;
   const [showAlert, setShowAlert] = useState(false);
   const [formData, setFormData] = useState({});
 
@@ -24,9 +27,9 @@ const EditWarehouse = (props) => {
     debugger
     if (selectedrow) {
       setFormData({
-        "warehouseId" : selectedrow.WarehouseID || "",
-        "warehouseName": selectedrow.WarehouseName || "",
-        "location": selectedrow.Location || "",
+        "warehouseId" : selectedrow.tenentCode || "",
+        "warehouseName": selectedrow.tenentName || "",
+        "location": selectedrow.tenentLocation || "",
       });
     }
   }, [selectedrow]);
@@ -41,17 +44,25 @@ const EditWarehouse = (props) => {
   }
 
   const handleUpdate = () => {
-    // const url = `SmInboundStockCiis/update/${formData.ExistingNumber}/${formData.MaterialNumber}/${formData.MaterialDescription}`;
-    // postRequest(url)
-    //   .then((res) => {
-    //     if (res.status === 200) {
-    //       alert("Material Updated Successfully");
-    //       props.handleOpenEditCompany();
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error("API Error:", error);
-    //   });
+    let Data = {};
+     Data = {...Data,
+        ExistTenentCode: selectedWarehouseData.tenentCode,
+        CompanyCode: selectedWarehouseData.companyCode,
+        TenentCode: formData.warehouseId,
+        TenentName: formData.warehouseName,
+        TenentLocation: formData.location
+     }
+    const url = `UserManagement/UpdateTenet`;
+    postRequest(url,Data)
+      .then((res) => {
+        if (res.status === 200) {
+          alert("Warehouse Updated Successfully");
+          props.handleOpenEditWarehouse();
+        }
+      })
+      .catch((error) => {
+        console.error("API Error:", error);
+      });
   }
 
 

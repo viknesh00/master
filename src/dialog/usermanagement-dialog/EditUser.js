@@ -8,6 +8,7 @@ import {
 import { ReactComponent as Packageplus } from "../../assets/svg/packageplus.svg";
 import { ReactComponent as Closebutton } from "../../assets/svg/closebutton.svg";
 import Textfield from "../../utils/Textfield";
+import DropdownField from "../../utils/DropDown";
 import Description from "../../utils/Description";
 import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
@@ -15,7 +16,7 @@ import { postRequest } from "../../services/ApiService";
 
 const EditUser = (props) => {
   const [open] = useState(props.value);
-  const {selectedrow,selectedcompanyData} = props;
+  const {selectedrow,selectedUserData} = props;
   const [showAlert, setShowAlert] = useState(false);
   const [formData, setFormData] = useState({});
 
@@ -24,16 +25,20 @@ const EditUser = (props) => {
     debugger
     if (selectedrow) {
       setFormData({
-        "ExistCompanyId": selectedrow.pk_CompanyCode || "",
-        "companyId" : selectedrow.pk_CompanyCode || "",
-        "companyName": selectedrow.companyName || "",
-        "domainName": selectedrow.domainName || "",
+        "ExistUserId": selectedrow.userCode || "",
+        "userId" : selectedrow.userCode || "",
+        "userName": selectedrow.userName || "",
+        "email": selectedrow.email || "",
+        "userType": selectedrow.userType && ["Admin", "Viewer", "Contributor"].includes(selectedrow.userType) 
+        ? selectedrow.userType : "",
+        "accessLevel": selectedrow.accessLevel || "",
+        "status": selectedrow.isActive === true ? "Active" : selectedrow.isActive === false ? "Inactive" : ""
       });
     }
   }, [selectedrow]);
 
   const handleClose = () => {
-    props.handleOpenEditMaterial();
+    props.handleOpenEditUser();
     console.log(formData)
   };
 
@@ -45,17 +50,18 @@ const EditUser = (props) => {
     debugger
     let Data = {};
      Data = {...Data,
-        ExistCompanyId: selectedcompanyData.pk_CompanyCode,
-        CompanyId: formData.companyId,
-        CompanyName: formData.companyName,
-        DomainName: formData.domainName
+        UserCode: formData.userId,
+        UserName: formData.userName,
+        UserType: formData.userType,
+        AccessLevel: formData.accessLevel,
+        UserStatus: formData.isActive
      }
-    const url = `UserManagement/UpdateCompanyUserManagement`;
+    const url = `UserManagement/UpdateUser`;
     postRequest(url,Data)
       .then((res) => {
         if (res.status === 200) {
           alert("User Updated Successfully");
-          props.handleOpenEditMaterial();
+          props.handleOpenEditUser();
         }
       })
       .catch((error) => {
@@ -67,8 +73,18 @@ const EditUser = (props) => {
   const handleInputChange = (name, value) => {
     
     setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
+      ...prevData,
+      [name]: value,
+      accessLevel:
+        name === "userType"
+          ? value === "Admin"
+            ? "Admin role"
+            : value === "Viewer"
+            ? "Read-only access"
+            : value === "Contributor"
+            ? "Read and write access"
+            : ""
+          : prevData.accessLevel,
     }));
 };
   
@@ -95,6 +111,15 @@ const EditUser = (props) => {
               placeholder="Enter User ID"
               onChange={handleInputChange}
               name="userId"
+              readOnly = {true}
+            />
+            <Textfield
+              label="Email"
+              value={formData.email}
+              placeholder="Enter Email"
+              onChange={handleInputChange}
+              name="email"
+              readOnly = {true}
             />
             <Textfield
               label="User Name"
@@ -103,26 +128,30 @@ const EditUser = (props) => {
               onChange={handleInputChange}
               name="userName"
             />
-            <Textfield
-              label="Email"
-              value={formData.email}
-              placeholder="Enter Email"
-              onChange={handleInputChange}
-              name="email"
+            <DropdownField
+                label="User Type"
+                name="userType"
+                value={formData.userType}
+                placeholder="Select User Type"
+                onChange={handleInputChange}
+                options={["Admin", "Viewer", "Contributor"]}
             />
             <Textfield
-              label="User Type"
-              value={formData.userType}
-              placeholder="Enter user Type"
-              onChange={handleInputChange}
-              name="userType"
+                label="Access Level"
+                name="accessLevel"
+                placeholder="Enter Access Level"
+                value={formData.accessLevel}
+                onChange={handleInputChange}
+                disabled
             />
-             <Textfield
-              label="Access Level"
-              value={formData.domainName}
-              placeholder="Enter Access Level"
-              onChange={handleInputChange}
-              name="accessLevel"
+            <DropdownField
+                label="Status"
+                name="status"
+                value={["Active", "Inactive"].includes(formData.status) ? formData.status : ""}
+                placeholder="Select User Status"
+                onChange={handleInputChange}
+                options={["Active", "Inactive"]}
+                disabled={formData.status === null}
             />
           </div>
         </DialogContent>

@@ -14,6 +14,7 @@ import { postRequest } from "../../services/ApiService";
 
 
 const AddCompany = (props) => {
+  const [companyData] = props;
   const [open] = useState(props.value);
   const [showAlert, setShowAlert] = useState(false);
   const [formData, setFormData] = useState({});

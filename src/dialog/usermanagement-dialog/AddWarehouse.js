@@ -10,29 +10,39 @@ import { ReactComponent as Closebutton } from "../../assets/svg/closebutton.svg"
 import Textfield from "../../utils/Textfield";
 import Description from "../../utils/Description";
 import SaveAlert from "../SaveAlert";
+import { useLocation } from "react-router-dom";
 import { postRequest } from "../../services/ApiService";
 
 
 const AddWarehouse = (props) => {
+  const location = useLocation();
+  const companyId = location.pathname.split('/').pop();
   const [open] = useState(props.value);
   const [showAlert, setShowAlert] = useState(false);
   const [formData, setFormData] = useState({});
 
 
   const handleAddwarehouse = () => {
-        //   const url = `SmInboundStockNonCiis/NonStockCIIMaterial/${formData.MaterialNumber}/${formData.MaterialDescription}`;
-  
-        //   postRequest(url)
-        //       .then((res) => {
-        //           if (res.status === 200) {
-        //               alert("Material Added Successfully");
-        //               props.handleOpenAddMaterial();
-        //           }
-        //       })
-        //       .catch((error) => {
-        //           alert("Entered Material Number Already Exists");
+          let Data = {};
+          Data = { ...Data,
+            CompanyCode : companyId,
+            TenentCode :formData.warehouseId,
+            TenentName :formData.warehouseName,
+            TenentLocation :formData.location
+          }
+          const url = `UserManagement/AddTenet`;
+
+          postRequest(url,Data)
+              .then((res) => {
+                  if (res.status === 200) {
+                      alert("Warehouse Added Successfully");
+                      props.handleOpenAddWarehouse();
+                  }
+              })
+              .catch((error) => {
+                  alert("Entered Warehouse ID Already Exists");
                   
-        //       });
+              });
       }
 
   const handleClose = () => {
@@ -70,21 +80,21 @@ const AddWarehouse = (props) => {
           <div className="grid-column-one">
             <Textfield
               label="Warehouse ID"
-              name="MaterialNumber"
+              name="warehouseId"
               placeholder="Enter Warehouse ID"
               onChange={handleInputChange}
             />
             {/* <div className="grid-span"> */}
               <Textfield
                 label="Warehouse Name"
-                name="MaterialDescription"
+                name="warehouseName"
                 placeholder="Enter Warehouse Name"
                 rows={4}
                 onChange={handleInputChange}
               />
                <Textfield
                 label="Location"
-                name="MaterialDescription"
+                name="location"
                 placeholder="Enter Location"
                 rows={4}
                 onChange={handleInputChange}
