@@ -14,8 +14,12 @@ import { useNavigate } from "react-router-dom";
 import EditMaterial from "../../dialog/ciistock-dialog/EditMaterial";
 import { getRequest, postRequest } from "../../services/ApiService";
 import Addciistock from "../../dialog/ciistock-dialog/Addciistock";
+import { getCookie } from "../../services/Cookies";
+import { useLocation } from "react-router-dom";
+import { useUser } from "../../UserContext";
 
-const Ciistock = () => {
+const Ciistock = (props) => {
+    const { name } = useUser();
     const navigate = useNavigate();
     const breadcrumbData = [
         { label: "CII Stock", path: "" },
@@ -48,7 +52,7 @@ const Ciistock = () => {
     }, []);
 
     const fetchciistockdata = () => {
-        const url = `SmInboundStockCiis`;
+        const url = `SmInboundStockCiis/GetSmInboundStockCiis/${name}`;
         
         getRequest(url)
           .then((res) => {
@@ -229,7 +233,7 @@ const Ciistock = () => {
                         <button className="outer-firstsection-download" onClick={handleDownload}>
                             <Download /> Download
                         </button>
-                        <button className="outer-firstsection-add" onClick={handleOpenAddMaterial}>
+                        <button className="outer-firstsection-add" onClick={handleOpenAddMaterial} disabled={getCookie("userType") === "Viewer"}>
                             <Plus /> Add Material
                         </button>
                     </div>
@@ -325,7 +329,16 @@ const Ciistock = () => {
                             <div className="table-data text-left w-[15%]">
                                 <span className={`${item["status"] === "Available" ? "status-available" : item["status"] === "Not Available" ? "status-not-available" : "status-unknown"}`}>{item["status"]}</span>
                             </div>
-                            <div className="table-data text-center w-[5%]"><VerticalDot onClick={(event) => handleVerticalDotClick(event, item)} /></div>
+                            <div className="table-data text-center w-[5%]">
+                                <VerticalDot
+                                    onClick={(event) => {
+                                        if (getCookie("userType") !== "Viewer") {
+                                            handleVerticalDotClick(event, item);
+                                        }
+                                    }}
+                                    className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
+                                />
+                            </div>
                         </div>
                     ))}
                 </div>

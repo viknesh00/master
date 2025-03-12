@@ -13,10 +13,11 @@ import Datefield from "../../utils/Datefield";
 import SaveAlert from "../SaveAlert";
 import Progressbar from "../../utils/Progressbar"
 import { postRequest } from "../../services/ApiService";
-
+import { useUser } from "../../UserContext";
 
 const AddStock = (props) => {
     const [open] = useState(props.value);
+    const { name } = useUser();
     const { materialNumber, materialDescription } = props;
     const [showAlert, setShowAlert] = useState(false);
     const [formData, setFormData] = useState({});
@@ -61,7 +62,8 @@ const AddStock = (props) => {
         data.append("Inwarddate", new Date(formData.InwardDate).toISOString() || "");
         data.append("ReceivedBy", formData.ReceivedBy || "");
         data.append("RacKLocation", formData.RackLocation || "");
-        data.append("InwardFrom", formData.InwardFrom || "");
+        data.append("InwardFrom", formData.InwardFrom || "");  
+        data.append("Username", name); 
 
         const url = `SmInboundStockCiis/import`;
 

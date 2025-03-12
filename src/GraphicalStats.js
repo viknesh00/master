@@ -8,6 +8,7 @@ import { ReactComponent as TickButton } from "./assets/svg/tickbutton.svg";
 import { ReactComponent as CloseButton } from "./assets/svg/closebutton.svg";
 import { useState, useEffect } from "react";
 import { getRequest, postRequest } from "./services/ApiService";
+import { useUser } from "./UserContext";
 const data = [
   { month: "Jan", oilStock: 600, nonOilStock: 100 },
   { month: "Feb", oilStock: 620, nonOilStock: 120 },
@@ -29,6 +30,7 @@ const CardContent = ({ children }) => (
     <div className="shadow-md rounded-md border p-4 ml-6 mr-6 mb-6 mt-6">{children}</div>
 );
 const GraphicalStats = () => {
+    const { name } = useUser();
     const [formData, setFormData] = useState({});
     const [filterValue, setFilterValue] = useState({});
     const [fromDate, setFromDate] = useState(null);
@@ -50,7 +52,7 @@ const GraphicalStats = () => {
     };
 
     const fetchDashboardGraphData = async (fromDate, toDate) => {
-        const url = `SmInboundStockNonCiis/DashBoardCharts`;
+        const url = `SmInboundStockNonCiis/DashBoardCharts/${name}`;
     
         try {
             const res = await postRequest(url);

@@ -1038,6 +1038,15 @@ input:focus, textarea:focus {
   cursor: pointer;
 }
 
+button:disabled {
+  /* opacity: 0.5; */
+  cursor: not-allowed;
+}
+span:disabled {
+  /* opacity: 0.5; */
+  cursor: not-allowed;
+}
+
 .div-table {
   display: flex;
   flex-direction: column;

@@ -18,6 +18,7 @@ import CustomSelect from "../../utils/CustomSelect";
 import AddStockInward from "../../dialog/nonciistock-dialog/AddStockInward";
 import UpdateStockInward from "../../dialog/nonciistock-dialog/UpdateStockInward";
 import { getRequest, postRequest } from "../../services/ApiService";
+import { getCookie } from "../../services/Cookies";
 
 const StockInward = () => {
     const location = useLocation();
@@ -229,7 +230,7 @@ const StockInward = () => {
                     <button className="outer-firstsection-download" onClick={handleDownload}>
                         <Download /> Download
                     </button>
-                    <button className="outer-firstsection-add" onClick={handleOpenAddStock}>
+                    <button className="outer-firstsection-add" onClick={handleOpenAddStock} disabled={getCookie("userType") === "Viewer"}>
                         <Plus /> Add Stock
                     </button>
                 </div>
@@ -338,7 +339,17 @@ const StockInward = () => {
                         <div className="table-data text-left w-[12%]">{item["deliveredQuantity"]}</div>
                         <div className="table-data text-left w-[10%]">{item["receivedBy"]}</div>
                         <div className="table-data text-left w-[15%]">{item["rackLocation"]}</div>
-                        <div className="table-data text-center w-[5%]"><VerticalDot onClick={(event) => handleVerticalDotClick(event, item)} /></div>
+                        <div className="table-data text-center w-[5%]">
+                            <VerticalDot
+                                className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
+                                onClick={(event) => {
+                                    if (getCookie("userType") !== "Viewer") {
+                                        handleVerticalDotClick(event, item);
+                                    }
+                                }}
+
+                            />
+                        </div>
                     </div>
                 ))}
             </div>

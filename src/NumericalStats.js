@@ -13,12 +13,15 @@ import { ReactComponent as Packageplus } from "./assets/svg/packageplus.svg";
 import { ReactComponent as TickButton } from "./assets/svg/tickbutton.svg";
 import { ReactComponent as CloseButton } from "./assets/svg/closebutton.svg";
 import { getRequest, postRequest } from "./services/ApiService";
+import { useLocation } from "react-router-dom";
+import { useUser } from "./UserContext";
 
 const CardContent = ({ children }) => (
     <div className="shadow-md rounded-md border p-4 ml-6 mr-6 mb-6 mt-6">{children}</div>
 );
 
 function NumericalStats(){
+     const { name } = useUser();
      const [formData, setFormData] = useState({});
      const [filterValue, setFilterValue] = useState({});
      const [fromDate, setFromDate] = useState(null);
@@ -48,11 +51,12 @@ function NumericalStats(){
     
         
         useEffect(() => {
+            debugger
             fetchDashboarddata();
         },[]);
     
             const fetchDashboarddata = () => {  
-                const url = `SmInboundStockNonCiis/DashBoard`;
+                const url = `SmInboundStockNonCiis/DashBoard/${name}`;
                 
                 postRequest(url)
                   .then((res) => {
@@ -63,28 +67,28 @@ function NumericalStats(){
                         let ciiUsed = res.data.ciiCounts[0].usedstock;
                         let ciiDefective = res.data.ciiCounts[0].defectivestock;
                         setCiiPieData([
-                            { name: "In Hand", value: ciiInhand, color: "#009E4C",totalStock : ciiInhand + ciiUsed + ciiDefective },
-                            { name: "New Stock", value: ciiNewStock, color: "#046C7A",totalStock : ciiInhand + ciiUsed + ciiDefective },
-                            { name: "Used", value: ciiUsed, color: "#F28C00", totalStock : ciiInhand + ciiUsed + ciiDefective },
-                            { name: "Defective", value: ciiDefective, color: "#E60000", totalStock : ciiInhand + ciiUsed + ciiDefective }
+                            { name: "In Hand", value: ciiInhand || 0, color: "#009E4C",totalStock : ciiInhand + ciiUsed + ciiDefective },
+                            { name: "New Stock", value: ciiNewStock || 0, color: "#046C7A",totalStock : ciiInhand + ciiUsed + ciiDefective },
+                            { name: "Used", value: ciiUsed || 0, color: "#F28C00", totalStock : ciiInhand + ciiUsed + ciiDefective },
+                            { name: "Defective", value: ciiDefective || 0, color: "#E60000", totalStock : ciiInhand + ciiUsed + ciiDefective }
                         ]);
                         let nonCiiInhand = res.data.nonCIICounts[0].inhandstock;
                         let nonCiiNewStock = res.data.nonCIICounts[0].newstock;
                         let nonCiiUsed = res.data.nonCIICounts[0].usedstock;
                         let nonCiiDefective = res.data.nonCIICounts[0].defectivestock;
                         setNonCiiPieData([
-                            { name: "In Hand", value: nonCiiInhand, color: "#009E4C", totalStock : nonCiiInhand + nonCiiUsed + nonCiiDefective },
-                            { name: "New Stock", value: nonCiiNewStock, color: "#046C7A",totalStock : nonCiiInhand + nonCiiUsed + nonCiiDefective },
-                            { name: "Used", value: nonCiiUsed, color: "#F28C00", totalStock : nonCiiInhand + nonCiiUsed + nonCiiDefective },
-                            { name: "Defective", value: nonCiiDefective, color: "#E60000", totalStock : nonCiiInhand + nonCiiUsed + nonCiiDefective },
+                            { name: "In Hand", value: nonCiiInhand || 0, color: "#009E4C", totalStock : nonCiiInhand + nonCiiUsed + nonCiiDefective },
+                            { name: "New Stock", value: nonCiiNewStock || 0, color: "#046C7A",totalStock : nonCiiInhand + nonCiiUsed + nonCiiDefective },
+                            { name: "Used", value: nonCiiUsed || 0, color: "#F28C00", totalStock : nonCiiInhand + nonCiiUsed + nonCiiDefective },
+                            { name: "Defective", value: nonCiiDefective || 0, color: "#E60000", totalStock : nonCiiInhand + nonCiiUsed + nonCiiDefective },
                         ])
                         let ciiDeliveredCount = res.data.deliveryReturnCounts[0].ciiDeliveryCount;
                         let ciiReturnCount = res.data.deliveryReturnCounts[0].ciiReturnCount;
                         let nonCiiDeliveredCount = res.data.deliveryReturnCounts[0].nonCIIDeliveryCount;
                         let nonCiiReturnCount = res.data.deliveryReturnCounts[0].nonCIIReturnCount;
                         setStockData([
-                            { title: "CII Stock", delivered: ciiDeliveredCount, returned: ciiReturnCount },
-                            { title: "Non-CII Stock", delivered: nonCiiDeliveredCount, returned: nonCiiReturnCount },
+                            { title: "CII Stock", delivered: ciiDeliveredCount || 0, returned: ciiReturnCount || 0 },
+                            { title: "Non-CII Stock", delivered: nonCiiDeliveredCount || 0, returned: nonCiiReturnCount || 0 },
                         ])
                       }
                   })
@@ -173,7 +177,7 @@ function NumericalStats(){
                                 <Pie
                                     data={pieCiiData}
                                     dataKey="value"
-                                    //innerRadius={50}
+                                    innerRadius={50}
                                     outerRadius={70}
                                     paddingAngle={0}
                                 >
@@ -251,7 +255,7 @@ function NumericalStats(){
                                 <Pie
                                     data={pieNonCiiData}
                                     dataKey="value"
-                                    //innerRadius={50}
+                                    innerRadius={50}
                                     outerRadius={70}
                                     paddingAngle={0}
                                 >

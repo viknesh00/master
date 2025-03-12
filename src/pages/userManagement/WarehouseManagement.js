@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { getRequest, postRequest } from "../../services/ApiService";
 import AddWarehouse from '../../dialog/usermanagement-dialog/AddWarehouse';
 import EditWarehouse from "../../dialog/usermanagement-dialog/EditWarehouse";
+import { getCookie } from "../../services/Cookies";
 
 const WarehouseManagement = () => {
     const navigate = useNavigate();
@@ -218,7 +219,7 @@ const WarehouseManagement = () => {
                         <button className="outer-firstsection-download" onClick={handleDownload}>
                             <Download /> Download
                         </button>
-                        <button className="outer-firstsection-add" onClick={handleOpenAddWarehouse}>
+                        <button className="outer-firstsection-add" onClick={handleOpenAddWarehouse} disabled={getCookie("userType") === "Viewer"}>
                             <Plus /> Add Warehouse
                         </button>
                     </div>
@@ -287,7 +288,17 @@ const WarehouseManagement = () => {
                                     {item["tenentStatus"] === true ? "Active" : "Inactive"}
                                 </span>
                             </div>
-                            <div className="table-data text-center w-[5%]"><VerticalDot onClick={(event) => handleVerticalDotClick(event, item)} /></div>
+                            <div className="table-data text-center w-[5%]">
+                                <VerticalDot
+                                    className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
+                                    onClick={(event) => {
+                                        if (getCookie("userType") !== "Viewer") {
+                                            handleVerticalDotClick(event, item);
+                                        }
+                                    }}
+
+                                />
+                            </div>
                         </div>
                     ))}
                 </div>

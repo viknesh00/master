@@ -4,8 +4,10 @@ import { ReactComponent as Backarrow } from "../assets/svg/back-arrow.svg";
 import { ReactComponent as Right } from "../assets/svg/right.svg";
 import { ReactComponent as StraightLine } from "../assets/svg/straight-line.svg";
 import { ReactComponent as Profile } from "../assets/svg/user-profile.svg";
+import { useUser } from "../UserContext";
 
 const Navbar = ({ breadcrumbs }) => {
+    const { name } = useUser();
     return (
         <div className="navbar">
             <div className="navigation">
@@ -33,7 +35,7 @@ const Navbar = ({ breadcrumbs }) => {
                 <Profile />
                 <div className="flex flex-col">
                     <span className="username">Nato Admin</span>
-                    <span className="useremail">admin@natobotics.com</span>
+                    <span className="useremail">{name}</span>
                 </div>
             </div>
         </div>

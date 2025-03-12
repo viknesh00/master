@@ -16,6 +16,7 @@ import { getRequest, postRequest } from "../../services/ApiService";
 import { useNavigate } from "react-router-dom";
 import AddUser from '../../dialog/usermanagement-dialog/AddUser';
 import EditUser from "../../dialog/usermanagement-dialog/EditUser";
+import { getCookie } from "../../services/Cookies";
 
 const UserManagement = () => {
     const navigate = useNavigate();
@@ -221,7 +222,7 @@ const UserManagement = () => {
                         <button className="outer-firstsection-download" onClick={handleDownload}>
                             <Download /> Download
                         </button>
-                        <button className="outer-firstsection-add" onClick={handleOpenAddUser}>
+                        <button className="outer-firstsection-add" onClick={handleOpenAddUser} disabled={getCookie("userType") === "Viewer"}>
                             <Plus /> Add User
                         </button>
                     </div>
@@ -275,9 +276,9 @@ const UserManagement = () => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[20%]" onClick={() => handleSort("isActive")}>
+                        <div className="table-header text-left w-[20%]" onClick={() => handleSort("userStatus")}>
                             Status
-                            {sortConfig.key === "isActive" && (
+                            {sortConfig.key === "userStatus" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
@@ -294,17 +295,28 @@ const UserManagement = () => {
                                     onChange={() => handleCheckboxChange(item["userCode"])}
                                 />
                             </div>
-                            <div className="table-data text-hyper text-left w-[20%]" onClick={() => handleMaterialClick(item["userCode"])}>{item["userCode"]}</div>
+                            {/* <div className="table-data text-hyper text-left w-[20%]" onClick={() => handleMaterialClick(item["userCode"])}>{item["userCode"]}</div> */}
+                            <div className="table-data text-hyper text-left w-[20%]">{item["userCode"]}</div>
                             <div className="table-data text-left w-[25%]">{item["userName"]}</div>
                             <div className="table-data text-left w-[25%]">{item["email"]}</div>
                             <div className="table-data text-left w-[25%]">{item["userType"]}</div>
                             <div className="table-data text-left w-[25%]">{item["accessLevel"]}</div>
                             <div className="table-data text-left w-[20%]">
-                                <span className={`${item["isActive"] === true ? "status-available" : item["isActive"] === false ? "status-not-available" : "status-reset"}`}>
-                                    {item["isActive"] === true ? "Active" : item["isActive"] === false ? "Inactive" : "Need to reset password"}
+                                <span className={`${item["userStatus"] === true ? "status-available" : item["userStatus"] === false ? "status-not-available" : "status-reset"}`}>
+                                    {item["userStatus"] === true ? "Active" : item["userStatus"] === false ? "Inactive" : "Need to reset password"}
                                 </span>
                             </div>
-                            <div className="table-data text-center w-[5%]"><VerticalDot onClick={(event) => handleVerticalDotClick(event, item)} /></div>
+                            <div className="table-data text-center w-[5%]">
+                                <VerticalDot
+                                    className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
+                                    onClick={(event) => {
+                                        if (getCookie("userType") !== "Viewer") {
+                                            handleVerticalDotClick(event, item);
+                                        }
+                                    }}
+
+                                />
+                            </div>
                         </div>
                     ))}
                 </div>

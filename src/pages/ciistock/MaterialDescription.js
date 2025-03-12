@@ -20,6 +20,7 @@ import UpdateStockInwardDetails from "../../dialog/ciistock-dialog/UpdateStockIn
 import UpdateDeliveryDetails from "../../dialog/ciistock-dialog/UpdateDeliveryDetails";
 import UpdateReturnDetails from "../../dialog/ciistock-dialog/UpdateReturnDetails";
 import { postRequest } from "../../services/ApiService";
+import { getCookie } from "../../services/Cookies";
 
 const MaterialDescription = () => {
     const navigate = useNavigate();
@@ -341,13 +342,20 @@ const MaterialDescription = () => {
                 <div className="header-wrapper">
                     <span className="main-title">{serialNumber}</span>
                     <div className="button-container">
-                        <div className="print-btn" onClick={handledeleteSerialumber}><Delete /></div>
+                        <div className="print-btn">
+                            <Delete onClick={(event,item) => {
+                                if (getCookie("userType") !== "Viewer") {
+                                    handleVerticalDotClick(event, item);
+                                }
+                            }}
+                                className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"} />
+                        </div>
                         <div className="print-btn" onClick={handlepdfDownload}><Download /></div>
 
-                        <button className="outer-firstsection-download" onClick={handleReturnDelivery}>
+                        <button className="outer-firstsection-download" onClick={handleReturnDelivery} disabled={getCookie("userType") === "Viewer"}>
                             <Plus /> Add Return
                         </button>
-                        <button className="outer-firstsection-add" onClick={handleAddDelivery}>
+                        <button className="outer-firstsection-add" onClick={handleAddDelivery} disabled={getCookie("userType") === "Viewer"}>
                             <Plus /> Add Delivery
                         </button>
                     </div>
@@ -360,7 +368,14 @@ const MaterialDescription = () => {
                 <div className="product-details-card">
                     <div className="product-details-header">
                         <span className="product-details-title">Product Details</span>
-                        <Edit className="cursor" onClick={handleProductDetails} />
+                        <Edit
+                            className={`${getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor"}`}
+                            onClick={(event) => {
+                                if (getCookie("userType") !== "Viewer") {
+                                    handleProductDetails();
+                                }
+                            }}
+                        />
                     </div>
 
                     <div class="product-details">
@@ -383,7 +398,14 @@ const MaterialDescription = () => {
                 <div className="product-details-card">
                     <div className="product-details-header">
                         <span className="product-details-title">Inward Details</span>
-                        <Edit className="cursor" onClick={handleInwardDetails} />
+                        <Edit
+                            className={`${getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor"}`}
+                            onClick={(event) => {
+                                if (getCookie("userType") !== "Viewer") {
+                                    handleInwardDetails();
+                                }
+                            }}
+                        />
                     </div>
 
                     <div class="product-details">
@@ -477,7 +499,17 @@ const MaterialDescription = () => {
                             <div className="table-data text-left w-[15%]">{item["receiverName"]}</div>
                             <div className="table-data text-left w-[20%]">{item["targetLocation"]}</div>
                             <div className="table-data text-left w-[20%]">{item["sentby"]}</div>
-                            <div className="table-data text-center w-[10%]"><VerticalDot onClick={(event) => handleVerticalDotClick(event, item, "delivery")} /></div>
+                            <div className="table-data text-center w-[10%]">
+                                <VerticalDot
+                                    onClick={(event) => {
+                                        if (getCookie("userType") !== "Viewer") {
+                                            handleVerticalDotClick(event, item, "delivery");
+                                        }
+                                    }}
+                                    className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
+                                />
+                            </div>
+
                         </div>
                     ))}
                 </div>
@@ -581,7 +613,17 @@ const MaterialDescription = () => {
                             <div className="table-data text-left w-[15%]">{item["returnedBy"]}</div>
                             <div className="table-data text-left w-[15%]">{item["returnType"]}</div>
                             <div className="table-data text-left w-[15%]">{item["returnedReason"]}</div>
-                            <div className="table-data text-center w-[5%]"><VerticalDot onClick={(event) => handleVerticalDotClick(event, item, "return")} /></div>
+                            <div className="table-data text-center w-[5%]">
+                                <VerticalDot
+                                    onClick={(event) => {
+                                        if (getCookie("userType") !== "Viewer") {
+                                            handleVerticalDotClick(event, item, "return");
+                                        }
+                                    }}
+                                    className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
+                                />
+                            </div>
+
                         </div>
                     ))}
                 </div>

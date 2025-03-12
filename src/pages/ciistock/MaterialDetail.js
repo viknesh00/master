@@ -23,6 +23,7 @@ import CustomSelect from "../../utils/CustomSelect";
 import AddStock from "../../dialog/ciistock-dialog/AddStock";
 import MovedAlert from "../../dialog/MovedAlert";
 import { getRequest, postRequest } from "../../services/ApiService";
+import { getCookie } from "../../services/Cookies";
 
 const MaterialDetail = () => {
     const navigate = useNavigate();
@@ -328,7 +329,7 @@ const MaterialDetail = () => {
                         <button className="outer-firstsection-download" onClick={handleDownload}>
                             <Download /> Download
                         </button>
-                        <button className="outer-firstsection-add" onClick={handleOpenAddStock}>
+                        <button className="outer-firstsection-add" onClick={handleOpenAddStock} disabled={getCookie("userType") === "Viewer"}>
                             <Plus /> Add Stock
                         </button>
                     </div>
@@ -460,7 +461,16 @@ const MaterialDetail = () => {
                             <div className="table-data text-left w-[10%]">
                                 <span className={`${item["status"] === "New" ? "status-available" : item["status"] === "Defective" ? "status-not-available" : "status-unknown"}`}>{item["status"]}</span>
                             </div>
-                            <div className="table-data text-center w-[10%]"><VerticalDot onClick={(event) => handleVerticalDotClick(event, item)} /></div>
+                            <div className="table-data text-center w-[10%]">
+                                <VerticalDot
+                                    onClick={(event) => {
+                                        if (getCookie("userType") !== "Viewer") {
+                                            handleVerticalDotClick(event, item);
+                                        }
+                                    }}
+                                    className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
+                                />
+                            </div>
                         </div>
                     ))}
                 </div>

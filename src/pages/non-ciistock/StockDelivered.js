@@ -18,6 +18,7 @@ import CustomSelect from "../../utils/CustomSelect";
 import AddStockDelivered from "../../dialog/nonciistock-dialog/AddStockDelivered";
 import UpdateStockDelivered from "../../dialog/nonciistock-dialog/UpdateStockDelivered";
 import { getRequest, postRequest } from "../../services/ApiService";
+import { getCookie } from "../../services/Cookies";
 
 const StockDelivered = () => {
     const location = useLocation();
@@ -227,7 +228,7 @@ const StockDelivered = () => {
                     <button className="outer-firstsection-download" onClick={handleDownload}>
                         <Download /> Download
                     </button>
-                    <button className="outer-firstsection-add" onClick={handleOpenAddDelivery}>
+                    <button className="outer-firstsection-add" onClick={handleOpenAddDelivery} disabled={getCookie("userType") === "Viewer"}>
                         <Plus /> Add Delivery
                     </button>
                 </div>
@@ -336,7 +337,17 @@ const StockDelivered = () => {
                         <div className="table-data text-left w-[15%]">{item["targetLocation"]}</div>
                         <div className="table-data text-left w-[15%]">{item["deliveredQuantity"]}</div>
                         <div className="table-data text-left w-[15%]">{item["sentBy"]}</div>
-                        <div className="table-data text-center w-[5%]"><VerticalDot onClick={(event) => handleVerticalDotClick(event, item)} /></div>
+                        <div className="table-data text-center w-[5%]">
+                            <VerticalDot
+                                className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
+                                onClick={(event) => {
+                                    if (getCookie("userType") !== "Viewer") {
+                                        handleVerticalDotClick(event, item);
+                                    }
+                                }}
+
+                            />
+                        </div>
                     </div>
                 ))}
             </div>

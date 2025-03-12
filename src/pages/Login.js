@@ -1,26 +1,88 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { postRequest } from "../services/ApiService";
+import { useUser } from "../UserContext.js";
+import Resetpassword from "../ResetPassword.js";
+import { cookieKeys,getCookie } from ".././services/Cookies";
+import Ciistock from "./ciistock/Ciistock.js";
 
-const Login = () => {
+const Login = (props) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+      const [open] = useState(props.value);
+      const [showAlert, setShowAlert] = useState(false);
     const navigate = useNavigate();
+    const { setName } = useUser();
 
     const handleLogin = (e) => {
+        debugger
         e.preventDefault();
-        if (username === "admin@natobotics.com" && password === "Welcome@Nat0b0tics") {
-            localStorage.setItem("isAuthenticated", "true"); 
-            navigate("/dashboard");
-        } else {
-            alert("Invalid credentials");
+        let Data = {};
+        Data = {
+            ...Data,
+            Email: username,
+            Password: password,
         }
+        if (username == "" || password == "") {
+            alert("User Name and Password should not empty");
+        }else{ 
+        const url = `Login/Login`;
+        postRequest(url, Data)
+            .then((res) => {
+                if (res.status === 200) {
+                    if(res.data[0].userStatus == null){
+                        setShowAlert(true);
+                    }
+                    else{
+                        localStorage.setItem("isAuthenticated", "true"); // Set after successful login
+                        localStorage.setItem("username", username); 
+                        setName(username);
+                        navigate("/dashboard");
+                        //alert("Login Successfully");
+                        const userData = {
+                            userName: res.data[0].userName,
+                            userCode: res.data[0].userCode,
+                            email: res.data[0].email,
+                            userType: res.data[0].userType,
+                            isActive: res.data[0].isActive,
+                            accessLevel: res.data[0].accessLevel
+                        }
+                        cookieKeys({ ...userData });
+                    }
+
+                }
+                else {
+                    alert("Login failed. Please check your credentials.");
+                }
+            })
+            .catch((error) => {
+                alert("Login failed. Please check your credentials.");
+                console.error("API Error:", error);
+            });
+        }
+        // if (username === "admin@natobotics.com" && password === "Welcome@Nat0b0tics") {
+        //     localStorage.setItem("isAuthenticated", "true"); 
+        //     navigate("/dashboard");
+        // } else {
+        //     alert("Invalid credentials");
+        // }
     };
+
+    const handleClose = () => {
+        //props.handleOpenAddCompany();
+        //console.log(formData)
+        setShowAlert(prevState => !prevState);
+      };
+    
+      const handleAlert = () => {   
+        setShowAlert(prevState => !prevState);
+    }
 
     return (
         <div
             className="flex justify-center items-center h-screen"
         >
-            <form
+            {showAlert && <Resetpassword value={showAlert} username={username} handleAlert={handleAlert} handleClose={handleClose} />}            <form
                 onSubmit={handleLogin}
                 className="p-6 rounded-lg shadow-lg"
                 style={{

@@ -15,8 +15,11 @@ import { useNavigate } from "react-router-dom";
 import { getRequest, postRequest } from "../../services/ApiService";
 import AddCompany from '../../dialog/usermanagement-dialog/AddCompany';
 import EditCompany from "../../dialog/usermanagement-dialog/EditCompany";
+import { getCookie } from "../../services/Cookies";
+import { useUser } from "../../UserContext";
 
 const CompanyManagement = () => {
+    const { name } = useUser();
     const navigate = useNavigate();
     const breadcrumbData = [
         { label: "Company Management", path: "" },
@@ -49,7 +52,7 @@ const CompanyManagement = () => {
     }, []);
 
     const fetchCompanyDetails = () => {
-            const url = `UserManagement`
+            const url = `UserManagement/GetCompanyList/${name}`
             getRequest(url)
                 .then((res) => {
                     if (res.status === 200) {
@@ -213,7 +216,7 @@ const CompanyManagement = () => {
                         <button className="outer-firstsection-download" onClick={handleDownload}>
                             <Download /> Download
                         </button>
-                        <button className="outer-firstsection-add" onClick={handleOpenAddCompany}>
+                        <button className="outer-firstsection-add" onClick={handleOpenAddCompany} disabled={getCookie("userType") === "Viewer"}>
                             <Plus /> Add Company
                         </button>
                     </div>
@@ -287,7 +290,17 @@ const CompanyManagement = () => {
                                     {item["companyStatus"] === true ? "Active" : "Inactive"}
                                 </span>
                             </div>
-                            <div className="table-data text-center w-[5%]"><VerticalDot onClick={(event) => handleVerticalDotClick(event, item)} /></div>
+                            <div className="table-data text-center w-[5%]">
+                                <VerticalDot
+                                    className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
+                                    onClick={(event) => {
+                                        if (getCookie("userType") !== "Viewer") {
+                                            handleVerticalDotClick(event, item);
+                                        }
+                                    }}
+
+                                />
+                            </div>
                         </div>
                     ))}
                 </div>

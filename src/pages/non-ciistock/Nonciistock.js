@@ -15,8 +15,11 @@ import { useNavigate } from "react-router-dom";
 import Addnonciistock from '../../dialog/ciistock-dialog/Addnonciistock'
 import EditMaterial from "../../dialog/ciistock-dialog/EditMaterial";
 import { getRequest, postRequest } from "../../services/ApiService";
+import { getCookie } from "../../services/Cookies";
+import { useUser } from "../../UserContext";
 
 const Nonciistock = () => {
+    const { name } = useUser();
     const navigate = useNavigate();
     const breadcrumbData = [
         { label: "Non-CII Stock", path: "" },
@@ -49,7 +52,7 @@ const Nonciistock = () => {
     }, []);
 
         const fetchnonciistockdata = () => {
-            const url = `SmInboundStockNonCiis`;
+            const url = `SmInboundStockNonCiis/GetSmInboundNonStockCiis/${name}`;
             
             getRequest(url)
               .then((res) => {
@@ -234,7 +237,7 @@ const Nonciistock = () => {
                         <button className="outer-firstsection-download" onClick={handleDownload}>
                             <Download /> Download
                         </button>
-                        <button className="outer-firstsection-add" onClick={handleOpenAddMaterial}>
+                        <button className="outer-firstsection-add" onClick={handleOpenAddMaterial} disabled={getCookie("userType") === "Viewer"}>
                             <Plus /> Add Material
                         </button>
                     </div>
@@ -330,7 +333,17 @@ const Nonciistock = () => {
                             <div className="table-data text-left w-[10%]">
                                 <span className={`${item["status"] === "Available" ? "status-available" : item["status"] === "Not Available" ? "status-not-available" : "status-unknown"}`}>{item["status"]}</span>
                             </div>
-                            <div className="table-data text-center w-[10%]"><VerticalDot onClick={(event) => handleVerticalDotClick(event, item)} /></div>
+                            <div className="table-data text-center w-[5%]">
+                                <VerticalDot
+                                    className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
+                                    onClick={(event) => {
+                                        if (getCookie("userType") !== "Viewer") {
+                                            handleVerticalDotClick(event, item);
+                                        }
+                                    }}
+
+                                />
+                            </div>
                         </div>
                     ))}
                 </div>
