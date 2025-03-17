@@ -171,23 +171,27 @@ function NumericalStats(){
                 </div>
 
                 <div className="grid grid-cols-5 gap-4">
-                    <div className="flex items-center justify-center">
-                        <ResponsiveContainer width="100%" height={150}>
-                            <PieChart>
-                                <Pie
-                                    data={pieCiiData}
-                                    dataKey="value"
-                                    innerRadius={50}
-                                    outerRadius={70}
-                                    paddingAngle={0}
-                                >
-                                    {pieCiiData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={entry.color} />
-                                    ))}
-                                </Pie>
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </div>
+                <div className="flex items-center justify-center">
+        {pieCiiData.some(data => data.value > 0) ? (
+            <ResponsiveContainer width="100%" height={150}>
+                <PieChart>
+                    <Pie
+                        data={pieCiiData}
+                        dataKey="value"
+                        innerRadius={50}
+                        outerRadius={70}
+                        paddingAngle={0}
+                    >
+                        {pieCiiData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                    </Pie>
+                </PieChart>
+            </ResponsiveContainer>
+        ) : (
+            <p className="text-gray-500">No Data Found</p>
+        )}
+    </div>
 
                     {pieCiiData.map((item, index) => (
                         <div key={index} className="flex flex-col items-center">
@@ -249,23 +253,27 @@ function NumericalStats(){
                 </div>
 
                 <div className="grid grid-cols-5 gap-4">
-                    <div className="flex items-center justify-center">
-                        <ResponsiveContainer width="100%" height={150}>
-                            <PieChart>
-                                <Pie
-                                    data={pieNonCiiData}
-                                    dataKey="value"
-                                    innerRadius={50}
-                                    outerRadius={70}
-                                    paddingAngle={0}
-                                >
-                                    {pieNonCiiData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={entry.color} />
-                                    ))}
-                                </Pie>
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </div>
+                <div className="flex items-center justify-center">
+        {pieNonCiiData.some(data => data.value > 0) ? (
+            <ResponsiveContainer width="100%" height={150}>
+                <PieChart>
+                    <Pie
+                        data={pieNonCiiData}
+                        dataKey="value"
+                        innerRadius={50}
+                        outerRadius={70}
+                        paddingAngle={0}
+                    >
+                        {pieNonCiiData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                    </Pie>
+                </PieChart>
+            </ResponsiveContainer>
+        ) : (
+            <p className="text-gray-500">No Data Found</p>
+        )}
+    </div>
 
                     {pieNonCiiData.map((item, index) => (
                         <div key={index} className="flex flex-col items-center">

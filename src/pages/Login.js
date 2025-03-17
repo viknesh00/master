@@ -79,61 +79,67 @@ const Login = (props) => {
     }
 
     return (
-        <div
-            className="flex justify-center items-center h-screen"
-        >
-            {showAlert && <Resetpassword value={showAlert} username={username} handleAlert={handleAlert} handleClose={handleClose} />}            <form
-                onSubmit={handleLogin}
-                className="p-6 rounded-lg shadow-lg"
-                style={{
-                    background: "linear-gradient(90deg, #1e3c72, #2a5298)",
-                    backdropFilter: "blur(10px)",
-                    width: "400px",
-                    textAlign: "center",
-                    color: "white",
-                }}
-            >
-                <h2 className="text-2xl font-semibold mb-6"> Welcome to NATOASSET</h2>
+        <div 
+        className="flex justify-center items-center h-screen bg-cover bg-center" 
+        style={{ backgroundImage: "url('/assets/images/Login.png')" }}
+    >
+        {showAlert && <Resetpassword value={showAlert} username={username} handleAlert={handleAlert} handleClose={handleClose} />}
+            <div className="absolute top-0 left-0 w-full h-[120px] bg-black flex flex-col items-center justify-center text-white">
+                <h2 className="text-2xl font-semibold">
+                    <span className="text-red-500">C</span>
+                    <span className="text-green-500">o</span>
+                    <span className="text-blue-500">n</span>
+                    <span className="text-purple-500">n</span>
+                    <span className="text-yellow-500">e</span>
+                    <span className="text-pink-500">c</span>
+                    <span className="text-indigo-500">t</span>
+                    <span className="inline-flex items-center text-white">
+        ing to <img src="/assets/images/Logomark.png" alt="Logo" width={15} height={15} className="ml-1" /> NATOASSET
+    </span> 
+                </h2>
+                <p className="text-sm">Sign in with your account</p>
+            </div>
+      <div className="bg-white p-8 rounded-lg shadow-lg w-96">
+            <p className="text-lg text-center">Sign In</p>
+            <form onSubmit={handleLogin} className="mt-6">
                 <div className="mb-4">
-                    <input
-                        type="text"
-                        value={username}
-                        placeholder="User Name"
-                        onChange={(e) => setUsername(e.target.value)}
-                        className="w-full p-2 rounded border-none outline-none"
-                        style={{
-                            background: "rgba(255, 255, 255, 0.2)",
-                            color: "white",
-                        }}
+                    <label className="block text-black">Username</label>
+                    <input 
+                        type="text" 
+                        value={username} 
+                        onChange={(e) => setUsername(e.target.value)} 
+                        className="w-full p-2 rounded border bg-white bg-opacity-20" 
                     />
                 </div>
                 <div className="mb-4">
-                    <input
-                        type="password"
-                        value={password}
-                        placeholder="Password"
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="w-full p-2 rounded border-none outline-none"
-                        style={{
-                            background: "rgba(255, 255, 255, 0.2)",
-                            color: "white",
-                        }}
+                    <label className="block text-black">Password</label>
+                    <input 
+                        type="password" 
+                        value={password} 
+                        onChange={(e) => setPassword(e.target.value)} 
+                        className="w-full p-2 rounded border bg-white bg-opacity-20" 
                     />
                 </div>
-                <button
-                    type="submit"
-                    className="w-full py-2 mt-4 rounded"
-                    style={{
-                        background: "rgba(255, 255, 255, 0.3)",
-                        color: "white",
-                        fontWeight: "bold",
-                        cursor: "pointer",
-                    }}
+                <div className="flex justify-between text-sm text-gray-600">
+                    <div>
+                        <input type="checkbox" id="remember" />
+                        <label htmlFor="remember" className="ml-1">Keep me signed in</label>
+                    </div>
+                    <a href="#" className="text-blue-600">Forgot Password?</a>
+                </div>
+                <button 
+                    type="submit" 
+                    className="w-full mt-4 bg-black text-white py-2 rounded shadow hover:bg-gray-800"
                 >
-                    Login
+                    Sign in
                 </button>
             </form>
+            <p className="text-center mt-4 text-gray-700 text-sm">
+                <span className="text-red-500">Powered by</span> <span className="text-purple-500">Natobotics</span>
+            </p>
         </div>
+    </div>  
+    
     );
 };
 
