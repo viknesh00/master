@@ -12,9 +12,11 @@ import Textfield from "../../utils/Textfield";
 import Datefield from "../../utils/Datefield";
 import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
+import { useUser } from "../../UserContext";
 
 const AddStockInward = (props) => {
     const location = useLocation();
+    const { name } = useUser();
     const {materialDescription } = props;
     const materialNumber = location.pathname.split('/').pop();
     const [open] = useState(props.value);
@@ -34,11 +36,12 @@ const AddStockInward = (props) => {
             materialDescription: materialDescription,
             deliveryNumber: formData.deliveryNumber ?? "",
             orderNumber: formData.orderNumber ?? "",
-            inwardDate: new Date(formData.inwardDate).toISOString(),
+            inwardDate: new Date(formData.inwardDate).toISOString(), 
             inwardFrom: formData.inwardFrom,
             quantityReceived: formData.enterQuantity,
             receivedBy: formData.receivedBy,
-            rackLocation: formData.rackLocation
+            rackLocation: formData.rackLocation,
+            username: name
         }
         const url = `SmInboundStockNonCiis/AddNonStockInbounddata`;
 
