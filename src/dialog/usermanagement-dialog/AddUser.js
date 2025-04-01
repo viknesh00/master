@@ -14,6 +14,7 @@ import Description from "../../utils/Description";
 import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
 import { Password } from "@mui/icons-material";
+import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 
 const AddUser = (props) => {
@@ -45,12 +46,12 @@ const AddUser = (props) => {
           postRequest(url,Data)
               .then((res) => {
                   if (res.status === 200) {
-                      alert("User Added Successfully");
+                    ToastSuccess("User Added Successfully");
                       props.handleOpenAddUser();
                   }
               })
               .catch((error) => {
-                  alert("Entered User ID Already Exists");
+                ToastError("Entered User ID Already Exists");
                   
               });
       }

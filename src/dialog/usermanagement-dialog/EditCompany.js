@@ -11,6 +11,7 @@ import Textfield from "../../utils/Textfield";
 import Description from "../../utils/Description";
 import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
+import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 
 const EditCompany = (props) => {
@@ -54,7 +55,7 @@ const EditCompany = (props) => {
     postRequest(url,Data)
       .then((res) => {
         if (res.status === 200) {
-          alert("Company Updated Successfully");
+          ToastSuccess("Company Updated Successfully");
           props.handleOpenEditCompany();
         }
       })

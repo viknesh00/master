@@ -11,7 +11,7 @@ import Textfield from "../../utils/Textfield";
 import SaveAlert from "../SaveAlert";
 import Datefield from "../../utils/Datefield";
 import { postRequest } from "../../services/ApiService";
-
+import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 const UpdateDeliveryDetails = (props) => {
 
@@ -62,7 +62,7 @@ const UpdateDeliveryDetails = (props) => {
             postRequest(url,Data)
                 .then((res) => {
                     if (res.status === 200) {
-                        alert(" Deliverd Record Updated Successfully");
+                        ToastSuccess(" Deliverd Record Updated Successfully");
                         props.handleDeliveryDetails();
                     }
                 })
@@ -84,12 +84,12 @@ const UpdateDeliveryDetails = (props) => {
             {showAlert && <SaveAlert value={showAlert} handleAlert={handleAlert} handleClose={handleClose} />}
             <Dialog open={open} onClose={handleClose} maxWidth={"xl"}>
                 <DialogTitle sx={{ padding: "32px 32px 32px 32px" }}>
-                    <div className="dialog-title-contianer">
-                        <div className="dialog-icon">
+                    {/* <div className="dialog-title-contianer">
+                                                <div className="dialog-icon">
                             <Packageplus />
                         </div>
                         <Closebutton className="cursor" onClick={handleClose} />
-                    </div>
+                    </div> */}
                     <div className="dialog-title">Update Stock Delivery Details</div>
                 </DialogTitle>
                 <DialogContent sx={{ padding: "0px 32px 40px 32px" }}>

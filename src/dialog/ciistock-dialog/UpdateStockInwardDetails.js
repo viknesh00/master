@@ -11,6 +11,7 @@ import Textfield from "../../utils/Textfield";
 import Datefield from "../../utils/Datefield";
 import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
+import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 const UpdateStockInwardDetails = (props) => {
     const { serialData } = props;
@@ -48,7 +49,7 @@ const UpdateStockInwardDetails = (props) => {
         postRequest(url, data)
             .then((res) => {
                 if (res.status === 200) {
-                    alert("Product Details Updated Successfully")
+                    ToastSuccess("Product Details Updated Successfully")
                     props.handleInwardDetails();
                 }
             })
@@ -74,12 +75,12 @@ const UpdateStockInwardDetails = (props) => {
             {showAlert && <SaveAlert value={showAlert} handleAlert={handleAlert} handleClose={handleClose} />}
             <Dialog open={open} onClose={handleClose} maxWidth={"xl"}>
                 <DialogTitle sx={{ padding: "32px 32px 32px 32px" }}>
-                    <div className="dialog-title-contianer">
-                        <div className="dialog-icon">
+                    {/* <div className="dialog-title-contianer">
+                                                <div className="dialog-icon">
                             <Packageplus />
                         </div>
                         <Closebutton className="cursor" onClick={handleClose} />
-                    </div>
+                    </div> */}
                     <div className="dialog-title">Update Stock Inward Details</div>
                 </DialogTitle>
                 <DialogContent sx={{ padding: "0px 32px 40px 32px" }}>

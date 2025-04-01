@@ -21,6 +21,7 @@ import AddStockReturned from "../../dialog/nonciistock-dialog/AddStockReturned";
 import UpdateStockReturned from "../../dialog/nonciistock-dialog/UpdateStockReturned";
 import { getRequest, postRequest } from "../../services/ApiService";
 import { getCookie } from "../../services/Cookies";
+import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 const StockReturned = () => {
     const location = useLocation();
@@ -178,7 +179,7 @@ const StockReturned = () => {
         postRequest(url)
             .then((res) => {
                 if (res.status === 200) {
-                    alert("Deleted Successfuly");
+                    ToastSuccess("Deleted Successfuly");
                     fetchMaterialDetails();
                 }
             })
@@ -235,7 +236,7 @@ const StockReturned = () => {
             {showUpdateStockReturned && <UpdateStockReturned value={showUpdateStockReturned} materialNumber={materialNumber} materialDescription={materialDescription} selectedMaterialData={selectedMaterialData} handleUpdateStockReturned={handleUpdateStockReturned} />}
             <div className="outer-firstsection">
                 <div className="outer-firstsection-header">
-                    <span className="outer-firstsection-title">{ materialDescription }</span>
+                <span className="main-title">{materialNumber}</span><span className="outer-firstsection-title">-{materialDescription}</span>
                 </div>
                 <div className="outer-firstsection-actions">
                     <button className="outer-firstsection-download" onClick={handleDownload}>
@@ -249,9 +250,9 @@ const StockReturned = () => {
 
             <div className="outer-secondsection">
                 <div className="tabs">
-                    <button className="tab-button active">View all</button>
+                    {/* <button className="tab-button active">View all</button>
                     <button className="tab-button">Working</button>
-                    <button className="tab-button">Text</button>
+                    <button className="tab-button">Text</button> */}
                 </div>
                 <Search placeholder="Search" onChange={handleInputChange} />
             </div>

@@ -221,15 +221,18 @@ code {
 }
 
 .navbar {
-  /* position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 1000; */
+  left: 0;
+  width: 100%;
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 12px 24px;
   height: 72px;
   background-color: #DFE2E4;
+  position: sticky;
 }
 
 .breadcrumb-link-active{
@@ -355,12 +358,14 @@ code {
     gap: 9px;
     text-align: center;
     border-radius: 8px;
+    min-width: 800px;
 }
 
 .file-info{
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 8px;
+  align-items: center;
 }
 
 .fileupload-description{
@@ -387,6 +392,7 @@ code {
   display: flex;
   gap: 8px;
   align-items: center;
+  justify-content: space-between;
 }
 
 .file-size{
@@ -1155,7 +1161,7 @@ span:disabled {
 }
 
 .dashboard-container {
-  margin-top: 32px;
+  /* margin-top: 32px; */
   gap: 8px;
   /* position: relative; */
 }
@@ -1197,7 +1203,7 @@ span:disabled {
 
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   column-gap: 40px; /* Sets the gap between columns */
   row-gap: 6px; /* Sets the gap between rows */
 }
@@ -1295,7 +1301,7 @@ span:disabled {
 }
 
 .switch-container-dashboard {
-  margin-top: 24px;
+  /* margin-top: 24px; */
   display: flex;
   align-items: center;
   border-bottom: 1px solid #E6E6E6;
@@ -1326,6 +1332,25 @@ span:disabled {
 .switch-button.active {
   border-bottom: 1px solid #000000; /* equivalent to Tailwind's border-b-2 border-black */
   color: #000000; /* equivalent to Tailwind's text-black */
+}
+
+.Toastify__toast-container {
+  top: 120px !important;
+}
+
+.Toastify__toast--success {
+  background-color: #0d0c0c !important;
+  color: #FFFFFF;
+}
+
+/* Success Progress Bar */
+.Toastify__progress-bar--success {
+  background-color: white !important;
+}
+
+/* Error Progress Bar */
+.Toastify__progress-bar--error {
+  background-color: white !important;
 }
 
 

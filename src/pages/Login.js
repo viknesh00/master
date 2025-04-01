@@ -5,6 +5,8 @@ import { useUser } from "../UserContext.js";
 import Resetpassword from "../ResetPassword.js";
 import { cookieKeys,getCookie } from ".././services/Cookies";
 import Ciistock from "./ciistock/Ciistock.js";
+import { toast } from "react-toastify";
+import { ToastError, ToastSuccess } from "../services/ToastMsg.js";
 
 const Login = (props) => {
     const [username, setUsername] = useState("");
@@ -24,7 +26,7 @@ const Login = (props) => {
             Password: password,
         }
         if (username == "" || password == "") {
-            alert("User Name and Password should not empty");
+            ToastError("User Name and Password should not empty");
         }else{ 
         const url = `Login/Login`;
         postRequest(url, Data)
@@ -38,7 +40,7 @@ const Login = (props) => {
                         localStorage.setItem("username", username); 
                         setName(username);
                         navigate("/dashboard");
-                        //alert("Login Successfully");
+                        ToastSuccess("Login Successfully");
                         const userData = {
                             userName: res.data[0].userName,
                             userCode: res.data[0].userCode,
@@ -52,11 +54,11 @@ const Login = (props) => {
 
                 }
                 else {
-                    alert("Login failed. Please check your credentials.");
+                    ToastError("Login failed. Please check your credentials.");
                 }
             })
             .catch((error) => {
-                alert("Login failed. Please check your credentials.");
+                ToastError("Login failed. Please check your credentials.");
                 console.error("API Error:", error);
             });
         }

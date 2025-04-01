@@ -12,6 +12,7 @@ import Description from "../../utils/Description";
 import SaveAlert from "../SaveAlert";
 import { useLocation } from "react-router-dom";
 import { postRequest } from "../../services/ApiService";
+import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 
 const AddWarehouse = (props) => {
@@ -35,12 +36,12 @@ const AddWarehouse = (props) => {
           postRequest(url,Data)
               .then((res) => {
                   if (res.status === 200) {
-                      alert("Warehouse Added Successfully");
+                    ToastSuccess("Warehouse Added Successfully");
                       props.handleOpenAddWarehouse();
                   }
               })
               .catch((error) => {
-                  alert("Entered Warehouse ID Already Exists");
+                ToastError("Entered Warehouse ID Already Exists");
                   
               });
       }

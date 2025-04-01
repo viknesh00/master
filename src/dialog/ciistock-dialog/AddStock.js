@@ -8,19 +8,22 @@ import {
 import { useDropzone } from "react-dropzone";
 import { ReactComponent as Packageplus } from "../../assets/svg/packageplus.svg";
 import { ReactComponent as Closebutton } from "../../assets/svg/closebutton.svg";
+import DropdownField from "../../utils/DropDown";
 import Textfield from "../../utils/Textfield";
 import Datefield from "../../utils/Datefield";
 import SaveAlert from "../SaveAlert";
 import Progressbar from "../../utils/Progressbar"
 import { postRequest } from "../../services/ApiService";
 import { useUser } from "../../UserContext";
+import { ReactComponent as Delete } from "../../assets/svg/delete.svg";
+import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 const AddStock = (props) => {
     const [open] = useState(props.value);
     const { name } = useUser();
     const { materialNumber, materialDescription } = props;
     const [showAlert, setShowAlert] = useState(false);
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState({uploadType: "Bulk Upload"});
     const [view, setView] = useState("form");
     const [files, setFiles] = useState([]);
     const [uploadProgress, setUploadProgress] = useState(0);
@@ -52,7 +55,43 @@ const AddStock = (props) => {
         }));
     };
 
-    const handleAddStock = () => {
+    const handleSingleAddStock = () => {
+        if(formData.uploadType == ""){
+            ToastError("Please select the Upload type")
+        }
+        let Data = {};
+        Data = {
+            ...Data,
+            DeliveryNumber : formData.DeliveryNumber || "",
+            MaterialNumber: materialNumber,
+            MaterialDescription: materialDescription,
+            OrderNumber: formData.OrderNumber,
+            Inwarddate: new Date(formData.InwardDate).toISOString() || "",
+            ReceivedBy: formData.ReceivedBy || "",
+            RacKLocation: formData.RackLocation || "",
+            InwardFrom: formData.InwardFrom || "",  
+            Username: name,
+            serialNumber: formData.serialNumber || "",
+            quantity: formData.quantity || "",
+            status: formData.status 
+        }
+
+        const url = `SmInboundStockCiis/ImportSingleStockData`;
+
+        postRequest(url, Data)
+            .then((res) => {
+                if (res.status === 200) {
+                    ToastSuccess("Stock Added Successfully");
+                    props.handleOpenAddStock();
+                }
+            })
+            .catch((error) => {
+               
+
+            });
+    }
+
+    const handleBulkAddStock = () => {
         const data = new FormData();
         data.append("file", files[0]); // Add the uploaded file
         data.append("DeliveryNumber", formData.DeliveryNumber || "");
@@ -70,7 +109,7 @@ const AddStock = (props) => {
         postRequest(url, data)
             .then((res) => {
                 if (res.status === 200) {
-                    alert("Stock Added Successfully");
+                    ToastSuccess("Stock Added Successfully");
                     props.handleOpenAddStock();
                 }
             })
@@ -108,15 +147,24 @@ const AddStock = (props) => {
             {showAlert && <SaveAlert value={showAlert} handleAlert={handleAlert} handleClose={handleClose} />}
             <Dialog open={open} onClose={handleClose} maxWidth={"xl"}>
                 <DialogTitle sx={{ padding: "32px 32px 32px 32px" }}>
-                    <div className="dialog-title-contianer">
-                        <div className="dialog-icon">
+                    {/* <div className="dialog-title-contianer">
+                                                <div className="dialog-icon">
                             <Packageplus />
                         </div>
                         <Closebutton className="cursor" onClick={handleClose} />
-                    </div>
+                    </div> */}
                     <div className="dialog-title">Add Stock Inward</div>
+                    {view === "form" ? (
+                    <DropdownField
+                        label="Upload Type"
+                        name="uploadType"
+                        value={formData.uploadType || "Bulk Upload"}
+                        placeholder="Select Upload Type"
+                        onChange={handleInputChange}
+                        options={["Single Upload", "Bulk Upload"]}
+                    />) : ""}
                 </DialogTitle>
-                <DialogContent sx={{ padding: "0px 32px 40px 32px" }}>
+                <DialogContent sx={{ padding: "0px 32px 40px 32px"}}>
                     <div className="addstock-details">
                         <div className="detail-item">
                             <span className="detail-label">Material Number</span>
@@ -174,6 +222,31 @@ const AddStock = (props) => {
                                 placeholder="Enter rack location"
                                 onChange={handleInputChange}
                             />
+                            {formData.uploadType && formData.uploadType !== "Bulk Upload" && (
+                                <>
+                                    <Textfield
+                                        label="Serial Number"
+                                        name="serialNumber"
+                                        value={formData.serialNumber}
+                                        placeholder="Enter Serial Number"
+                                        onChange={handleInputChange}
+                                    />
+                                    <Textfield
+                                        label="Quantity"
+                                        name="quantity"
+                                        value={formData.quantity}
+                                        placeholder="Enter Quantity"
+                                        onChange={handleInputChange}
+                                    />
+                                    <Textfield
+                                        label="Status"
+                                        name="status"
+                                        value={formData.status}
+                                        placeholder="Enter Status"
+                                        onChange={handleInputChange}
+                                    />
+                                </>
+                            )}
                         </div>
                     ) : (
                         <div>
@@ -195,13 +268,16 @@ const AddStock = (props) => {
                             {files.length > 0 && (
                                 <div className="fileupload-details-container">
                                     <div className="fileupload-excel-section">
-                                        <img className="w-8 h-8" src="/assets/images/excel.png" alt="Upload" />
+                                        
                                         <div className="file-info">
+                                        <img className="w-8 h-8" src="/assets/images/excel.png" alt="Upload" />
                                             <span className="file-name">{files[0].name}</span>
                                             <span className="file-size">
                                                 {(files[0].size / (1024 * 1024)).toFixed(2)} MB
                                             </span>
                                         </div>
+                                        <Delete className="cursor" onClick={() => setFiles([])} />
+                                        {/* <button className="remove-file-btn" onClick={() => setFiles([])}>Remove</button> */}
                                     </div>
                                     {uploadProgress > 0 && uploadProgress < 100 && (
                                         <div className="progress-bar-container">
@@ -225,16 +301,22 @@ const AddStock = (props) => {
                             <button className="cancel-btn" onClick={handleAlert}>
                                 Cancel
                             </button>
-                            <button className="submit-btn" onClick={handleUploadClick}>
-                                Upload File
-                            </button>
+                            {formData.uploadType === "Single Upload" ? (
+                                <button className="submit-btn" onClick={handleSingleAddStock}>
+                                    Submit
+                                </button>
+                            ) : formData.uploadType === "Bulk Upload" ? (
+                                <button className="submit-btn" onClick={handleUploadClick}>
+                                    Upload File
+                                </button>
+                            ) : null}
                         </>
                     ) : (
                         <>
                             <button className="cancel-btn" onClick={() => setView("form")}>
                                 Back
                             </button>
-                            <button className="submit-btn" onClick={handleAddStock}>
+                            <button className="submit-btn" onClick={handleBulkAddStock}>
                                 Submit
                             </button>
                         </>

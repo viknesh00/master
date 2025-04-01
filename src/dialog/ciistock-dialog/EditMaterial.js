@@ -11,7 +11,7 @@ import Textfield from "../../utils/Textfield";
 import Description from "../../utils/Description";
 import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
-
+import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 const EditMaterial = (props) => {
   const [open] = useState(props.value);
@@ -44,7 +44,7 @@ const EditMaterial = (props) => {
     postRequest(url)
       .then((res) => {
         if (res.status === 200) {
-          alert("Material Updated Successfully");
+          ToastSuccess("Material Updated Successfully");
           props.handleOpenEditMaterial();
         }
       })

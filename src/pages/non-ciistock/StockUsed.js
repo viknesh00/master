@@ -19,6 +19,7 @@ import AddStockUsed from "../../dialog/nonciistock-dialog/AddStockUsed";
 import UpdateStockUsed from "../../dialog/nonciistock-dialog/UpdateStockUsed";
 import { getRequest, postRequest } from "../../services/ApiService";
 import { getCookie } from "../../services/Cookies";
+import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 const StockUsed = () => {
     const location = useLocation();
@@ -174,7 +175,7 @@ const StockUsed = () => {
         postRequest(url)
             .then((res) => {
                 if (res.status === 200) {
-                    alert("Deleted Successfuly");
+                    ToastSuccess("Deleted Successfuly");
                     fetchMaterialDetails();
                 }
             })
@@ -213,7 +214,7 @@ const StockUsed = () => {
 
             <div className="outer-firstsection">
                 <div className="outer-firstsection-header">
-                    <span className="outer-firstsection-title">{ materialDescription }</span>
+                <span className="main-title">{materialNumber}</span><span className="outer-firstsection-title">-{materialDescription}</span>
                 </div>
                 <div className="outer-firstsection-actions">
                     <button className="outer-firstsection-download" onClick={handleDownload}>
@@ -227,9 +228,9 @@ const StockUsed = () => {
 
             <div className="outer-secondsection">
                 <div className="tabs">
-                    <button className="tab-button active">View all</button>
+                    {/* <button className="tab-button active">View all</button>
                     <button className="tab-button">Working</button>
-                    <button className="tab-button">Text</button>
+                    <button className="tab-button">Text</button> */}
                 </div>
                 <Search placeholder="Search" onChange={handleInputChange} />
             </div>

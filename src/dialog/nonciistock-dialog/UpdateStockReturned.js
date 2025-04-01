@@ -13,6 +13,7 @@ import Datefield from "../../utils/Datefield";
 import Description from "../../utils/Description";
 import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
+import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 const UpdateStockReturned = (props) => {
     const location = useLocation();
@@ -62,7 +63,7 @@ const UpdateStockReturned = (props) => {
         postRequest(url, Data)
             .then((res) => {
                 if (res.status === 200) {
-                    alert("Stock Updated Successfully");
+                    ToastSuccess("Stock Updated Successfully");
                     props.handleUpdateStockReturned();
                 }
             })
@@ -87,12 +88,12 @@ const UpdateStockReturned = (props) => {
             {showAlert && <SaveAlert value={showAlert} handleAlert={handleAlert} handleClose={handleClose} />}
             <Dialog open={open} onClose={handleClose} maxWidth={"xl"}>
                 <DialogTitle sx={{ padding: "32px 32px 32px 32px" }}>
-                    <div className="dialog-title-contianer">
-                        <div className="dialog-icon">
+                    {/* <div className="dialog-title-contianer">
+                                                <div className="dialog-icon">
                             <Packageplus />
                         </div>
                         <Closebutton className="cursor" onClick={handleClose} />
-                    </div>
+                    </div> */}
                     <div className="dialog-title">Update Stock Return</div>
                 </DialogTitle>
                 <DialogContent sx={{ padding: "0px 32px 40px 32px" }}>

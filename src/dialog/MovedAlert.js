@@ -6,6 +6,7 @@ import {
 } from "@mui/material";
 import { ReactComponent as FlipForward } from "../assets/svg/flip-forward.svg";
 import { postRequest } from "../services/ApiService";
+import { ToastError, ToastSuccess } from "../services/ToastMsg";
 
 
 
@@ -24,7 +25,7 @@ const MovedAlert = (props) => {
     postRequest(url)
               .then((res) => {
                   if (res.status === 200) {
-                    alert("Product has been Moved to Used");
+                    ToastSuccess("Product has been Moved to Used");
                     props.handlemovedtoused();
                   }
               })

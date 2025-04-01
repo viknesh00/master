@@ -12,6 +12,7 @@ import Description from "../../utils/Description";
 import { useLocation } from "react-router-dom";
 import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
+import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 
 const EditWarehouse = (props) => {
@@ -56,7 +57,7 @@ const EditWarehouse = (props) => {
     postRequest(url,Data)
       .then((res) => {
         if (res.status === 200) {
-          alert("Warehouse Updated Successfully");
+          ToastSuccess("Warehouse Updated Successfully");
           props.handleOpenEditWarehouse();
         }
       })

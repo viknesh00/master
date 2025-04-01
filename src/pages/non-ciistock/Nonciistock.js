@@ -17,6 +17,7 @@ import EditMaterial from "../../dialog/ciistock-dialog/EditMaterial";
 import { getRequest, postRequest } from "../../services/ApiService";
 import { getCookie } from "../../services/Cookies";
 import { useUser } from "../../UserContext";
+import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 const Nonciistock = () => {
     const { name } = useUser();
@@ -193,7 +194,7 @@ const Nonciistock = () => {
             postRequest(url)
               .then((res) => {
                   if (res.status === 200) {
-                    alert("Deleted Successfuly");
+                    ToastSuccess("Deleted Successfuly");
                     fetchnonciistockdata();
                   }
               })

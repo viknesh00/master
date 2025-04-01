@@ -300,7 +300,7 @@ const MaterialDetail = () => {
             {showMovetoused && <MovedAlert value={showMovetoused} materialNumber={materialNumber} serialNumber={selectedSerialNumber} handlemovedtoused={handlemovedtoused} />}
             <Navbar breadcrumbs={breadcrumbData} />
             <div className="outersection-container">
-                <span className="main-title">{materialNumber}</span>
+                {/* <span className="main-title">{materialNumber}</span> */}
 
                 <div className="dashboard-container">
                     <div className="toggle-btn-container">
@@ -311,19 +311,19 @@ const MaterialDetail = () => {
 
                     {isPanelVisible && (
                         <div className="grid-container">
-                            <StockCard title="Total Stock" value={analyticsData[0]?.totalstock || 0} bgColor="card1" />
-                            <StockCard title="Total Stock in Hand" value={analyticsData[0]?.inhandstock || 0} bgColor="card2" />
-                            <StockCard title="Total Stock Delivered" value={analyticsData[0]?.deliverycount || 0} bgColor="card3" />
-                            <StockCard title="Total Returned Stock" value={analyticsData[0]?.returncount || 0} bgColor="card4" />
-                            <StockCard title="Total Stock Used in Hand" value={analyticsData[0]?.usedstock || 0} bgColor="card5" />
-                            <StockCard title="Total Defective Item" value={analyticsData[0]?.defectivestock || 0} bgColor="card6" />
+                            <StockCard title="Total Stock" value={analyticsData[0]?.totalstock || 0} bgColor="#000000" />
+                            <StockCard title="Stock in Hand" value={analyticsData[0]?.inhandstock || 0} bgColor="#039855" />
+                            <StockCard title="Stock Delivered" value={analyticsData[0]?.deliverycount || 0} bgColor="#FF6600" />
+                            <StockCard title="Returned Stock" value={analyticsData[0]?.returncount || 0} bgColor="#046C7A" />
+                            <StockCard title="Stock Used" value={analyticsData[0]?.usedstock || 0} bgColor="#5D36FF"/>
+                            <StockCard title="Defective Item" value={analyticsData[0]?.defectivestock || 0} bgColor="#DD0000" />
                         </div>
                     )}
                 </div>
 
                 <div className="outer-firstsection">
                     <div className="outer-firstsection-header">
-                        <span className="outer-firstsection-title">{materialDescription}</span>
+                        <span className="main-title">{materialNumber}</span><span className="outer-firstsection-title">-{materialDescription}</span>
                     </div>
                     <div className="outer-firstsection-actions">
                         <button className="outer-firstsection-download" onClick={handleDownload}>

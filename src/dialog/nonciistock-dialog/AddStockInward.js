@@ -13,6 +13,7 @@ import Datefield from "../../utils/Datefield";
 import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
 import { useUser } from "../../UserContext";
+import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 const AddStockInward = (props) => {
     const location = useLocation();
@@ -48,7 +49,7 @@ const AddStockInward = (props) => {
         postRequest(url, Data)
             .then((res) => {
                 if (res.status === 200) {
-                    alert("Stock Added Successfully");
+                    ToastSuccess("Stock Added Successfully");
                     props.handleOpenAddStock();
                 }
             })
@@ -73,12 +74,12 @@ const AddStockInward = (props) => {
             {showAlert && <SaveAlert value={showAlert} handleAlert={handleAlert} handleClose={handleClose} />}
             <Dialog open={open} onClose={handleClose} maxWidth={"xl"}>
                 <DialogTitle sx={{ padding: "32px 32px 32px 32px" }}>
-                    <div className="dialog-title-contianer">
-                        <div className="dialog-icon">
+                    {/* <div className="dialog-title-contianer">
+                                                <div className="dialog-icon">
                             <Packageplus />
                         </div>
                         <Closebutton className="cursor" onClick={handleClose} />
-                    </div>
+                    </div> */}
                     <div className="dialog-title">Add Stock Inward</div>
                 </DialogTitle>
                 <DialogContent sx={{ padding: "0px 32px 40px 32px" }}>

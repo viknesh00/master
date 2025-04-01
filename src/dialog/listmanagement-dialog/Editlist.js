@@ -11,7 +11,7 @@ import Textfield from "../../utils/Textfield";
 import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
 import MultipleAdd from "../../utils/MultipleAdd";
-
+import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 const EditList = (props) => {
     const [open] = useState(props.value);
@@ -33,12 +33,12 @@ const EditList = (props) => {
         postRequest(url)
             .then((res) => {
                 if (res.status === 200) {
-                    alert("Material Added Successfully");
+                    ToastSuccess("Material Added Successfully");
                     props.handleOpenEditList();
                 }
             })
             .catch((error) => {
-                alert("Entered Material Number Already Exists");
+                ToastError("Entered Material Number Already Exists");
 
             });
     }

@@ -7,31 +7,36 @@ const CustomSelect = ({ label, options, placeholder, onSelectionChange, resetSel
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedOption, setSelectedOption] = useState(null);
 
+  // Reset selected option when resetSelect prop is true
   useEffect(() => {
     if (resetSelect) {
-      setSelectedOption(null); // Reset selected option when resetSelect is true
+      setSelectedOption(null);
     }
   }, [resetSelect]);
 
-  const filteredOptions = options.filter((option) =>
-    option.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Filter options based on search term
+  const filteredOptions = options
+  .filter((option) => option?.name?.toLowerCase().includes(searchTerm.toLowerCase()));
 
+  // Handle input change for search term
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
-    setShowDropdown(true);
+    setShowDropdown(true); // Show dropdown when user starts typing
+    onSelectionChange(searchTerm);
   };
 
+  // Handle option selection
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
-    onSelectionChange(option, "inwardFrom"); // Notify parent about the selection
-    setSearchTerm("");
-    setShowDropdown(false);
+    onSelectionChange(option, "inwardFrom"); // Notify parent about selection
+    setSearchTerm(""); // Clear search term after selection
+    setShowDropdown(false); // Close dropdown after selection
   };
 
-  const handleClick = () => setShowDropdown(prevState =>(!prevState));
+  // Toggle dropdown visibility on input field click
+  const handleClick = () => setShowDropdown(prevState => !prevState);
 
- 
+  // Close dropdown if input field loses focus
   const handleBlur = (e) => {
     const relatedTarget = e.relatedTarget;
     if (
@@ -58,10 +63,10 @@ const CustomSelect = ({ label, options, placeholder, onSelectionChange, resetSel
         />
         {/* Toggle Arrow Icon */}
         {showDropdown ? (
-  <UpArrow className="cursor" key="up-arrow" />
-) : (
-  <DownArrow className="cursor" key="down-arrow" />
-)}
+          <UpArrow className="cursor" key="up-arrow" />
+        ) : (
+          <DownArrow className="cursor" key="down-arrow" />
+        )}
       </div>
 
       {/* Dropdown Menu */}

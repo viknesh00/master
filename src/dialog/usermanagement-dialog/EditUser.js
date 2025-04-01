@@ -12,6 +12,7 @@ import DropdownField from "../../utils/DropDown";
 import Description from "../../utils/Description";
 import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
+import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 
 const EditUser = (props) => {
@@ -60,7 +61,7 @@ const EditUser = (props) => {
     postRequest(url,Data)
       .then((res) => {
         if (res.status === 200) {
-          alert("User Updated Successfully");
+          ToastSuccess("User Updated Successfully");
           props.handleOpenEditUser();
         }
       })

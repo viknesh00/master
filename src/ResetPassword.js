@@ -10,6 +10,7 @@ import { ReactComponent as Packageplus } from "././assets/svg/packageplus.svg";
 import { ReactComponent as Closebutton } from "././assets/svg/closebutton.svg";
 import Textfield from "././utils/Textfield";
 import { postRequest } from "././services/ApiService";
+import { ToastError, ToastSuccess } from "./services/ToastMsg";
 
 export default function ResetPassword(props){
     const {username} = props;
@@ -29,7 +30,7 @@ export default function ResetPassword(props){
       const handleResetPassword =()=>{
         debugger
         if (formData.newPassword !== formData.confirmPassword) {
-            alert("New Password and Confirm Password do not match!");
+          ToastError("New Password and Confirm Password do not match!");
             return;
         }
         let Data = {};
@@ -44,13 +45,13 @@ export default function ResetPassword(props){
                   postRequest(url,Data)
                       .then((res) => {
                           if (res.status === 200) {
-                              alert("Password Updated Successfully");
+                            ToastSuccess("Password Updated Successfully");
                               handleClose();
                               navigate("/dashboard");
                           }
                       })
                       .catch((error) => {
-                          alert("Password does not match With Confirm Password");
+                        ToastError("Password does not match With Confirm Password");
                           
                       });
       }

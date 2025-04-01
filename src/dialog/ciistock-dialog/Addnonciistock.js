@@ -11,6 +11,7 @@ import Textfield from "../../utils/Textfield";
 import Description from "../../utils/Description";
 import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
+import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 
 const Addnonciistock = (props) => {
@@ -25,12 +26,12 @@ const Addnonciistock = (props) => {
           postRequest(url)
               .then((res) => {
                   if (res.status === 200) {
-                      alert("Material Added Successfully");
+                    ToastSuccess("Material Added Successfully");
                       props.handleOpenAddMaterial();
                   }
               })
               .catch((error) => {
-                  alert("Entered Material Number Already Exists");
+                ToastError("Entered Material Number Already Exists");
                   
               });
       }

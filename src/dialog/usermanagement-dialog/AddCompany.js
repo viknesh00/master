@@ -11,6 +11,7 @@ import Textfield from "../../utils/Textfield";
 import Description from "../../utils/Description";
 import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
+import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 
 const AddCompany = (props) => {
@@ -33,12 +34,12 @@ const AddCompany = (props) => {
           postRequest(url,Data)
               .then((res) => {
                   if (res.status === 200) {
-                      alert("Company Added Successfully");
+                    ToastSuccess("Company Added Successfully");
                       props.handleOpenAddCompany();
                   }
               })
               .catch((error) => {
-                  alert("Entered Company ID Already Exists");
+                ToastError("Entered Company ID Already Exists");
                   
               });
       }
