@@ -18,6 +18,7 @@ import { getCookie } from "../../services/Cookies";
 import { useLocation } from "react-router-dom";
 import { useUser } from "../../UserContext";
 import CustomSelect from "../../utils/CustomSelect";
+import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 const Ciistock = (props) => {
     const { name } = useUser();
@@ -81,6 +82,7 @@ const Ciistock = (props) => {
         postRequest(url)
           .then((res) => {
               if (res.status === 200) {
+                ToastSuccess("Material Deleted Successfully");
                 fetchciistockdata();
               }
           })

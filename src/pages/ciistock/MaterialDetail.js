@@ -312,7 +312,7 @@ const MaterialDetail = () => {
                     {isPanelVisible && (
                         <div className="grid-container">
                             <StockCard title="Total Stock" value={analyticsData[0]?.totalstock || 0} bgColor="#000000" />
-                            <StockCard title="Stock in Hand" value={analyticsData[0]?.inhandstock || 0} bgColor="#039855" />
+                            <StockCard title="Stock Inward" value={analyticsData[0]?.inhandstock || 0} bgColor="#039855" />
                             <StockCard title="Stock Delivered" value={analyticsData[0]?.deliverycount || 0} bgColor="#FF6600" />
                             <StockCard title="Returned Stock" value={analyticsData[0]?.returncount || 0} bgColor="#046C7A" />
                             <StockCard title="Stock Used" value={analyticsData[0]?.usedstock || 0} bgColor="#5D36FF"/>

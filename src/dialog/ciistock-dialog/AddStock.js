@@ -56,8 +56,9 @@ const AddStock = (props) => {
     };
 
     const handleSingleAddStock = () => {
-        if(formData.uploadType == ""){
-            ToastError("Please select the Upload type")
+        if (!formData.serialNumber || !formData.quantity || !formData.status) {
+            ToastError("Please enter Serial Number, Quantity, and Status");
+            return;
         }
         let Data = {};
         Data = {

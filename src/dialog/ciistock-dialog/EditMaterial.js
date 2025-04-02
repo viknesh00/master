@@ -40,6 +40,9 @@ const EditMaterial = (props) => {
   }
 
   const handleUpdate = () => {
+    if (formData.MaterialNumber == "" || formData.MaterialDescription == "") {
+      ToastError("Please enter the Material Number and Material Description");
+    }
     const url = `SmInboundStockCiis/update/${formData.ExistingNumber}/${formData.MaterialNumber}/${formData.MaterialDescription}`;
     postRequest(url)
       .then((res) => {
@@ -50,6 +53,7 @@ const EditMaterial = (props) => {
       })
       .catch((error) => {
         console.error("API Error:", error);
+        //ToastError(error.response.data);
       });
   }
 

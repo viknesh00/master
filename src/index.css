@@ -1343,6 +1343,11 @@ span:disabled {
   color: #FFFFFF;
 }
 
+.Toastify__toast--error {
+  background-color: #0d0c0c !important;
+  color: #FFFFFF;
+}
+
 /* Success Progress Bar */
 .Toastify__progress-bar--success {
   background-color: white !important;
