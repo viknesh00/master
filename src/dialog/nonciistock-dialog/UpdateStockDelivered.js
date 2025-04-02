@@ -58,7 +58,8 @@ const UpdateStockDelivered = (props) => {
                     deliveredQuantity:formData.deliveredQuantity,
                     existDeliveredQuantity: selectedMaterialData.deliveredQuantity,
                     sentBy:formData.sentBy,
-                    deliveryNumber_inbound: formData.deliveryNumber
+                    deliveryNumber_inbound: formData.deliveryNumber,
+                    outboundStockNonCIIKey: selectedMaterialData.outboundStockNonCIIKey
                 }
                 const url = `SmInboundStockNonCiis/UpdateNonStockDeliverdata`;
         
@@ -70,7 +71,7 @@ const UpdateStockDelivered = (props) => {
                         }
                     })
                     .catch((error) => {
-                        console.error("API Error:", error);
+                        ToastError(error.response.data);
                     });
     }
 

@@ -251,7 +251,7 @@ const StockInward = () => {
             </div>
 
             <div className="outer-secondsection">
-                <div className="tabs">
+                <div >
                     {/* <button className="tab-button active">View all</button>
                     <button className="tab-button">Working</button>
                     <button className="tab-button">Text</button> */}

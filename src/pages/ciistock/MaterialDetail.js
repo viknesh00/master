@@ -501,17 +501,17 @@ const MaterialDetail = () => {
                             left: alertBox.x,
                         }}
                     >
-                        <button
+                        {/* <button
                             className="dropdown-item"
                             onClick={() => handledeleteSerialumber()}
                         >
                             <span><Delete /></span> Delete
-                        </button>
+                        </button> */}
                         <button
                             className="dropdown-item"
                             onClick={() => handlemovedtoused()}
                         >
-                            <span><FlipForward /></span> Move to Used
+                            <span><FlipForward /></span> Status Change
                         </button>
                     </div>
                 )}

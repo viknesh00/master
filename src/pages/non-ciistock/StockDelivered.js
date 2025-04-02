@@ -190,9 +190,9 @@ const StockDelivered = () => {
         }
         setShowAddDelivered(prevState => !prevState);
     }
-    const handleRemoveMaterial = (deliveryNumber,orderNumber) => {
+    const handleRemoveMaterial = (deliveryNumber,outboundStockNonCIIKey) => {
             debugger
-                    const url = `SmInboundStockNonCiis/DeleteNonStockDeliverdata/${materialNumber}/${deliveryNumber}/${orderNumber}`
+                    const url = `SmInboundStockNonCiis/DeleteNonStockDeliverdata/${materialNumber}/${deliveryNumber}/${outboundStockNonCIIKey}`
                     postRequest(url)
                       .then((res) => {
                           if (res.status === 200) {
@@ -249,7 +249,7 @@ const StockDelivered = () => {
             </div>
 
             <div className="outer-secondsection">
-                <div className="tabs">
+                <div >
                     {/* <button className="tab-button active">View all</button>
                     <button className="tab-button">Working</button>
                     <button className="tab-button">Text</button> */}
@@ -382,7 +382,7 @@ const StockDelivered = () => {
                     </button>
                     <button
                         className="dropdown-item"
-                        onClick={() => handleRemoveMaterial(alertBox.data["deliveryNumber"],alertBox.data["orderNumber"])}
+                        onClick={() => handleRemoveMaterial(alertBox.data["deliveryNumber"],alertBox.data["outboundStockNonCIIKey"])}
                     >
                         <span><Delete /></span> Delete
                     </button>

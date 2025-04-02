@@ -56,7 +56,7 @@ const AddStockDelivered = (props) => {
                 }
             })
             .catch((error) => {
-                console.error("API Error:", error);
+                ToastError(error.response.data);
             });
     }
 

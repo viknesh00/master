@@ -13,6 +13,7 @@ import SaveAlert from "../SaveAlert";
 import Description from "../../utils/Description";
 import { postRequest } from "../../services/ApiService";
 import { ToastError, ToastSuccess } from "../../services/ToastMsg";
+import DropdownField from "../../utils/DropDown";
 
 
 const AddReturnStock = (props) => {
@@ -31,6 +32,7 @@ const AddReturnStock = (props) => {
     };
 
     const handleSave = () => {
+        debugger
         let Data = {};
         Data = {
             ...Data,
@@ -57,7 +59,7 @@ const AddReturnStock = (props) => {
                 }
             })
             .catch((error) => {
-                console.error("API Error:", error);
+                ToastError(error.response.data);
             });
     };
 
@@ -133,12 +135,20 @@ const AddReturnStock = (props) => {
                             placeholder="Enter rack location"
                             onChange={handleInputChange}
                         />
-                        <Textfield
+                        <DropdownField
+                            label={<span>Return Type<span className="error">*</span></span>}
+                            name="ReturnType"
+                            value={formData.ReturnType}
+                            placeholder="Select Return Type"
+                            onChange={handleInputChange}
+                            options={["Used", "Damaged", "BreakFix"]}
+                        />
+                        {/* <Textfield
                             label={<span>Return Type<span className="error">*</span></span>}
                             name="ReturnType"
                             placeholder="Enter return quantity"
                             onChange={handleInputChange}
-                        />
+                        /> */}
                         <div className="grid-span">
                             <Description
                                 label={<span>Return<span className="error">*</span></span>}

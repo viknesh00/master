@@ -7,12 +7,14 @@ import {
 import { ReactComponent as FlipForward } from "../assets/svg/flip-forward.svg";
 import { postRequest } from "../services/ApiService";
 import { ToastError, ToastSuccess } from "../services/ToastMsg";
+import DropdownField from "../utils/DropDown";
 
 
 
 const MovedAlert = (props) => {
   const [open] = useState(props.value);
   const {materialNumber, serialNumber} = props;
+    const [formData, setFormData] = useState({});
 
 
   const handleClose = () => {
@@ -20,12 +22,12 @@ const MovedAlert = (props) => {
   };
 
   const handleSaveMovetoUsed = () => {
-    const status = "Used"
+    const status = formData.statusChange
     const url = `SmInboundStockCiis/${materialNumber}/${serialNumber}/${status}`;
     postRequest(url)
               .then((res) => {
                   if (res.status === 200) {
-                    ToastSuccess("Product has been Moved to Used");
+                    ToastSuccess("Status Changed Successfully");
                     props.handlemovedtoused();
                   }
               })
@@ -33,6 +35,13 @@ const MovedAlert = (props) => {
                   console.error("API Error:", error);
               });
   }
+
+  const handleInputChange = (name, value) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
   return (
     <div>
       <Dialog open={open} onClose={handleClose}>
@@ -42,8 +51,16 @@ const MovedAlert = (props) => {
               <FlipForward />
             </div>
           </div>
-          <div className="dialog-title-alert">Move to Used</div>
-          <div className="dialog-description-alert">Are you sure want to move to used?</div>
+          <div className="dialog-title-alert">Status Change</div>               
+              <DropdownField
+                label="Status Change"
+                name="statusChange"
+                value={formData.statusChange}
+                placeholder="Select User Type"
+                onChange={handleInputChange}
+                options={["Used", "Damaged", "BreakFix"]}
+              />
+          <div className="dialog-description-alert">Are you sure want to Change the Status?</div>
         </DialogTitle>
         <DialogActions class="dialog-alert-button">
           <button className="cancel-btn-alert" onClick={handleClose}>Cancel</button>
