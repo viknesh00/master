@@ -13,6 +13,7 @@ import SaveAlert from "../SaveAlert";
 import Description from "../../utils/Description";
 import { postRequest } from "../../services/ApiService";
 import { ToastError, ToastSuccess } from "../../services/ToastMsg";
+import DropdownField from "../../utils/DropDown";
 
 const UpdateReturnDetails = (props) => {
     const [open] = useState(props.value);
@@ -21,6 +22,7 @@ const UpdateReturnDetails = (props) => {
     const [formData, setFormData] = useState({});
 
     useEffect(() => {
+        debugger
         if (selectedRow && serialData) {
             setFormData({
                 "materialNumber": serialData.materialNumber || "",
@@ -154,13 +156,21 @@ const UpdateReturnDetails = (props) => {
                             placeholder="Enter rack location"
                             onChange={handleInputChange}
                         />
-                        <Textfield
+                        <DropdownField
+                            label={<span>Return Type<span className="error">*</span></span>}
+                            name="ReturnType"
+                            value={formData.ReturnType}
+                            placeholder="Select Return Type"
+                            onChange={handleInputChange}
+                            options={["Used", "Damaged", "BreakFix"]}
+                        />
+                        {/* <Textfield
                             label={<span>Return Type<span className="error">*</span></span>}
                             name="ReturnType"
                             value={formData.ReturnType}
                             placeholder="Enter return quantity"
                             onChange={handleInputChange}
-                        />
+                        /> */}
                         <div className="grid-span">
                             <Description
                                 label={<span>Return<span className="error">*</span></span>}

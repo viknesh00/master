@@ -67,7 +67,7 @@ const AddStock = (props) => {
             MaterialNumber: materialNumber,
             MaterialDescription: materialDescription,
             OrderNumber: formData.OrderNumber,
-            Inwarddate: formData.InwardDate ? new Date(formData.InwardDate).toISOString() : null,
+            Inwarddate: new Date(formData.InwardDate).toISOString() || "",
             ReceivedBy: formData.ReceivedBy || "",
             RacKLocation: formData.RackLocation || "",
             InwardFrom: formData.InwardFrom || "",  
@@ -87,7 +87,7 @@ const AddStock = (props) => {
                 }
             })
             .catch((error) => {
-               
+                ToastError(error.response.data);
 
             });
     }
@@ -115,7 +115,7 @@ const AddStock = (props) => {
                 }
             })
             .catch((error) => {
-               
+                ToastError(error.response.data);
 
             });
     }

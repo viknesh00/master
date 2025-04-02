@@ -71,35 +71,35 @@
                             let ciiInhand = res.data.ciiCounts[0].inhandstock;
                             let ciiNewStock = res.data.ciiCounts[0].newstock;
                             let ciiUsed = res.data.ciiCounts[0].usedstock;
-                            let ciiDefective = res.data.ciiCounts[0].defectivestock;
-                            let ciiDeliveredCount = res.data.deliveryReturnCounts[0].ciiDeliveryCount;
-                            let ciiReturnCount = res.data.deliveryReturnCounts[0].ciiReturnCount;
+                            let ciiDefective = res.data.ciiCounts[0].damagedstock;
+                            let ciiDeliveredCount = res.data.ciiCounts[0].outwardstock;
+                            let ciiBreakFixCount = res.data.deliveryReturnCounts[0].breakfixstock;
                             setCiiPieData([
                                 { name: "In Hand", value: ciiInhand || 0, color: "#009E4C",totalStock : ciiInhand + ciiUsed + ciiDefective },
                                 { name: "New Stock", value: ciiNewStock || 0, color: "#046C7A",totalStock : ciiInhand + ciiUsed + ciiDefective },
                                 { name: "Used", value: ciiUsed || 0, color: "#F28C00", totalStock : ciiInhand + ciiUsed + ciiDefective },
-                                { name: "Defective", value: ciiDefective || 0, color: "#E60000", totalStock : ciiInhand + ciiUsed + ciiDefective },
-                                { name: "Total Returned", value: ciiReturnCount || 0, color: "#046C7A", totalStock : ciiInhand + ciiUsed + ciiDefective },
+                                { name: "Damaged", value: ciiDefective || 0, color: "#E60000", totalStock : ciiInhand + ciiUsed + ciiDefective },
+                                { name: "BreakFix", value: ciiBreakFixCount || 0, color: "#046C7A", totalStock : ciiInhand + ciiUsed + ciiDefective },
                                 { name: "Total Outward", value: ciiDeliveredCount || 0, color: "#5D36FF", totalStock : ciiInhand + ciiUsed + ciiDefective }
                             ]);
                             let nonCiiInhand = res.data.nonCIICounts[0].inhandstock;
                             let nonCiiNewStock = res.data.nonCIICounts[0].newstock;
                             let nonCiiUsed = res.data.nonCIICounts[0].usedstock;
-                            let nonCiiDefective = res.data.nonCIICounts[0].defectivestock;
+                            let nonCiiDefective = res.data.nonCIICounts[0].damagedstock;
                             let nonCiiDeliveredCount = res.data.deliveryReturnCounts[0].nonCIIDeliveryCount;
-                            let nonCiiReturnCount = res.data.deliveryReturnCounts[0].nonCIIReturnCount;
+                            let nonCiiReturnCount = res.data.deliveryReturnCounts[0].breakfixstock;
                             setNonCiiPieData([
                                 { name: "In Hand", value: nonCiiInhand || 0, color: "#009E4C", totalStock : nonCiiInhand + nonCiiUsed + nonCiiDefective },
                                 { name: "New Stock", value: nonCiiNewStock || 0, color: "#046C7A",totalStock : nonCiiInhand + nonCiiUsed + nonCiiDefective },
                                 { name: "Used", value: nonCiiUsed || 0, color: "#F28C00", totalStock : nonCiiInhand + nonCiiUsed + nonCiiDefective },
-                                { name: "Defective", value: nonCiiDefective || 0, color: "#E60000", totalStock : nonCiiInhand + nonCiiUsed + nonCiiDefective },
-                                { name: "Total Returned", value: nonCiiReturnCount || 0, color: "#046C7A", totalStock : nonCiiInhand + nonCiiUsed + nonCiiDefective },
+                                { name: "Damaged", value: nonCiiDefective || 0, color: "#E60000", totalStock : nonCiiInhand + nonCiiUsed + nonCiiDefective },
+                                { name: "BreakFix", value: nonCiiReturnCount || 0, color: "#046C7A", totalStock : nonCiiInhand + nonCiiUsed + nonCiiDefective },
                                 { name: "Total Outward", value: nonCiiDeliveredCount || 0, color: "#5D36FF", totalStock : nonCiiInhand + nonCiiUsed + nonCiiDefective },
                             ])
-                            setStockData([
-                                { title: "CII Stock", delivered: ciiDeliveredCount || 0, returned: ciiReturnCount || 0 },
-                                { title: "Non-CII Stock", delivered: nonCiiDeliveredCount || 0, returned: nonCiiReturnCount || 0 },
-                            ])
+                            // setStockData([
+                            //     { title: "CII Stock", delivered: ciiDeliveredCount || 0, returned: ciiReturnCount || 0 },
+                            //     { title: "Non-CII Stock", delivered: nonCiiDeliveredCount || 0, returned: nonCiiReturnCount || 0 },
+                            // ])
                         }
                     })
                     .catch((error) => {

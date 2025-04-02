@@ -20,9 +20,10 @@ const CustomSelect = ({ label, options, placeholder, onSelectionChange, resetSel
 
   // Handle input change for search term
   const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
+    const value = e.target.value;
+    setSearchTerm(value);
     setShowDropdown(true); // Show dropdown when user starts typing
-    onSelectionChange(searchTerm);
+    onSelectionChange(value);
   };
 
   // Handle option selection
