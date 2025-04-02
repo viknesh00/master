@@ -7,6 +7,7 @@ import { ReactComponent as Plus } from "../../assets/svg/plus.svg";
 import { ReactComponent as Edit } from "../../assets/svg/edit.svg";
 import Search from "../../utils/Search";
 import Pagination from "@mui/material/Pagination";
+import TablePagination from "@mui/material/TablePagination";
 import { ReactComponent as UpArrow } from "../../assets/svg/up-arrow.svg";
 import { ReactComponent as DownArrow } from "../../assets/svg/down-arrow.svg";
 import { ReactComponent as VerticalDot } from "../../assets/svg/vertical-dot.svg";
@@ -27,9 +28,10 @@ const MaterialDescription = () => {
     const location = useLocation();
     const [materialNumber, serialNumber] = location.pathname.split('/').slice(-2);
     const { serialData, materialDescription } = location.state || {};
-    const [currentPage, setCurrentPage] = useState(1);
-    const [returnCurrentPage, setReturnCurrentPage] = useState(1);
-    const rowsPerPage = 10;
+    const [currentPage, setCurrentPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [returnCurrentPage, setReturnCurrentPage] = useState(0);
+    const [returnRowsPerPage, setReturnRowsPerPage] = useState(10);
     const [deliveryData, setDeliveryData] = useState([]);
     const [selectedMaterialData, setSelectedMaterialData] = useState("");
     const [returnData, setReturnData] = useState([]);
@@ -148,10 +150,9 @@ const MaterialDescription = () => {
         return 0;
     });
 
-    const totalPages = Math.ceil(sortedData.length / rowsPerPage);
     const paginatedData = sortedData.slice(
-        (currentPage - 1) * rowsPerPage,
-        currentPage * rowsPerPage
+        currentPage * rowsPerPage,
+        currentPage * rowsPerPage + rowsPerPage
     );
 
     const filteredReturnData = returnData.filter((item) =>
@@ -173,10 +174,9 @@ const MaterialDescription = () => {
         return 0;
     });
 
-    const returnTotalPages = Math.ceil(sortedReturnData.length / rowsPerPage);
     const paginatedReturnData = sortedReturnData.slice(
-        (returnCurrentPage - 1) * rowsPerPage,
-        returnCurrentPage * rowsPerPage
+        returnCurrentPage * returnRowsPerPage,
+        returnCurrentPage * returnRowsPerPage + returnRowsPerPage
     );
 
     const handleInputChange = (value) => {
@@ -189,6 +189,11 @@ const MaterialDescription = () => {
         setCurrentPage(value);
     };
 
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setCurrentPage(0);
+    };
+    
     const handleSort = (key) => {
         let direction = "asc";
         if (sortConfig.key === key && sortConfig.direction === "asc") {
@@ -205,6 +210,11 @@ const MaterialDescription = () => {
 
     const handleReturnPageChange = (event, value) => {
         setReturnCurrentPage(value);
+    };
+
+    const handleReturnChangeRowsPerPage = (event) => {
+        setReturnRowsPerPage(parseInt(event.target.value, 10));
+        setReturnCurrentPage(0);
     };
 
     const handleReturnSort = (key) => {
@@ -530,12 +540,24 @@ const MaterialDescription = () => {
                     </div>
                 )}
                 <div className="table-footer">
-                    <Pagination
-                        count={totalPages}
+                    <div className="table-pagination">
+                        <Pagination
+                            count={Math.ceil(sortedData.length / rowsPerPage)}
+                            page={currentPage + 1}
+                            onChange={(event, value) => handlePageChange(event, value - 1)}
+                            variant="outlined"
+                            shape="rounded"
+                        />
+                    </div>
+                    <TablePagination
+                        component="div"
+                        count={sortedData.length}
                         page={currentPage}
-                        onChange={handlePageChange}
-                        variant="outlined"
-                        shape="rounded"
+                        onPageChange={handlePageChange}
+                        rowsPerPage={rowsPerPage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                        nextIconButtonProps={{ style: { display: 'none' } }}
+                        backIconButtonProps={{ style: { display: 'none' } }}
                     />
                 </div>
 
@@ -628,12 +650,24 @@ const MaterialDescription = () => {
                     ))}
                 </div>
                 <div className="table-footer">
-                    <Pagination
-                        count={returnTotalPages}
-                        page={currentPage}
-                        onChange={handleReturnPageChange}
-                        variant="outlined"
-                        shape="rounded"
+                    <div className="table-pagination">
+                        <Pagination
+                            count={Math.ceil(sortedReturnData.length / returnRowsPerPage)}
+                            page={returnCurrentPage + 1}
+                            onChange={(event, value) => handleReturnPageChange(event, value - 1)}
+                            variant="outlined"
+                            shape="rounded"
+                        />
+                    </div>
+                    <TablePagination
+                        component="div"
+                        count={sortedReturnData.length}
+                        page={returnCurrentPage}
+                        onPageChange={handleReturnPageChange}
+                        rowsPerPage={returnRowsPerPage}
+                        onRowsPerPageChange={handleReturnChangeRowsPerPage}
+                        nextIconButtonProps={{ style: { display: 'none' } }}
+                        backIconButtonProps={{ style: { display: 'none' } }}
                     />
                 </div>
 

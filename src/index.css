@@ -997,6 +997,13 @@ input:focus, textarea:focus {
   padding: 12px 24px 16px 24px;
   border: 1px solid #E6E6E6;
   border-top: none;
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.table-pagination{
+  flex-grow: 1;
   display: flex;
   justify-content: center;
 }

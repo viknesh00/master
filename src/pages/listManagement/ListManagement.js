@@ -5,12 +5,13 @@ import Search from "../../utils/Search";
 import { ReactComponent as Edit } from "../../assets/svg/edit.svg";
 import list_management_data from "../../data/list_management.json";
 import Pagination from "@mui/material/Pagination";
+import TablePagination from "@mui/material/TablePagination";
 import AddList from "../../dialog/listmanagement-dialog/AddList";
 import EditList from "../../dialog/listmanagement-dialog/Editlist";
 
 const ListManagement = () => {
-    const [currentPage, setCurrentPage] = useState(1);
-    const rowsPerPage = 10;
+    const [currentPage, setCurrentPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
     const [searchQuery, setSearchQuery] = useState("");
     const [showAddList, setShowAddList] = useState(false);
     const [showEditList, setShowEditList] = useState(false);
@@ -22,10 +23,9 @@ const ListManagement = () => {
         item["listName"].toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const totalPages = Math.ceil(filteredData.length / rowsPerPage);
     const paginatedData = filteredData.slice(
-        (currentPage - 1) * rowsPerPage,
-        currentPage * rowsPerPage
+        currentPage * rowsPerPage,
+        currentPage * rowsPerPage + rowsPerPage
     );
 
     const handleInputChange = (value) => {
@@ -35,6 +35,11 @@ const ListManagement = () => {
 
     const handlePageChange = (event, value) => {
         setCurrentPage(value);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setCurrentPage(0);
     };
 
     const handleOpenAddList = () => {
@@ -87,12 +92,24 @@ const ListManagement = () => {
 
 
                 <div className="table-footer">
-                    <Pagination
-                        count={totalPages}
+                    <div className="table-pagination">
+                        <Pagination
+                            count={Math.ceil(filteredData.length / rowsPerPage)}
+                            page={currentPage + 1}
+                            onChange={(event, value) => handlePageChange(event, value - 1)}
+                            variant="outlined"
+                            shape="rounded"
+                        />
+                    </div>
+                    <TablePagination
+                        component="div"
+                        count={filteredData.length}
                         page={currentPage}
-                        onChange={handlePageChange}
-                        variant="outlined"
-                        shape="rounded"
+                        onPageChange={handlePageChange}
+                        rowsPerPage={rowsPerPage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                        nextIconButtonProps={{ style: { display: 'none' } }}
+                        backIconButtonProps={{ style: { display: 'none' } }}
                     />
                 </div>
             </div>

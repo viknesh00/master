@@ -5,6 +5,7 @@ import { ReactComponent as Download } from "../../assets/svg/download.svg";
 import { ReactComponent as Plus } from "../../assets/svg/plus.svg";
 import Search from "../../utils/Search";
 import Pagination from "@mui/material/Pagination";
+import TablePagination from "@mui/material/TablePagination";
 import Warehouse_data from "../../data/warehouse_data.json";
 import * as XLSX from "xlsx";
 import { ReactComponent as UpArrow } from "../../assets/svg/up-arrow.svg";
@@ -27,10 +28,10 @@ const WarehouseManagement = () => {
         { label: "Company Management", path: "/company-management" },
         { label: `${companyName}`, path: "" },
     ];
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
     const [warehouseData, setWarehouseData] = useState([]);
     const [selectedWarehouseData, setSelectedWarehouseData] = useState([]);
-    const rowsPerPage = 10;
     const [showAddMaterial, setShowAddMaterial] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedRows, setSelectedRows] = useState([]);
@@ -124,10 +125,9 @@ const WarehouseManagement = () => {
         return 0;
     });
 
-    const totalPages = Math.ceil(sortedData.length / rowsPerPage);
     const paginatedData = sortedData.slice(
-        (currentPage - 1) * rowsPerPage,
-        currentPage * rowsPerPage
+        currentPage * rowsPerPage,
+        currentPage * rowsPerPage + rowsPerPage
     );
 
     const handleInputChange = (value) => {
@@ -138,6 +138,11 @@ const WarehouseManagement = () => {
 
     const handlePageChange = (event, value) => {
         setCurrentPage(value);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setCurrentPage(0);
     };
 
     const handleSelectAllChange = (event) => {
@@ -327,12 +332,24 @@ const WarehouseManagement = () => {
                 )}
 
                 <div className="table-footer">
-                    <Pagination
-                        count={totalPages}
+                    <div className="table-pagination">
+                        <Pagination
+                            count={Math.ceil(sortedData.length / rowsPerPage)}
+                            page={currentPage + 1}
+                            onChange={(event, value) => handlePageChange(event, value - 1)}
+                            variant="outlined"
+                            shape="rounded"
+                        />
+                    </div>
+                    <TablePagination
+                        component="div"
+                        count={sortedData.length}
                         page={currentPage}
-                        onChange={handlePageChange}
-                        variant="outlined"
-                        shape="rounded"
+                        onPageChange={handlePageChange}
+                        rowsPerPage={rowsPerPage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                        nextIconButtonProps={{ style: { display: 'none' } }}
+                        backIconButtonProps={{ style: { display: 'none' } }}
                     />
                 </div>
             </div>
