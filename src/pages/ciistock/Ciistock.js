@@ -4,6 +4,7 @@ import { ReactComponent as Download } from "../../assets/svg/download.svg";
 import { ReactComponent as Plus } from "../../assets/svg/plus.svg";
 import Search from "../../utils/Search";
 import Pagination from "@mui/material/Pagination";
+import TablePagination from "@mui/material/TablePagination";
 import * as XLSX from "xlsx";
 import { ReactComponent as UpArrow } from "../../assets/svg/up-arrow.svg";
 import { ReactComponent as DownArrow } from "../../assets/svg/down-arrow.svg";
@@ -27,8 +28,8 @@ const Ciistock = (props) => {
         { label: "CII Stock", path: "" },
     ];
     const [ciiStockData, setCiiStockData] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const rowsPerPage = 10;
+    const [currentPage, setCurrentPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
     const [showAddMaterial, setShowAddMaterial] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedRows, setSelectedRows] = useState([]);
@@ -146,10 +147,9 @@ const Ciistock = (props) => {
         return 0;
     });
 
-    const totalPages = Math.ceil(sortedData.length / rowsPerPage);
     const paginatedData = sortedData.slice(
-        (currentPage - 1) * rowsPerPage,
-        currentPage * rowsPerPage
+        currentPage * rowsPerPage,
+        currentPage * rowsPerPage + rowsPerPage
     );
 
     const handleInputChange = (value) => {
@@ -211,6 +211,11 @@ const Ciistock = (props) => {
         setCurrentPage(value);
     };
 
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setCurrentPage(0);
+    };
+
     const handleSelectAllChange = (event) => {
         if (event.target.checked) {
             setSelectedRows(paginatedData.map((item) => item["materialNumber"]));
@@ -232,9 +237,17 @@ const Ciistock = (props) => {
     );
 
     const handleDownload = () => {
+        const keysToKeep = ["materialNumber", "materialDescription", "newstock", "usedstock", "stockinHand", "status"];
+        const cleanedData = filteredData.map(item =>
+            Object.fromEntries(
+                keysToKeep
+                    .filter(key => key in item) // Ensure the key exists in the object
+                    .map(key => [key, item[key]]) // Reconstruct the object with keys in order
+            )
+        );
         const dataToExport = selectedRows.length
-            ? filteredData.filter((item) => selectedRows.includes(item["materialNumber"]))
-            : filteredData;
+            ? cleanedData.filter((item) => selectedRows.includes(item["materialNumber"]))
+            : cleanedData;
         const worksheet = XLSX.utils.json_to_sheet(dataToExport);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "CII Stock");
@@ -430,14 +443,25 @@ const Ciistock = (props) => {
                         </button>
                     </div>
                 )}
-
                 <div className="table-footer">
-                    <Pagination
-                        count={totalPages}
+                    <div className="table-pagination">
+                        <Pagination
+                            count={Math.ceil(sortedData.length / rowsPerPage)}
+                            page={currentPage + 1}
+                            onChange={(event, value) => handlePageChange(event, value - 1)}
+                            variant="outlined"
+                            shape="rounded"
+                        />
+                    </div>
+                    <TablePagination
+                        component="div"
+                        count={sortedData.length}
                         page={currentPage}
-                        onChange={handlePageChange}
-                        variant="outlined"
-                        shape="rounded"
+                        onPageChange={handlePageChange}
+                        rowsPerPage={rowsPerPage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                        nextIconButtonProps={{ style: { display: 'none' } }}
+                        backIconButtonProps={{ style: { display: 'none' } }}
                     />
                 </div>
             </div>
