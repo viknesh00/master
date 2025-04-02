@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ReactComponent as DownArrow } from "../assets/svg/optiondown-arrow.svg";
 import { ReactComponent as UpArrow } from "../assets/svg/optionup-arrow.svg";
 
-const CustomSelect = ({ label, options, placeholder, onSelectionChange, resetSelect }) => {
+const CustomSelect = ({ label, options, placeholder, onSelectionChange, getsearchValue, resetSelect }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedOption, setSelectedOption] = useState(null);
@@ -20,15 +20,16 @@ const CustomSelect = ({ label, options, placeholder, onSelectionChange, resetSel
 
   // Handle input change for search term
   const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
+    const value = e.target.value;
+    setSearchTerm(value);
     setShowDropdown(true); // Show dropdown when user starts typing
-    onSelectionChange(searchTerm);
+    getsearchValue(value);
   };
 
   // Handle option selection
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
-    onSelectionChange(option, "inwardFrom"); // Notify parent about selection
+    onSelectionChange(option, label); // Notify parent about selection
     setSearchTerm(""); // Clear search term after selection
     setShowDropdown(false); // Close dropdown after selection
   };

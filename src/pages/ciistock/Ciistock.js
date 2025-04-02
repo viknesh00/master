@@ -158,54 +158,35 @@ const Ciistock = (props) => {
         setSelectedRows([]);
     };
 
-      // API call whenever searchTerm changes
-      useEffect(() => {
-        debugger
-        if (!searchTerm.trim()) {
-          setSerialOptions([]); // Clear dropdown if input is empty
-          return;
-        }
-    
-        console.log("API Call:", searchTerm); // Debugging: Check if API is being triggered
-    
-        const url = `SmInboundStockCiis/SearchSerialNumber/${name}/${searchTerm}`;
-    
-        postRequest(url)
-          .then((res) => {
-              if (res.status === 200 && res.data) {
+    const getsearchValue = (value) => {
+        if (!value.trim()) {
+            setSerialOptions([]); // Clear dropdown if input is empty
+            return;
+          }
+      
+          console.log("API Call:", value); // Debugging: Check if API is being triggered
+      
+          const url = `SmInboundStockCiis/SearchSerialNumber/${name}/${value}`;
+      
+          postRequest(url)
+            .then((res) => {
+                if (res.status === 200 && res.data) {
+  
+                    const Options = [
+                        ...new Set(res.data.map((item) => item)),
+                    ].map((value) => ({ id: value, name: value.serialNumber }));
+  
+                    setSerialOptions(Options); // Update dropdown
+                }
+            })
+            .catch((error) => {
+              console.error("API Error:", error);
+            });
+    }
 
-                  const Options = [
-                      ...new Set(res.data.map((item) => item.serialNumber)),
-                  ].map((value) => ({ id: value, name: value }));
-
-                  setSerialOptions(Options); // Update dropdown
-              }
-          })
-          .catch((error) => {
-            console.error("API Error:", error);
-          });
-    
-      }, [searchTerm]); // API call happens on every searchTerm change
-    
-
-    // const searchSerialNumber = (event) => {
-    //     debugger
-    //     const serialNumber = event.target.value; // Get input value
-    
-    //     if (!serialNumber) return; // Prevent API call if empty
-    
-    //     const url = `SmInboundStockCiis/SearchSerialNumber/${serialNumber}`;
-    
-    //     postRequest(url)
-    //       .then((res) => {
-    //           if (res.status === 200 && res.data) {
-    //               setSerialOptions(res.data); // Update dropdown options with API response
-    //           }
-    //       })
-    //       .catch((error) => {
-    //           console.error("API Error:", error);
-    //       });
-    // };
+    const onSelectionChange = (value, field) =>{
+        navigate(`/cii-stock/${value.id.materialNumber}/${value.id.serialNumber}`, { state: { serialData : value.id, materialDescription : value.id.materialDescription } });
+    }
 
     const handlePageChange = (event, value) => {
         setCurrentPage(value);
@@ -295,7 +276,8 @@ const Ciistock = (props) => {
                         <CustomSelect
                             options={serialOptions}
                             placeholder="Search Serial Number"
-                            onSelectionChange={setSearchTerm}
+                            getsearchValue={getsearchValue}
+                            onSelectionChange={onSelectionChange}
                             //resetSelect={resetSelect}
                         />
                     </div>
