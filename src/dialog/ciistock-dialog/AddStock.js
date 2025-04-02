@@ -67,7 +67,7 @@ const AddStock = (props) => {
             MaterialNumber: materialNumber,
             MaterialDescription: materialDescription,
             OrderNumber: formData.OrderNumber,
-            Inwarddate: new Date(formData.InwardDate).toISOString() || "",
+            Inwarddate: formData.InwardDate ? new Date(formData.InwardDate).toISOString() : null,
             ReceivedBy: formData.ReceivedBy || "",
             RacKLocation: formData.RackLocation || "",
             InwardFrom: formData.InwardFrom || "",  
