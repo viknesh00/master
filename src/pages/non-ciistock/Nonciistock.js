@@ -172,9 +172,17 @@ const Nonciistock = () => {
     );
 
     const handleDownload = () => {
+        const keysToKeep = ["materialNumber", "materialDescription", "newstock", "usedstock", "stockinHand", "status"];
+        const cleanedData = filteredData.map(item =>
+            Object.fromEntries(
+                keysToKeep
+                    .filter(key => key in item) // Ensure the key exists in the object
+                    .map(key => [key, item[key]]) // Reconstruct the object with keys in order
+            )
+        );
         const dataToExport = selectedRows.length
-            ? filteredData.filter((item) => selectedRows.includes(item["materialNumber"]))
-            : filteredData;
+            ? cleanedData.filter((item) => selectedRows.includes(item["materialNumber"]))
+            : cleanedData;
         const worksheet = XLSX.utils.json_to_sheet(dataToExport);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "Non-CII Stock");

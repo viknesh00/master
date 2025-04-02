@@ -166,13 +166,24 @@ const WarehouseManagement = () => {
     );
 
     const handleDownload = () => {
+        const keysToKeep = ["tenentCode", "tenentName", "tenentLocation", "tenentStatus"];
+        const cleanedData = filteredData.map(item =>
+            Object.fromEntries(
+                keysToKeep
+                    .filter(key => key in item) // Ensure the key exists in the object
+                    .map(key => [
+                        key, 
+                        key === "tenentStatus" ? (item[key] ? "Active" : "Inactive") : item[key] // Convert companyStatus
+                    ])
+            )
+        );
         const dataToExport = selectedRows.length
-            ? filteredData.filter((item) => selectedRows.includes(item["tenentCode"]))
-            : filteredData;
+            ? cleanedData.filter((item) => selectedRows.includes(item["tenentCode"]))
+            : cleanedData;
         const worksheet = XLSX.utils.json_to_sheet(dataToExport);
         const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Company Management");
-        XLSX.writeFile(workbook, "Company_Management.xlsx");
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Warehouse Management");
+        XLSX.writeFile(workbook, "Warhouse_Management.xlsx");
     };
 
     const handleSort = (key) => {

@@ -155,9 +155,17 @@ const StockReturned = () => {
     );
 
     const handleDownload = () => {
+        const keysToKeep = ["orderNumber", "locationReturnedFrom", "returnedDate", "qunatity", "returnedBy", "rackLocation","returnType","returnReason"];
+        const cleanedData = filteredData.map(item =>
+            Object.fromEntries(
+                keysToKeep
+                    .filter(key => key in item) // Ensure the key exists in the object
+                    .map(key => [key, item[key]]) // Reconstruct the object with keys in order
+            )
+        );
         const dataToExport = selectedRows.length
-            ? filteredData.filter((item) => selectedRows.includes(item["orderNumber"]))
-            : filteredData;
+            ? cleanedData.filter((item) => selectedRows.includes(item["orderNumber"]))
+            : cleanedData;
         const worksheet = XLSX.utils.json_to_sheet(dataToExport);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "Stock Returned");

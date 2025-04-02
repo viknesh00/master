@@ -169,13 +169,24 @@ const UserManagement = () => {
     );
 
     const handleDownload = () => {
+        const keysToKeep = ["userCode", "userName", "email", "userType", "accessLevel", "userStatus"];
+        const cleanedData = filteredData.map(item =>
+            Object.fromEntries(
+                keysToKeep
+                    .filter(key => key in item) // Ensure the key exists in the object
+                    .map(key => [
+                        key, 
+                        key === "userStatus" ? (item[key] ? "Active" : "Inactive") : item[key] // Convert companyStatus
+                    ])
+            )
+        );
         const dataToExport = selectedRows.length
-            ? filteredData.filter((item) => selectedRows.includes(item["userCode"]))
-            : filteredData;
+            ? cleanedData.filter((item) => selectedRows.includes(item["userCode"]))
+            : cleanedData;
         const worksheet = XLSX.utils.json_to_sheet(dataToExport);
         const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Company Management");
-        XLSX.writeFile(workbook, "Company_Management.xlsx");
+        XLSX.utils.book_append_sheet(workbook, worksheet, "User Management");
+        XLSX.writeFile(workbook, "User_Management.xlsx");
     };
 
     const handleSort = (key) => {

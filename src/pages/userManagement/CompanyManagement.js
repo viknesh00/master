@@ -163,9 +163,20 @@ const CompanyManagement = () => {
     );
 
     const handleDownload = () => {
+        const keysToKeep = ["pk_CompanyCode", "companyName", "domainName", "companyStatus"];
+        const cleanedData = filteredData.map(item =>
+            Object.fromEntries(
+                keysToKeep
+                    .filter(key => key in item) // Ensure the key exists in the object
+                    .map(key => [
+                        key, 
+                        key === "companyStatus" ? (item[key] ? "Active" : "Inactive") : item[key] // Convert companyStatus
+                    ])
+            )
+        );
         const dataToExport = selectedRows.length
-            ? filteredData.filter((item) => selectedRows.includes(item["pk_CompanyCode"]))
-            : filteredData;
+            ? cleanedData.filter((item) => selectedRows.includes(item["pk_CompanyCode"]))
+            : cleanedData;
         const worksheet = XLSX.utils.json_to_sheet(dataToExport);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "Company Management");
