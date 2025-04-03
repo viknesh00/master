@@ -21,6 +21,10 @@ const Addnonciistock = (props) => {
 
 
   const handleAddnonciistock = () => {
+        if (!formData.MaterialNumber || !formData.MaterialDescription) {
+            ToastError("Please enter the Material Number and Material Description");
+            return; 
+        }
           const url = `SmInboundStockNonCiis/NonStockCIIMaterial/${formData.MaterialNumber}/${formData.MaterialDescription}`;
   
           postRequest(url)
@@ -31,7 +35,7 @@ const Addnonciistock = (props) => {
                   }
               })
               .catch((error) => {
-                ToastError("Entered Material Number Already Exists");
+                ToastError(error.response.data);
                   
               });
       }

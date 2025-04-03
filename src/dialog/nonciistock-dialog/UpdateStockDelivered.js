@@ -43,6 +43,10 @@ const UpdateStockDelivered = (props) => {
     };
 
     const handleUpdateDeliveredciistock = () => {
+                if (!formData.deliveryNumber || !formData.orderNumber) {
+                    ToastError("Please enter Delivery Number and Quantity Received");
+                    return; 
+                }
                 let Data = {};
                  Data = {
                     ...Data,
@@ -52,12 +56,12 @@ const UpdateStockDelivered = (props) => {
                     deliveryNumber:formData.deliveryNumber,
                     orderNumber:formData.orderNumber,
                     existOrderNumber:selectedMaterialData.orderNumber,
-                    outboundDate: new Date(formData.outboundDate).toISOString(),
-                    receiverName:formData.receiverName,
-                    targetLocation:formData.targetLocation,
+                    outboundDate: formData.outboundDate? new Date(formData.outboundDate).toISOString() : null,
+                    receiverName:formData.receiverName || "",
+                    targetLocation:formData.targetLocation || "",
                     deliveredQuantity:formData.deliveredQuantity,
                     existDeliveredQuantity: selectedMaterialData.deliveredQuantity,
-                    sentBy:formData.sentBy,
+                    sentBy:formData.sentBy || "",
                     deliveryNumber_inbound: formData.deliveryNumber,
                     outboundStockNonCIIKey: selectedMaterialData.outboundStockNonCIIKey
                 }
@@ -116,7 +120,7 @@ const UpdateStockDelivered = (props) => {
                     <div className="grid-column">
                     <Textfield
                             name="deliveryNumber"
-                            label="Delivery Number"
+                            label={<span>Delivery Number<span className="error">*</span></span>}
                             placeholder="Enter delivery number"
                             onChange={handleInputChange}
                             value={formData.deliveryNumber}
@@ -131,21 +135,21 @@ const UpdateStockDelivered = (props) => {
                         />
                         <Datefield
                             name="outboundDate"
-                            label={<span>Outbound Date<span className="error">*</span></span>}
+                            label="Outbound Date"
                             placeholder="Select Date"
                             onChange={handleInputChange}
                             value={formData.outboundDate}
                         />
                         <Textfield
                             name="receiverName"
-                            label={<span>Receiver Name<span className="error">*</span></span>}
+                            label="Receiver Name"
                             placeholder="Enter receiver name"
                             onChange={handleInputChange}
                             value={formData.receiverName}
                         />
                         <Textfield
                             name="targetLocation"
-                            label={<span>Target Location<span className="error">*</span></span>}
+                            label="Target Location"
                             placeholder="Enter target location"
                             onChange={handleInputChange}
                             value={formData.targetLocation}
@@ -159,7 +163,7 @@ const UpdateStockDelivered = (props) => {
                         />
                         <Textfield
                             name="sentBy"
-                            label={<span>Sent By<span className="error">*</span></span>}
+                            label="Sent By"
                             placeholder="Enter Sender Name"
                             onChange={handleInputChange}
                             value={formData.sentBy}

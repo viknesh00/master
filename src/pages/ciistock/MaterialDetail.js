@@ -142,9 +142,15 @@ const MaterialDetail = () => {
             return matchesSearch && item["status"] === "New";
         } else if (activeTab === "Used") {
             return matchesSearch && item["status"] === "Used";
-        } else if (activeTab === "Defective") {
-            return matchesSearch && item["status"] === "Defective";
-        } else if (fromDate && toDate) {
+        } else if (activeTab === "Damaged") {
+            return matchesSearch && item["status"] === "Damaged";
+        } else if (activeTab === "BreakFix") {
+            return matchesSearch && item["status"] === "BreakFix";
+        }
+        else if (activeTab === "Outward") {
+            return matchesSearch && item["status"] === "Outward";
+        }
+        else if (fromDate && toDate) {
             const itemDate = new Date(item["inwardDate"]);
             const fromDate = filterValue.fromdate ? new Date(filterValue.fromdate) : null;
             const toDate = filterValue.todate ? new Date(filterValue.todate) : null;
@@ -330,11 +336,11 @@ const MaterialDetail = () => {
                     {isPanelVisible && (
                         <div className="grid-container">
                             <StockCard title="Total Stock" value={analyticsData[0]?.totalstock || 0} bgColor="#000000" />
-                            <StockCard title="Stock Inward" value={analyticsData[0]?.inhandstock || 0} bgColor="#039855" />
-                            <StockCard title="Stock Delivered" value={analyticsData[0]?.deliverycount || 0} bgColor="#FF6600" />
-                            <StockCard title="Returned Stock" value={analyticsData[0]?.returncount || 0} bgColor="#046C7A" />
-                            <StockCard title="Stock Used" value={analyticsData[0]?.usedstock || 0} bgColor="#5D36FF"/>
-                            <StockCard title="Defective Item" value={analyticsData[0]?.defectivestock || 0} bgColor="#DD0000" />
+                            <StockCard title="New Stock" value={analyticsData[0]?.inhandstock || 0} bgColor="#039855" />
+                            <StockCard title="Outward Stock" value={analyticsData[0]?.outwardstock || 0} bgColor="#FF6600" />
+                            <StockCard title="Used Stock" value={analyticsData[0]?.usedstock || 0} bgColor="#046C7A" />
+                            <StockCard title="BreakFix Stock" value={analyticsData[0]?.breakfixstock || 0} bgColor="#5D36FF"/>
+                            <StockCard title="Damaged Stock" value={analyticsData[0]?.damagedstock || 0} bgColor="#DD0000" />
                         </div>
                     )}
                 </div>
@@ -374,10 +380,22 @@ const MaterialDetail = () => {
                             Used
                         </button>
                         <button
-                            className={`tab-button ${activeTab === "Defective" ? "active" : ""}`}
-                            onClick={() => setActiveTab("Defective")}
+                            className={`tab-button ${activeTab === "Damaged" ? "active" : ""}`}
+                            onClick={() => setActiveTab("Damaged")}
                         >
-                            Defective
+                            Damaged
+                        </button>
+                        <button
+                            className={`tab-button ${activeTab === "BreakFix" ? "active" : ""}`}
+                            onClick={() => setActiveTab("BreakFix")}
+                        >
+                            BreakFix
+                        </button>
+                        <button
+                            className={`tab-button ${activeTab === "Outward" ? "active" : ""}`}
+                            onClick={() => setActiveTab("Outward")}
+                        >
+                            Outward
                         </button>
                     </div>
                     <Search placeholder="Search" onChange={handleInputChange} />
@@ -477,7 +495,7 @@ const MaterialDetail = () => {
                             <div className="table-data text-left w-[10%]">{item["receivedBy"]}</div>
                             <div className="table-data text-left w-[10%]">{item["rackLocation"]}</div>
                             <div className="table-data text-left w-[10%]">
-                                <span className={`${item["status"] === "New" ? "status-available" : item["status"] === "Defective" ? "status-not-available" : "status-unknown"}`}>{item["status"]}</span>
+                                <span className={`${item["status"] === "New" ? "status-available" : item["status"] === "Damaged" ? "status-not-available" : "status-unknown"}`}>{item["status"]}</span>
                             </div>
                             <div className="table-data text-center w-[10%]">
                                 <VerticalDot

@@ -23,7 +23,7 @@ const NonciiMaterialDetail = () => {
     const [activeTab, setActiveTab] = useState("Stock Inward");
     const tabs = [
         { label: "Stock Inward", icon: <ActivityHeart /> },
-        { label: "Stock Delivered", icon: <ActivityHeart /> },
+        { label: "Stock Outward", icon: <ActivityHeart /> },
         { label: "Stock Returned", icon: <ActivityHeart /> },
         { label: "Used Stock", icon: <ActivityHeart /> },
     ];
@@ -53,7 +53,7 @@ const NonciiMaterialDetail = () => {
         switch (activeTab) {
             case "Stock Inward":
                 return <StockInward/>;
-            case "Stock Delivered":
+            case "Stock Outward":
                 return <StockDelivered/>;
             case "Stock Returned":
                 return <StockReturned/>
@@ -80,11 +80,11 @@ const NonciiMaterialDetail = () => {
                     {isPanelVisible && (
                         <div className="grid-container">
                             <StockCard title="Total Stock" value={analyticsData[0]?.totalstock || 0} bgColor="#000000" />
-                            <StockCard title="Stock Inward" value={analyticsData[0]?.inhandstock || 0} bgColor="#039855" onClick={() => setActiveTab("Stock Inward")} />
-                            <StockCard title="Stock Used" value={analyticsData[0]?.usedstock || 0} bgColor="#FF6600" onClick={() => setActiveTab("Used Stock")} />
-                            <StockCard title="Stock Outward" value={analyticsData[0]?.deliverycount || 0} bgColor="#046C7A" onClick={() => setActiveTab("Stock Delivered")} />
-                            <StockCard title="Returned Stock" value={analyticsData[0]?.returncount || 0} bgColor="#5D36FF" onClick={() => setActiveTab("Stock Returned")} />
-                            <StockCard title="Defective Item" value={analyticsData[0]?.defectivestock || 0} bgColor="#DD0000" />
+                            <StockCard title="New Stock" value={analyticsData[0]?.newstock || 0} bgColor="#039855" onClick={() => setActiveTab("Stock Inward")} />
+                            <StockCard title="Used Stock" value={analyticsData[0]?.usedstock || 0} bgColor="#FF6600" onClick={() => setActiveTab("Used Stock")} />
+                            <StockCard title="Outward Stock" value={analyticsData[0]?.deliverycount || 0} bgColor="#046C7A" onClick={() => setActiveTab("Stock Outward")} />
+                            <StockCard title="BreakFix Stock" value={analyticsData[0]?.breakfixstock || 0} bgColor="#5D36FF" onClick={() => setActiveTab("Stock Returned")} />
+                            <StockCard title="Damaged Stock" value={analyticsData[0]?.damagedstock || 0} bgColor="#DD0000" />
                         </div>
                     )}
                 </div>

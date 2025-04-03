@@ -56,6 +56,10 @@ const UpdateReturnDetails = (props) => {
     };
 
     const handleSave = () => {
+                if(!formData.OrderNumber || !formData.ReturnType){
+                    ToastError("Please enter Order Number and Return Type");
+                    return;
+                };
         let Data = {};
         Data = {
             ...Data,
@@ -64,12 +68,12 @@ const UpdateReturnDetails = (props) => {
             materialDescription: serialData.materialDescription,
             orderNumber: formData.OrderNumber,
             existOrderNumber: selectedMaterialData.orderNumber,
-            locationReturnedFrom: formData.ReturnLocation,
-            returneddate: new Date(formData.ReturnDate).toISOString(),
-            returnedBy: formData.ReceivedBy,
-            rackLocation: formData.RackLocation,
+            locationReturnedFrom: formData.ReturnLocation || "",
+            returneddate: formData.ReturnDate? new Date(formData.ReturnDate).toISOString(): null,
+            returnedBy: formData.ReceivedBy || "",
+            rackLocation: formData.RackLocation || "",
             returnType: formData.ReturnType,
-            returns: formData.Return,
+            returns: formData.Return || "",
         }
 
         const url = `SmOutboundStockCiis/UpdateReturnData`;
@@ -122,35 +126,35 @@ const UpdateReturnDetails = (props) => {
 
                     <div className="grid-column">
                         <Textfield
-                            label="Order Number"
+                            label={<span>Order Number<span className="error">*</span></span>}
                             name="OrderNumber"
                             value={formData.OrderNumber}
                             placeholder="Enter order number"
                             onChange={handleInputChange}
                         />
                         <Textfield
-                            label={<span>Return Location<span className="error">*</span></span>}
+                            label="Return Location"
                             name="ReturnLocation"
                             value={formData.ReturnLocation}
                             placeholder="Enter return location"
                             onChange={handleInputChange}
                         />
                         <Datefield
-                            label={<span>Return Date<span className="error">*</span></span>}
+                            label="Return Date"
                             name="ReturnDate"
                             value={formData.ReturnDate}
                             placeholder="Select Date"
                             onChange={handleInputChange}
                         />
                         <Textfield
-                            label={<span>Received By<span className="error">*</span></span>}
+                            label="Received By"
                             name="ReceivedBy"
                             value={formData.ReceivedBy}
                             placeholder="Enter receiver name"
                             onChange={handleInputChange}
                         />
                         <Textfield
-                            label={<span>Rack Location<span className="error">*</span></span>}
+                            label="Rack Location"
                             name="RackLocation"
                             value={formData.RackLocation}
                             placeholder="Enter rack location"
@@ -173,7 +177,7 @@ const UpdateReturnDetails = (props) => {
                         /> */}
                         <div className="grid-span">
                             <Description
-                                label={<span>Return<span className="error">*</span></span>}
+                                label="Return"
                                 name="Return"
                                 value={formData.Return}
                                 placeholder="Enter material description..."

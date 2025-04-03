@@ -510,7 +510,7 @@ const MaterialDescription = () => {
                                 />
                             </div>
                             <div className="table-data text-left w-[15%]">{item["outBoundOrderNumber"]}</div>
-                            <div className="table-data text-left w-[15%]">{item["outBoundDate"]}</div>
+                            <div className="table-data text-left w-[15%]">{formatDate(item["outBoundDate"])}</div>
                             <div className="table-data text-left w-[15%]">{item["receiverName"]}</div>
                             <div className="table-data text-left w-[20%]">{item["targetLocation"]}</div>
                             <div className="table-data text-left w-[20%]">{item["sentby"]}</div>

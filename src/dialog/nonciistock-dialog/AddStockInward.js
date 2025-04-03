@@ -30,18 +30,22 @@ const AddStockInward = (props) => {
     };
 
     const handleAddInwardciistock = () => {
+        if(!formData.deliveryNumber || !formData.enterQuantity){
+            ToastError("Please enter Delivery Number and Quantity Received");
+            return;
+        }
         let Data = {};
         Data = {
             ...Data,
             materialNumber: materialNumber,
             materialDescription: materialDescription,
-            deliveryNumber: formData.deliveryNumber ?? "",
-            orderNumber: formData.orderNumber ?? "",
-            inwardDate: new Date(formData.inwardDate).toISOString(), 
-            inwardFrom: formData.inwardFrom,
+            deliveryNumber: formData.deliveryNumber,
+            orderNumber: formData.orderNumber || "",
+            inwardDate: formData.inwardDate? new Date(formData.inwardDate).toISOString() : null, 
+            inwardFrom: formData.inwardFrom || "",
             quantityReceived: formData.enterQuantity,
-            receivedBy: formData.receivedBy,
-            rackLocation: formData.rackLocation,
+            receivedBy: formData.receivedBy || "",
+            rackLocation: formData.rackLocation || "",
             username: name
         }
         const url = `SmInboundStockNonCiis/AddNonStockInbounddata`;
@@ -99,7 +103,7 @@ const AddStockInward = (props) => {
                     <div className="grid-column">
                         <Textfield
                             name="deliveryNumber"
-                            label="Delivery Number"
+                            label={<span>Delivery Number<span className="error">*</span></span>}
                             placeholder="Enter Delivery Number"
                             onChange={handleInputChange}
                             value={formData.deliveryNumber}
@@ -113,14 +117,14 @@ const AddStockInward = (props) => {
                         />
                         <Datefield
                             name="inwardDate"
-                            label={<span>Inward Date<span className="error">*</span></span>}
+                            label="Inward Date"
                             placeholder="Select Date"
                             onChange={handleInputChange}
                             value={formData.inwardDate}
                         />
                         <Textfield
                             name="inwardFrom"
-                            label={<span>Inward From<span className="error">*</span></span>}
+                            label="Inward From"
                             placeholder="Enter source location"
                             onChange={handleInputChange}
                             value={formData.inwardFrom}
@@ -134,7 +138,7 @@ const AddStockInward = (props) => {
                         />
                         <Textfield
                             name="receivedBy"
-                            label={<span>Received By<span className="error">*</span></span>}
+                            label="Received By"
                             placeholder="Enter receiver name"
                             onChange={handleInputChange}
                             value={formData.receivedBy}

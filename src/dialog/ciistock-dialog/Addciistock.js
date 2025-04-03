@@ -21,10 +21,11 @@ const Addnonciistock = (props) => {
 
 
   const handleAddnonciistock = () => {
-            if(formData.MaterialNumber == "" || formData.MaterialDescription == ""){
-                ToastError("Please enter the Material Number and Material Description");
-            }
-          const url = `SmInboundStockNonCiis/NonStockCIIMaterial/${formData.MaterialNumber}/${formData.MaterialDescription}`;
+    if (!formData.MaterialNumber || !formData.MaterialDescription) {
+        ToastError("Please enter the Material Number and Material Description");
+        return; // Stop execution if validation fails
+    }
+          const url = `SmInboundStockCiis/Material/${formData.MaterialNumber}/${formData.MaterialDescription}`;
   
           postRequest(url)
               .then((res) => {

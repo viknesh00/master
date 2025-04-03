@@ -40,9 +40,10 @@ const EditMaterial = (props) => {
   }
 
   const handleUpdate = () => {
-    if (formData.MaterialNumber == "" || formData.MaterialDescription == "") {
+    if (!formData.MaterialNumber || !formData.MaterialDescription) {
       ToastError("Please enter the Material Number and Material Description");
-    }
+      return;
+    };
     const url = `SmInboundStockCiis/update/${formData.ExistingNumber}/${formData.MaterialNumber}/${formData.MaterialDescription}`;
     postRequest(url)
       .then((res) => {

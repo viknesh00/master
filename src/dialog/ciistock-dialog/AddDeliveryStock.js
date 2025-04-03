@@ -26,6 +26,10 @@ const AddDeliveryStock = (props) => {
     };
 
     const handleSave = () => {
+        if(!formData.OrderNumber){
+            ToastError("Please enter Order Number");
+            return;
+        }
         let Data = {};
         Data = {
             ...Data,
@@ -34,10 +38,12 @@ const AddDeliveryStock = (props) => {
             serialNumber: serialData.serialNumber,
             materialDescription: serialData.materialDescription,
             orderNumber: formData.OrderNumber,
-            outBounddate: new Date(formData.OutBoundDate).toISOString(),
-            targetLocation: formData.TargetLocation,
-            receiverName: formData.ReceiverName,
-            sentBy: formData.SentBy,
+            outBounddate: formData.OutBoundDate
+            ? new Date(formData.OutBoundDate).toISOString()  // Convert to UTC Date format
+            : null,
+            targetLocation: formData.TargetLocation || "",
+            receiverName: formData.ReceiverName || "",
+            sentBy: formData.SentBy || "",
             fk_Inbound_StockCII_DeliveryNumber: serialData.deliveryNumber
         }
 
@@ -102,31 +108,31 @@ const AddDeliveryStock = (props) => {
 
                     <div className="grid-column">
                         <Textfield
-                            label="Order Number"
+                            label={<span>Order Number<span className="error">*</span></span>}
                             name="OrderNumber"
                             placeholder="Enter order number"
                             onChange={handleInputChange}
                         />
                         <Datefield
-                            label={<span>OutBound Date<span className="error">*</span></span>}
+                            label="OutBound Date"
                             name="OutBoundDate"
                             placeholder="Select Date"
                             onChange={handleInputChange}
                         />
                         <Textfield
-                            label={<span>Receiver Name<span className="error">*</span></span>}
+                            label="Receiver Name"
                             name="ReceiverName"
                             placeholder="Enter receiver name"
                             onChange={handleInputChange}
                         />
                         <Textfield
-                            label={<span>Target Location<span className="error">*</span></span>}
+                            label="Target Location"
                             name="TargetLocation"
                             placeholder="Enter target location"
                             onChange={handleInputChange}
                         />
                         <Textfield
-                            label={<span>Sent By<span className="error">*</span></span>}
+                            label="Sent By"
                             name="SentBy"
                             placeholder="Enter sender name"
                             onChange={handleInputChange}

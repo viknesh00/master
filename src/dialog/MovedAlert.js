@@ -22,6 +22,9 @@ const MovedAlert = (props) => {
   };
 
   const handleSaveMovetoUsed = () => {
+    if (!formData.statusChange) {
+      return ToastError("Please select the Status Change");
+    }
     const status = formData.statusChange
     const url = `SmInboundStockCiis/${materialNumber}/${serialNumber}/${status}`;
     postRequest(url)

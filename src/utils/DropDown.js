@@ -8,7 +8,7 @@ const DropdownField = ({ label, name, value, onChange, options, disabled, placeh
   return (
     <div className="textfield-container">
       <div className="textfield-label">
-        {label}<sup style={{ color: "red" }}>*</sup>
+        {label}
       </div>
       <Select className="search-box-dropdown" name={name} value={options.includes(value) ? value : ""} disabled={disabled} onChange={handleChange}>
       <MenuItem value="">

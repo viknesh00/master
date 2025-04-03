@@ -67,7 +67,7 @@ const AddStock = (props) => {
             MaterialNumber: materialNumber,
             MaterialDescription: materialDescription,
             OrderNumber: formData.OrderNumber,
-            Inwarddate: new Date(formData.InwardDate).toISOString() || "",
+            Inwarddate: formData.InwardDate ? new Date(formData.InwardDate).toISOString() : null,
             ReceivedBy: formData.ReceivedBy || "",
             RacKLocation: formData.RackLocation || "",
             InwardFrom: formData.InwardFrom || "",  
@@ -93,13 +93,17 @@ const AddStock = (props) => {
     }
 
     const handleBulkAddStock = () => {
+        debugger
+        if(!files[0]){
+            ToastError("Please Upload Excel File");
+        }
         const data = new FormData();
         data.append("file", files[0]); // Add the uploaded file
         data.append("DeliveryNumber", formData.DeliveryNumber || "");
         data.append("MaterialNumber", materialNumber);
         data.append("MaterialDescription", materialDescription);
         data.append("OrderNumber", formData.OrderNumber || "");
-        data.append("Inwarddate", new Date(formData.InwardDate).toISOString() || "");
+        data.append("Inwarddate", formData.InwardDate ? new Date(formData.InwardDate).toISOString() : "");
         data.append("ReceivedBy", formData.ReceivedBy || "");
         data.append("RacKLocation", formData.RackLocation || "");
         data.append("InwardFrom", formData.InwardFrom || "");  
@@ -226,21 +230,21 @@ const AddStock = (props) => {
                             {formData.uploadType && formData.uploadType !== "Bulk Upload" && (
                                 <>
                                     <Textfield
-                                        label="Serial Number"
+                                        label={<span>Serial Number<span className="error">*</span></span>}
                                         name="serialNumber"
                                         value={formData.serialNumber}
                                         placeholder="Enter Serial Number"
                                         onChange={handleInputChange}
                                     />
                                     <Textfield
-                                        label="Quantity"
+                                        label={<span>Quantity<span className="error">*</span></span>}
                                         name="quantity"
                                         value={formData.quantity}
                                         placeholder="Enter Quantity"
                                         onChange={handleInputChange}
                                     />
                                     <Textfield
-                                        label="Status"
+                                        label={<span>Status<span className="error">*</span></span>}
                                         name="status"
                                         value={formData.status}
                                         placeholder="Enter Status"

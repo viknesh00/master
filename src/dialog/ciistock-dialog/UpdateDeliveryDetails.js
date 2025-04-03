@@ -26,7 +26,7 @@ const UpdateDeliveryDetails = (props) => {
                 "materialNumber": serialData.materialNumber || "",
                 "serialNumber": serialData.serialNumber,
                 "orderNumber": selectedMaterialData.outBoundOrderNumber,
-                "outbounddate": new Date(selectedRow.outBoundDate.split('/').reverse().join('-')),
+                "outbounddate": selectedRow.outBoundDate? new Date(selectedRow.outBoundDate.split('/').reverse().join('-')) : "",
                 "targetLocation": selectedRow.targetLocation,
                 "receiverName": selectedRow.receiverName,
                 "sentBy": selectedRow.sentby
@@ -44,6 +44,11 @@ const UpdateDeliveryDetails = (props) => {
     };
 
     const handleSave = () => {
+        debugger
+                if(!formData.orderNumber){
+                    ToastError("Please enter Order Number");
+                    return;
+                }
             let Data = {};
             Data = {
                 ...Data,
@@ -51,10 +56,10 @@ const UpdateDeliveryDetails = (props) => {
                 serialNumber: serialData.serialNumber,
                 orderNumber: formData.orderNumber, 
                 ExistOrderNumber: selectedMaterialData.outBoundOrderNumber,
-                outBounddate: new Date(formData.outbounddate).toISOString(),
-                targetLocation: formData.targetLocation,
-                receiverName: formData.receiverName,
-                sentBy: formData.sentBy,
+                outBounddate: formData.outbounddate? new Date(formData.outbounddate).toISOString(): null,
+                targetLocation: formData.targetLocation || "",
+                receiverName: formData.receiverName || "",
+                sentBy: formData.sentBy || "",
             }
     
             const url = `SmOutboundStockCiis/UpdatedeliveryData`;
@@ -67,7 +72,7 @@ const UpdateDeliveryDetails = (props) => {
                     }
                 })
                 .catch((error) => {
-                    console.error("API Error:", error);
+                    ToastError(error.response.data);
                 });
         };
 
@@ -114,35 +119,35 @@ const UpdateDeliveryDetails = (props) => {
 
                     <div className="grid-column">
                         <Textfield
-                            label="Order Nummber"
+                            label={<span>Order Number<span className="error">*</span></span>}
                             placeholder="Enter order number"
                             name="orderNumber"
                             value={formData.orderNumber}
                             onChange={handleInputChange}
                         />
                         <Datefield
-                            label={<span>Outbound Date<span className="error">*</span></span>}
+                            label="OutBound Date"
                             placeholder="Select Date"
                             name="outbounddate"
                             value={formData.outbounddate}
                             onChange={handleInputChange}
                         />
                         <Textfield
-                            label={<span>Receiver Name<span className="error">*</span></span>}
+                            label="Receiver Name"
                             placeholder="Enter receiver name"
                             name="receiverName"
                             value={formData.receiverName}
                             onChange={handleInputChange}
                         />
                         <Textfield
-                            label={<span>Target Location<span className="error">*</span></span>}
+                            label="Target Location"
                             placeholder="Enter target location"
                             name="targetLocation"
                             value={formData.targetLocation}
                             onChange={handleInputChange}
                         />
                         <Textfield
-                            label={<span>Sent By<span className="error">*</span></span>}
+                            label="Sent By"
                             placeholder="Enter sender name"
                             name="sentBy"
                             value={formData.sentBy}

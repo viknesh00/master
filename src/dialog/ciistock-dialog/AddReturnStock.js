@@ -33,6 +33,11 @@ const AddReturnStock = (props) => {
 
     const handleSave = () => {
         debugger
+        if(!formData.OrderNumber || !formData.ReturnType){
+            ToastError("Please enter Order Number and Return Type");
+            return;
+        };
+
         let Data = {};
         Data = {
             ...Data,
@@ -41,12 +46,12 @@ const AddReturnStock = (props) => {
             serialNumber: serialData.serialNumber,
             materialDescription: serialData.materialDescription,
             orderNumber: formData.OrderNumber,
-            locationReturnedFrom: formData.ReturnLocation,
-            returneddate: new Date(formData.ReturnDate).toISOString(),
-            returnedBy: formData.ReceivedBy,
-            rackLocation: formData.RackLocation,
+            locationReturnedFrom: formData.ReturnLocation || "",
+            returneddate: formData.ReturnDate? new Date(formData.ReturnDate).toISOString() : null,
+            returnedBy: formData.ReceivedBy || "",
+            rackLocation: formData.RackLocation || "",
             returnType: formData.ReturnType,
-            returns: formData.Return,
+            returns: formData.Return || "",
         }
 
         const url = `SmOutboundStockCiis/AddReturnData`;
@@ -106,31 +111,31 @@ const AddReturnStock = (props) => {
 
                     <div className="grid-column">
                         <Textfield
-                            label="Order Number"
+                            label={<span>Order Number<span className="error">*</span></span>}
                             name="OrderNumber"
                             placeholder="Enter order number"
                             onChange={handleInputChange}
                         />
                         <Textfield
-                            label={<span>Return Location<span className="error">*</span></span>}
+                            label="Return Location"
                             name="ReturnLocation"
                             placeholder="Enter return location"
                             onChange={handleInputChange}
                         />
                         <Datefield
-                            label={<span>Return Date<span className="error">*</span></span>}
+                            label="Return Date"
                             name="ReturnDate"
                             placeholder="Select Date"
                             onChange={handleInputChange}
                         />
                         <Textfield
-                            label={<span>Received By<span className="error">*</span></span>}
+                            label="Received By"
                             name="ReceivedBy"
                             placeholder="Enter receiver name"
                             onChange={handleInputChange}
                         />
                         <Textfield
-                            label={<span>Rack Location<span className="error">*</span></span>}
+                            label="Rack Location"
                             name="RackLocation"
                             placeholder="Enter rack location"
                             onChange={handleInputChange}
@@ -151,7 +156,7 @@ const AddReturnStock = (props) => {
                         /> */}
                         <div className="grid-span">
                             <Description
-                                label={<span>Return<span className="error">*</span></span>}
+                                label="Return"
                                 name="Return"
                                 placeholder="Enter material description..."
                                 rows={4}
