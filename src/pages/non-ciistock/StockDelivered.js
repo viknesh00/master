@@ -151,12 +151,17 @@ const StockDelivered = () => {
     );
 
     const formatDate = (dateString) => {
+        if (!dateString) return ""; // Return empty string if dateString is null or undefined
+    
         const date = new Date(dateString);
+        if (isNaN(date.getTime())) return ""; // Return empty string if the date is invalid
+    
         const day = String(date.getDate()).padStart(2, "0");
         const month = String(date.getMonth() + 1).padStart(2, "0");
         const year = date.getFullYear();
+    
         return `${day}/${month}/${year}`;
-      };
+    };
 
     const handleDownload = () => {
         const keysToKeep = ["deliveryNumber", "orderNumber", "outboundDate", "receiverName", "targetLocation", "deliveredQuantity","sentBy"];
@@ -201,7 +206,7 @@ const StockDelivered = () => {
                           }
                       })
                       .catch((error) => {
-                          console.error("API Error:", error);
+                          ToastError(error.response.data);
                       });
     }
 

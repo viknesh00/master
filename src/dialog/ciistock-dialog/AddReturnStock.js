@@ -59,7 +59,7 @@ const AddReturnStock = (props) => {
         postRequest(url, Data)
             .then((res) => {
                 if (res.status === 200) {
-                    ToastSuccess("Material Returned Successfully");
+                    ToastSuccess("Stock Returned Successfully");
                     props.handleReturnDelivery();
                 }
             })

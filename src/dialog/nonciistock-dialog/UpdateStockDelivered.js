@@ -43,8 +43,8 @@ const UpdateStockDelivered = (props) => {
     };
 
     const handleUpdateDeliveredciistock = () => {
-                if (!formData.deliveryNumber || !formData.orderNumber) {
-                    ToastError("Please enter Delivery Number and Quantity Received");
+                if (!formData.deliveryNumber || !formData.deliveredQuantity) {
+                    ToastError("Please enter Delivery Number and Quantity Delivered");
                     return; 
                 }
                 let Data = {};

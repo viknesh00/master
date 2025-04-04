@@ -22,7 +22,6 @@ const UpdateReturnDetails = (props) => {
     const [formData, setFormData] = useState({});
 
     useEffect(() => {
-        debugger
         if (selectedRow && serialData) {
             setFormData({
                 "materialNumber": serialData.materialNumber || "",
@@ -30,7 +29,7 @@ const UpdateReturnDetails = (props) => {
                 "materialDescription": serialData.materialDescription || "",
                 "OrderNumber": selectedRow.orderNumber || "",
                 "ReturnLocation": selectedRow.locationReturnedFrom || "",
-                "ReturnDate": new Date(selectedRow.returnedDate.split('/').reverse().join('-')) || "",
+                "ReturnDate": selectedRow.returnedDate? new Date(selectedRow.returnedDate.split('/').reverse().join('-')) : "",
                 "ReceivedBy": selectedRow.returnedBy || "",
                 "RackLocation": selectedRow.rackLocation || "",
                 "ReturnType": selectedRow.returnType || "",
@@ -81,12 +80,12 @@ const UpdateReturnDetails = (props) => {
         postRequest(url, Data)
             .then((res) => {
                 if (res.status === 200) {
-                    ToastSuccess("Material Returned Successfully");
+                    ToastSuccess("Returned Stock Updated Successfully");
                     props.handleReturnDetails();
                 }
             })
             .catch((error) => {
-                console.error("API Error:", error);
+                ToastError(error.response.data);
             });
     };
 

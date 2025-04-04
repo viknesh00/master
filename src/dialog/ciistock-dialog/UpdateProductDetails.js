@@ -41,6 +41,10 @@ const UpdateProductDetails = (props) => {
     };
 
     const handleUpdate = () => {
+        if(!formData.rackLocation){
+            ToastError("Please enter Rack Location");
+            return;
+        }
         let data = {};
         data = {
             ...data,
@@ -108,6 +112,7 @@ const UpdateProductDetails = (props) => {
                             value={formData.serialNumber}
                             placeholder="Enter serial number"
                             onChange={handleInputChange}
+                            readOnly={true}
                         />
                         <Textfield
                             label={<span>Rack Location<span className="error">*</span></span>}
