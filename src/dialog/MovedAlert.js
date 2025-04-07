@@ -50,16 +50,16 @@ const MovedAlert = (props) => {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle sx={{ padding: '32px 32px 40px 32px' }}>
           <div className="dialog-title-contianer">
-            <div className="dialog-icon-alert">
+            {/* <div className="dialog-icon-alert">
               <FlipForward />
-            </div>
+            </div> */}
           </div>
           <div className="dialog-title-alert">Status Change</div>               
               <DropdownField
                 label="Status Change"
                 name="statusChange"
                 value={formData.statusChange}
-                placeholder="Select User Type"
+                placeholder="Select Device status"
                 onChange={handleInputChange}
                 options={["Used", "Damaged", "BreakFix"]}
               />

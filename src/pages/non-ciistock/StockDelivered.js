@@ -22,7 +22,7 @@ import { getRequest, postRequest } from "../../services/ApiService";
 import { getCookie } from "../../services/Cookies";
 import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
-const StockDelivered = () => {
+const StockDelivered = (props) => {
     const location = useLocation();
     const materialNumber = location.pathname.split('/').pop();
     const { materialDescription } = location.state || {};
@@ -192,11 +192,11 @@ const StockDelivered = () => {
     const handleOpenAddDelivery = () => {
         if(showAddDelivered){
             fetchMaterialDetails();
+            props.fetchMaterialAnalysiticsNonCiiData();
         }
         setShowAddDelivered(prevState => !prevState);
     }
     const handleRemoveMaterial = (deliveryNumber,outboundStockNonCIIKey) => {
-            debugger
                     const url = `SmInboundStockNonCiis/DeleteNonStockDeliverdata/${materialNumber}/${deliveryNumber}/${outboundStockNonCIIKey}`
                     postRequest(url)
                       .then((res) => {
@@ -211,7 +211,6 @@ const StockDelivered = () => {
     }
 
     const handleVerticalDotClick = (event, item) => {
-        debugger
         event.stopPropagation();
         const rect = event.target.getBoundingClientRect();
         setSelectedMaterialData(item)
@@ -230,6 +229,7 @@ const StockDelivered = () => {
     const handleUpdateStockDelivered = () => {
         if(showUpdateStockDelivered){
             fetchMaterialDetails();
+            props.fetchMaterialAnalysiticsNonCiiData();
         }
         setShowUpdateStockDelivered(prevState => !prevState);
         setAlertBox({ visible: false, x: 0, y: 0, data: null });
@@ -241,9 +241,10 @@ const StockDelivered = () => {
 
             <div className="outer-firstsection">
                 <div className="outer-firstsection-header">
-                <span className="main-title">{materialNumber}</span><span className="outer-firstsection-title">-{materialDescription}</span>
+                <span className="outer-firstsection-title">{materialNumber}</span><span className="outer-firstsection-title">-{materialDescription}</span>
                 </div>
                 <div className="outer-firstsection-actions">
+                <Search placeholder="Search" onChange={handleInputChange} />
                     <button className="outer-firstsection-download" onClick={handleDownload}>
                         <Download /> Download
                     </button>
@@ -253,14 +254,14 @@ const StockDelivered = () => {
                 </div>
             </div>
 
-            <div className="outer-secondsection">
+            {/* <div className="outer-secondsection">
                 <div >
                     {/* <button className="tab-button active">View all</button>
                     <button className="tab-button">Working</button>
-                    <button className="tab-button">Text</button> */}
+                    <button className="tab-button">Text</button>
                 </div>
                 <Search placeholder="Search" onChange={handleInputChange} />
-            </div>
+            </div> */}
             <div className="outer-secondsection">
                 <div className="outer-firstsection-header">
                     <FilterDateField
@@ -338,37 +339,38 @@ const StockDelivered = () => {
                     </div>
                     <div className="table-header text-left w-[5%]"></div>
                 </div>
+                <div className="max-h-[400px] overflow-y-auto">
+                    {paginatedData.map((item, index) => (
+                        <div key={index} className="div-data">
+                            <div className="text-center w-[5%]">
+                                <input
+                                    type="checkbox"
+                                    className="table-checkbox"
+                                    checked={selectedRows.includes(item["orderNumber"])}
+                                    onChange={() => handleCheckboxChange(item["orderNumber"])}
+                                />
+                            </div>
+                            <div className="table-data text-left w-[15%]">{item["deliveryNumber"]}</div>
+                            <div className="table-data text-left w-[15%]">{item["orderNumber"]}</div>
+                            <div className="table-data text-left w-[15%]">{formatDate(item["outboundDate"])}</div>
+                            <div className="table-data text-left w-[15%]">{item["receiverName"]}</div>
+                            <div className="table-data text-left w-[15%]">{item["targetLocation"]}</div>
+                            <div className="table-data text-left w-[15%]">{item["deliveredQuantity"]}</div>
+                            <div className="table-data text-left w-[15%]">{item["sentBy"]}</div>
+                            <div className="table-data text-center w-[5%]">
+                                <VerticalDot
+                                    className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
+                                    onClick={(event) => {
+                                        if (getCookie("userType") !== "Viewer") {
+                                            handleVerticalDotClick(event, item);
+                                        }
+                                    }}
 
-                {paginatedData.map((item, index) => (
-                    <div key={index} className="div-data">
-                        <div className="text-center w-[5%]">
-                            <input
-                                type="checkbox"
-                                className="table-checkbox"
-                                checked={selectedRows.includes(item["orderNumber"])}
-                                onChange={() => handleCheckboxChange(item["orderNumber"])}
-                            />
+                                />
+                            </div>
                         </div>
-                        <div className="table-data text-left w-[15%]">{item["deliveryNumber"]}</div>
-                        <div className="table-data text-left w-[15%]">{item["orderNumber"]}</div>
-                        <div className="table-data text-left w-[15%]">{formatDate(item["outboundDate"])}</div>
-                        <div className="table-data text-left w-[15%]">{item["receiverName"]}</div>
-                        <div className="table-data text-left w-[15%]">{item["targetLocation"]}</div>
-                        <div className="table-data text-left w-[15%]">{item["deliveredQuantity"]}</div>
-                        <div className="table-data text-left w-[15%]">{item["sentBy"]}</div>
-                        <div className="table-data text-center w-[5%]">
-                            <VerticalDot
-                                className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
-                                onClick={(event) => {
-                                    if (getCookie("userType") !== "Viewer") {
-                                        handleVerticalDotClick(event, item);
-                                    }
-                                }}
-
-                            />
-                        </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
 
             {alertBox.visible && (

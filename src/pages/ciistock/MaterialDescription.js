@@ -355,7 +355,7 @@ const MaterialDescription = () => {
             <Navbar breadcrumbs={breadcrumbData} />
             <div className="outersection-container">
                 <div className="header-wrapper">
-                    <span className="main-title">{serialNumber}</span>
+                    <span className="main-title">{serialNumber}-{materialDescription}</span>
                     <div className="button-container">
                         <div className="print-btn">
                             <Delete onClick={(event,item) => {
@@ -375,10 +375,10 @@ const MaterialDescription = () => {
                         </button>
                     </div>
                 </div>
-                <div className="product-title">
+                {/* <div className="product-title">
                     <img className="w-20 h-20" src="/assets/images/package.png" alt="User" />
                     <span className="product-text">{materialDescription}</span>
-                </div>
+                </div> */}
 
                 <div className="product-details-card">
                     <div className="product-details-header">
@@ -450,12 +450,12 @@ const MaterialDescription = () => {
                     <span className="product-details-title">Delivery Details</span>
 
                 </div>
-                <div className="outer-secondsection">
+                {/* <div className="outer-secondsection">
                     <div >
 
                     </div>
                     <Search onChange={handleInputChange} />
-                </div>
+                </div> */}
                 <div className="div-table">
                     <div className="div-head">
                         <div className="text-center w-[5%]">
@@ -569,12 +569,12 @@ const MaterialDescription = () => {
                 <div className="delivery-details-card">
                     <span className="product-details-title">Return Details</span>
                 </div>
-                <div className="outer-secondsection">
+                {/* <div className="outer-secondsection">
                     <div >
 
                     </div>
                     <Search onChange={handleReturnInputChange} />
-                </div>
+                </div> */}
                 <div className="div-table">
                     <div className="div-head">
                         <div className="text-center w-[5%]">

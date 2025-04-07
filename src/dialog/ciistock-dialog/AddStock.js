@@ -321,9 +321,12 @@ const AddStock = (props) => {
                             <button className="cancel-btn" onClick={() => setView("form")}>
                                 Back
                             </button>
-                            <button className="submit-btn" onClick={handleBulkAddStock}>
-                                Submit
-                            </button>
+                                <button
+                                    className={`submit-btn ${files.length === 0 || uploadProgress !== 100 ? "disabled-btn" : ""}`}
+                                    onClick={handleBulkAddStock}
+                                >
+                                    Submit
+                                </button>
                         </>
                     )}
                 </DialogActions>

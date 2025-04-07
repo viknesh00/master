@@ -232,9 +232,10 @@ const StockUsed = () => {
 
             <div className="outer-firstsection">
                 <div className="outer-firstsection-header">
-                <span className="main-title">{materialNumber}</span><span className="outer-firstsection-title">-{materialDescription}</span>
+                <span className="outer-firstsection-title">{materialNumber}</span><span className="outer-firstsection-title">-{materialDescription}</span>
                 </div>
                 <div className="outer-firstsection-actions">
+                    <Search placeholder="Search" onChange={handleInputChange} />
                     <button className="outer-firstsection-download" onClick={handleDownload}>
                         <Download /> Download
                     </button>
@@ -244,14 +245,14 @@ const StockUsed = () => {
                 </div>
             </div>
 
-            <div className="outer-secondsection">
+            {/* <div className="outer-secondsection">
                 <div >
                     {/* <button className="tab-button active">View all</button>
                     <button className="tab-button">Working</button>
-                    <button className="tab-button">Text</button> */}
+                    <button className="tab-button">Text</button>
                 </div>
                 <Search placeholder="Search" onChange={handleInputChange} />
-            </div>
+            </div> */}
             <div className="outer-secondsection">
                 <div className="outer-firstsection-header">
                     <FilterDateField
@@ -316,34 +317,35 @@ const StockUsed = () => {
                     </div>
                     <div className="table-header text-left w-[10%]"></div>
                 </div>
+                <div className="max-h-[400px] overflow-y-auto">
+                    {paginatedData.map((item, index) => (
+                        <div key={index} className="div-data">
+                            <div className="text-center w-[10%]">
+                                <input
+                                    type="checkbox"
+                                    className="table-checkbox"
+                                    checked={selectedRows.includes(item["orderNumber"])}
+                                    onChange={() => handleCheckboxChange(item["orderNumber"])}
+                                />
+                            </div>
+                            <div className="table-data text-left w-[20%]">{item["orderNumber"]}</div>
+                            <div className="table-data text-left w-[20%]">{item["returnLocation"]}</div>
+                            <div className="table-data text-left w-[20%]">{formatDate(item["returnDate"])}</div>
+                            <div className="table-data text-left w-[20%]">{item["itemQuantity"]}</div>
+                            <div className="table-data text-center w-[10%]">
+                                <VerticalDot
+                                    className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
+                                    onClick={(event) => {
+                                        if (getCookie("userType") !== "Viewer") {
+                                            handleVerticalDotClick(event, item);
+                                        }
+                                    }}
 
-                {paginatedData.map((item, index) => (
-                    <div key={index} className="div-data">
-                        <div className="text-center w-[10%]">
-                            <input
-                                type="checkbox"
-                                className="table-checkbox"
-                                checked={selectedRows.includes(item["orderNumber"])}
-                                onChange={() => handleCheckboxChange(item["orderNumber"])}
-                            />
+                                />
+                            </div>
                         </div>
-                        <div className="table-data text-left w-[20%]">{item["orderNumber"]}</div>
-                        <div className="table-data text-left w-[20%]">{item["returnLocation"]}</div>
-                        <div className="table-data text-left w-[20%]">{formatDate(item["returnDate"])}</div>
-                        <div className="table-data text-left w-[20%]">{item["itemQuantity"]}</div>
-                        <div className="table-data text-center w-[10%]">
-                            <VerticalDot
-                                className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
-                                onClick={(event) => {
-                                    if (getCookie("userType") !== "Viewer") {
-                                        handleVerticalDotClick(event, item);
-                                    }
-                                }}
-
-                            />
-                        </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
 
             {alertBox.visible && (

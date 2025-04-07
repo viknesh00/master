@@ -52,9 +52,9 @@ const NonciiMaterialDetail = () => {
     const renderTabContent = () => {
         switch (activeTab) {
             case "Stock Inward":
-                return <StockInward/>;
+                return <StockInward fetchMaterialAnalysiticsNonCiiData={fetchMaterialAnalysiticsNonCiiData}/>;
             case "Stock Outward":
-                return <StockDelivered/>;
+                return <StockDelivered fetchMaterialAnalysiticsNonCiiData={fetchMaterialAnalysiticsNonCiiData}/>;
             case "Stock Returned":
                 return <StockReturned/>
             case "Used Stock":

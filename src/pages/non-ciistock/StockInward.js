@@ -22,7 +22,7 @@ import { getRequest, postRequest } from "../../services/ApiService";
 import { getCookie } from "../../services/Cookies";
 import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
-const StockInward = () => {
+const StockInward = (props) => {
     const location = useLocation();
     const materialNumber = location.pathname.split('/').pop();
     const { materialDescription } = location.state || {};
@@ -193,13 +193,14 @@ const StockInward = () => {
         debugger
         if(showStock){
             fetchMaterialDetails();
+            props.fetchMaterialAnalysiticsNonCiiData();
         }
         setShowStock(prevState => !prevState);
     }
 
-    const handleRemoveMaterial = (deliveryNumber,orderNumber) => {
+    const handleRemoveMaterial = (deliveryNumber,inboundStockNonCIIKey) => {
         debugger
-                const url = `SmInboundStockNonCiis/DeleteNonStockInbounddata/${materialNumber}/${deliveryNumber}/${orderNumber}`
+                const url = `SmInboundStockNonCiis/DeleteNonStockInbounddata/${materialNumber}/${deliveryNumber}/${inboundStockNonCIIKey}`
                 postRequest(url)
                   .then((res) => {
                       if (res.status === 200) {
@@ -232,6 +233,7 @@ const StockInward = () => {
     const handleUpdateStockInward = () => {
         if(showUpdateStockInward){
             fetchMaterialDetails();
+            props.fetchMaterialAnalysiticsNonCiiData();
         }
         setshowUpdateStockInward(prevState => !prevState);
         setAlertBox({ visible: false, x: 0, y: 0, data: null });
@@ -243,9 +245,10 @@ const StockInward = () => {
 
             <div className="outer-firstsection">
                 <div className="outer-firstsection-header">
-                <span className="main-title">{materialNumber}</span><span className="outer-firstsection-title">-{materialDescription}</span>
+                <span className="outer-firstsection-title">{materialNumber}</span><span className="outer-firstsection-title">-{materialDescription}</span>
                 </div>
                 <div className="outer-firstsection-actions">
+                <Search placeholder="Search" onChange={handleInputChange} />
                     <button className="outer-firstsection-download" onClick={handleDownload}>
                         <Download /> Download
                     </button>
@@ -255,14 +258,14 @@ const StockInward = () => {
                 </div>
             </div>
 
-            <div className="outer-secondsection">
+            {/* <div className="outer-secondsection">
                 <div >
                     {/* <button className="tab-button active">View all</button>
                     <button className="tab-button">Working</button>
-                    <button className="tab-button">Text</button> */}
+                    <button className="tab-button">Text</button> 
                 </div>
                 <Search placeholder="Search" onChange={handleInputChange} />
-            </div>
+            </div> */}
             <div className="outer-secondsection">
                 <div className="outer-firstsection-header">
                     <FilterDateField
@@ -340,37 +343,38 @@ const StockInward = () => {
                     </div>
                     <div className="table-header text-left w-[5%]"></div>
                 </div>
+                <div className="max-h-[400px] overflow-y-auto">
+                    {paginatedData.map((item, index) => (
+                        <div key={index} className="div-data">
+                            <div className="text-center w-[5%]">
+                                <input
+                                    type="checkbox"
+                                    className="table-checkbox"
+                                    checked={selectedRows.includes(item["deliveryNumber"])}
+                                    onChange={() => handleCheckboxChange(item["deliveryNumber"])}
+                                />
+                            </div>
+                            <div className="table-data text-left w-[15%]">{item["deliveryNumber"]}</div>
+                            <div className="table-data text-left w-[15%]">{item["orderNumber"]}</div>
+                            <div className="table-data text-left w-[12%]">{formatDate(item["inwardDate"])}</div>
+                            <div className="table-data text-left w-[13%]">{item["sourceLocation"]}</div>
+                            <div className="table-data text-left w-[12%]">{item["deliveredQuantity"]}</div>
+                            <div className="table-data text-left w-[10%]">{item["receivedBy"]}</div>
+                            <div className="table-data text-left w-[15%]">{item["rackLocation"]}</div>
+                            <div className="table-data text-center w-[5%]">
+                                <VerticalDot
+                                    className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
+                                    onClick={(event) => {
+                                        if (getCookie("userType") !== "Viewer") {
+                                            handleVerticalDotClick(event, item);
+                                        }
+                                    }}
 
-                {paginatedData.map((item, index) => (
-                    <div key={index} className="div-data">
-                        <div className="text-center w-[5%]">
-                            <input
-                                type="checkbox"
-                                className="table-checkbox"
-                                checked={selectedRows.includes(item["deliveryNumber"])}
-                                onChange={() => handleCheckboxChange(item["deliveryNumber"])}
-                            />
+                                />
+                            </div>
                         </div>
-                        <div className="table-data text-left w-[15%]">{item["deliveryNumber"]}</div>
-                        <div className="table-data text-left w-[15%]">{item["orderNumber"]}</div>
-                        <div className="table-data text-left w-[12%]">{formatDate(item["inwardDate"])}</div>
-                        <div className="table-data text-left w-[13%]">{item["sourceLocation"]}</div>
-                        <div className="table-data text-left w-[12%]">{item["deliveredQuantity"]}</div>
-                        <div className="table-data text-left w-[10%]">{item["receivedBy"]}</div>
-                        <div className="table-data text-left w-[15%]">{item["rackLocation"]}</div>
-                        <div className="table-data text-center w-[5%]">
-                            <VerticalDot
-                                className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
-                                onClick={(event) => {
-                                    if (getCookie("userType") !== "Viewer") {
-                                        handleVerticalDotClick(event, item);
-                                    }
-                                }}
-
-                            />
-                        </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
 
             {alertBox.visible && (
@@ -389,7 +393,7 @@ const StockInward = () => {
                     </button>
                     <button
                         className="dropdown-item"
-                        onClick={() => handleRemoveMaterial(alertBox.data["deliveryNumber"],alertBox.data["orderNumber"])}
+                        onClick={() => handleRemoveMaterial(alertBox.data["deliveryNumber"],alertBox.data["inboundStockNonCIIKey"])}
                     >
                         <span><Delete /></span> Delete
                     </button>

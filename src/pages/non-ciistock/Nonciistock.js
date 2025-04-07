@@ -328,38 +328,39 @@ const Nonciistock = () => {
                         </div>
                         <div className="table-header text-left w-[10%]"></div>
                     </div>
+                    <div className="max-h-[400px] overflow-y-auto">
+                        {paginatedData.map((item, index) => (
+                            <div key={index} className="div-data">
+                                <div className="text-center w-[5%]">
+                                    <input
+                                        type="checkbox"
+                                        className="table-checkbox"
+                                        checked={selectedRows.includes(item["materialNumber"])}
+                                        onChange={() => handleCheckboxChange(item["materialNumber"])}
+                                    />
+                                </div>
+                                <div className="table-data text-hyper text-left w-[15%]" onClick={() => handleMaterialClick(item["materialNumber"], item["materialDescription"])}>{item["materialNumber"]}</div>
+                                <div className="table-data text-left w-[25%]">{item["materialDescription"]}</div>
+                                <div className="table-data text-left w-[15%]">{item["stockinHand"]}</div>
+                                <div className="table-data text-left w-[10%]">{item["newstock"]}</div>
+                                <div className="table-data text-left w-[10%]">{item["usedstock"]}</div>
+                                <div className="table-data text-left w-[10%]">
+                                    <span className={`${item["status"] === "Available" ? "status-available" : item["status"] === "Not Available" ? "status-not-available" : "status-unknown"}`}>{item["status"]}</span>
+                                </div>
+                                <div className="table-data text-center w-[5%]">
+                                    <VerticalDot
+                                        className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
+                                        onClick={(event) => {
+                                            if (getCookie("userType") !== "Viewer") {
+                                                handleVerticalDotClick(event, item);
+                                            }
+                                        }}
 
-                    {paginatedData.map((item, index) => (
-                        <div key={index} className="div-data">
-                            <div className="text-center w-[5%]">
-                                <input
-                                    type="checkbox"
-                                    className="table-checkbox"
-                                    checked={selectedRows.includes(item["materialNumber"])}
-                                    onChange={() => handleCheckboxChange(item["materialNumber"])}
-                                />
+                                    />
+                                </div>
                             </div>
-                            <div className="table-data text-hyper text-left w-[15%]" onClick={() => handleMaterialClick(item["materialNumber"], item["materialDescription"])}>{item["materialNumber"]}</div>
-                            <div className="table-data text-left w-[25%]">{item["materialDescription"]}</div>
-                            <div className="table-data text-left w-[15%]">{item["stockinHand"]}</div>
-                            <div className="table-data text-left w-[10%]">{item["newstock"]}</div>
-                            <div className="table-data text-left w-[10%]">{item["usedstock"]}</div>
-                            <div className="table-data text-left w-[10%]">
-                                <span className={`${item["status"] === "Available" ? "status-available" : item["status"] === "Not Available" ? "status-not-available" : "status-unknown"}`}>{item["status"]}</span>
-                            </div>
-                            <div className="table-data text-center w-[5%]">
-                                <VerticalDot
-                                    className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
-                                    onClick={(event) => {
-                                        if (getCookie("userType") !== "Viewer") {
-                                            handleVerticalDotClick(event, item);
-                                        }
-                                    }}
-
-                                />
-                            </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
 
                 {alertBox.visible && (

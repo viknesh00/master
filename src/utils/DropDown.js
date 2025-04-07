@@ -10,16 +10,19 @@ const DropdownField = ({ label, name, value, onChange, options, disabled, placeh
       <div className="textfield-label">
         {label}
       </div>
+      <FormControl fullWidth>
+      {!value && <InputLabel shrink={false}>{placeholder}</InputLabel>}
       <Select className="search-box-dropdown" name={name} value={options.includes(value) ? value : ""} disabled={disabled} onChange={handleChange}>
-      <MenuItem value="">
+      {/* <MenuItem value="">
           {placeholder}
-        </MenuItem>
+        </MenuItem> */}
         {options.map((option) => (
           <MenuItem key={option} value={option} disabled={option === "Select User Type"}>
             {option}
           </MenuItem>
         ))}
       </Select>
+      </FormControl>
     </div>
   );
 };

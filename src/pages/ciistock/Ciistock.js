@@ -185,7 +185,8 @@ const Ciistock = (props) => {
     }
 
     const onSelectionChange = (value, field) =>{
-        navigate(`/cii-stock/${value.id.materialNumber}/${value.id.serialNumber}`, { state: { serialData : value.id, materialDescription : value.id.materialDescription } });
+        navigate(`/cii-stock/${value.id.materialNumber}`, { state: { materialDescription : value.id.materialDescription } });
+        //navigate(`/cii-stock/${value.id.materialNumber}/${value.id.serialNumber}`, { state: { serialData : value.id, materialDescription : value.id.materialDescription } });
     }
 
     const handlePageChange = (event, value) => {
@@ -370,7 +371,7 @@ const Ciistock = (props) => {
                         </div>
                         <div className="table-header text-left w-[5%]"></div>
                     </div>
-
+                    <div className="max-h-[400px] overflow-y-auto">
                     {paginatedData.map((item, index) => (
                         <div key={index} className="div-data">
                             <div className="text-center w-[5%]">
@@ -401,6 +402,7 @@ const Ciistock = (props) => {
                             </div>
                         </div>
                     ))}
+                </div>
                 </div>
 
                 {alertBox.visible && (

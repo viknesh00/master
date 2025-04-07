@@ -30,11 +30,11 @@ const SaveAlert = (props) => {
             </div>
           </div>
           <div className="dialog-title-alert">Unsaved Changes</div>
-          <div className="dialog-description-alert">Do you want to save or discard changes?</div>
+          <div className="dialog-description-alert">Are you sure you want to cancel and discard all changes?</div>
         </DialogTitle>
         <DialogActions class="dialog-alert-button">
           <button className="cancel-btn-alert" onClick={handlePrevent}>Cancel</button>
-          <button className="submit-btn-alert" onClick={handleClose}>Submit</button>
+          <button className="submit-btn-alert" onClick={handleClose}>Confirm</button>
         </DialogActions>
       </Dialog>
     </div>

@@ -1068,6 +1068,13 @@ span:disabled {
   border-bottom: none;
 }
 
+.disabled-btn {
+  background-color: #ccc !important;
+  color: #666 !important;
+  cursor: not-allowed !important;
+  pointer-events: none;
+}
+
 .table-checkbox {
   /* display: inline-block; */
   top:1px;

@@ -347,7 +347,7 @@ const MaterialDetail = () => {
 
                 <div className="outer-firstsection">
                     <div className="outer-firstsection-header">
-                        <span className="main-title">{materialNumber}</span><span className="outer-firstsection-title">-{materialDescription}</span>
+                        <span className="outer-firstsection-title">{materialNumber}</span><span className="outer-firstsection-title">-{materialDescription}</span>
                     </div>
                     <div className="outer-firstsection-actions">
                         <button className="outer-firstsection-download" onClick={handleDownload}>
@@ -446,7 +446,7 @@ const MaterialDetail = () => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[25%]" onClick={() => handleSort("inwardDate")}>
+                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("inwardDate")}>
                             Inward Date
                             {sortConfig.key === "inwardDate" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
@@ -458,19 +458,19 @@ const MaterialDetail = () => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[10%]" onClick={() => handleSort("receivedBy")}>
+                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("receivedBy")}>
                             Received By
                             {sortConfig.key === "receivedBy" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[10%]" onClick={() => handleSort("rackLocation")}>
+                        <div className="table-header text-left w-[12%]" onClick={() => handleSort("rackLocation")}>
                             Racks Location
                             {sortConfig.key === "rackLocation" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[10%]" onClick={() => handleSort("status")}>
+                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("status")}>
                             Status
                             {sortConfig.key === "status" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
@@ -478,37 +478,38 @@ const MaterialDetail = () => {
                         </div>
                         <div className="table-header text-left w-[10%]"></div>
                     </div>
-
-                    {paginatedData.map((item, index) => (
-                        <div key={index} className="div-data">
-                            <div className="text-center w-[5%]">
-                                <input
-                                    type="checkbox"
-                                    className="table-checkbox"
-                                    checked={selectedRows.includes(item["serialNumber"])}
-                                    onChange={() => handleCheckboxChange(item["serialNumber"])}
-                                />
+                    <div className="max-h-[400px] overflow-y-auto">
+                        {paginatedData.map((item, index) => (
+                            <div key={index} className="div-data">
+                                <div className="text-center w-[5%]">
+                                    <input
+                                        type="checkbox"
+                                        className="table-checkbox"
+                                        checked={selectedRows.includes(item["serialNumber"])}
+                                        onChange={() => handleCheckboxChange(item["serialNumber"])}
+                                    />
+                                </div>
+                                <div className="table-data text-hyper text-left w-[15%]" onClick={() => handleMaterialClick(item["serialNumber"], item, item["orderNumber"])}>{item["serialNumber"]}</div>
+                                <div className="table-data text-left w-[15%]">{formatDate(item["inwardDate"])}</div>
+                                <div className="table-data text-left w-[15%]">{item["sourceLocation"]}</div>
+                                <div className="table-data text-left w-[15%]">{item["receivedBy"]}</div>
+                                <div className="table-data text-left w-[12%]">{item["rackLocation"]}</div>
+                                <div className="table-data text-left w-[15%]">
+                                    <span className={`${item["status"] === "New" ? "status-available" : item["status"] === "Damaged" ? "status-not-available" : "status-unknown"}`}>{item["status"]}</span>
+                                </div>
+                                <div className="table-data text-center w-[10%]">
+                                    <VerticalDot
+                                        onClick={(event) => {
+                                            if (getCookie("userType") !== "Viewer") {
+                                                handleVerticalDotClick(event, item);
+                                            }
+                                        }}
+                                        className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
+                                    />
+                                </div>
                             </div>
-                            <div className="table-data text-hyper text-left w-[15%]" onClick={() => handleMaterialClick(item["serialNumber"], item,item["orderNumber"])}>{item["serialNumber"]}</div>
-                            <div className="table-data text-left w-[25%]">{formatDate(item["inwardDate"])}</div>
-                            <div className="table-data text-left w-[15%]">{item["sourceLocation"]}</div>
-                            <div className="table-data text-left w-[10%]">{item["receivedBy"]}</div>
-                            <div className="table-data text-left w-[10%]">{item["rackLocation"]}</div>
-                            <div className="table-data text-left w-[10%]">
-                                <span className={`${item["status"] === "New" ? "status-available" : item["status"] === "Damaged" ? "status-not-available" : "status-unknown"}`}>{item["status"]}</span>
-                            </div>
-                            <div className="table-data text-center w-[10%]">
-                                <VerticalDot
-                                    onClick={(event) => {
-                                        if (getCookie("userType") !== "Viewer") {
-                                            handleVerticalDotClick(event, item);
-                                        }
-                                    }}
-                                    className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
-                                />
-                            </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
 
                 {alertBox.visible && (
