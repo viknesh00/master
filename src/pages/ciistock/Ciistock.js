@@ -107,20 +107,26 @@ const Ciistock = (props) => {
     };
 
     const filteredData = ciiStockData.filter((item) => {
+        debugger
         const query = searchQuery.toLowerCase();
-
-        const matchesSearch = Object.values(item).some((value) =>
-            String(value).toLowerCase().includes(query)
-        );
-
+    
+        const materialMatch = item["materialNumber"]?.toString().toLowerCase().includes(query);
+    
+        const matchesSearch =
+            materialMatch ||
+            Object.values(item).some((value) =>
+                String(value).toLowerCase().includes(query)
+            );
+    
         if (activeTab === "Available") {
             return matchesSearch && item["status"] === "Available";
         } else if (activeTab === "Not Available") {
             return matchesSearch && item["status"] === "Not Available";
         }
-
+    
         return matchesSearch;
     });
+    
 
     const isValidDate = (value) => {
         const date = new Date(value);
@@ -153,8 +159,9 @@ const Ciistock = (props) => {
     );
 
     const handleInputChange = (value) => {
+        debugger
         setSearchQuery(value);
-        setCurrentPage(1);
+        setCurrentPage(0);
         setSelectedRows([]);
     };
 
@@ -294,7 +301,7 @@ const Ciistock = (props) => {
                         <button className="outer-firstsection-download" onClick={handleDownload}>
                             <Download /> Download
                         </button>
-                        <button className="outer-firstsection-add" onClick={handleOpenAddMaterial} disabled={getCookie("userType") === "Viewer"}>
+                        <button className="outer-firstsection-add" onClick={handleOpenAddMaterial} disabled={getCookie("userType") === "Viewer" || getCookie("userType") ==="QualityChecker"}>
                             <Plus /> Add Material
                         </button>
                     </div>
@@ -393,11 +400,16 @@ const Ciistock = (props) => {
                             <div className="table-data text-center w-[5%]">
                                 <VerticalDot
                                     onClick={(event) => {
-                                        if (getCookie("userType") !== "Viewer") {
+                                        const userType = getCookie("userType");
+                                        if (userType !== "Viewer" && userType !== "QualityChecker") {
                                             handleVerticalDotClick(event, item);
                                         }
                                     }}
-                                    className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
+                                    className={
+                                        getCookie("userType") === "Viewer" || getCookie("userType") === "QualityChecker"
+                                            ? "cursor-not-allowed"
+                                            : "cursor-pointer"
+                                    }
                                 />
                             </div>
                         </div>

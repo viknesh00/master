@@ -66,12 +66,12 @@ export default function ResetPassword(props){
         <div>
             <Dialog open={open} onClose={handleClose}>
         <DialogTitle sx={{ padding: '32px 32px 40px 32px' }}>
-          <div className="dialog-title-contianer">
+          {/* <div className="dialog-title-contianer">
             <div className="dialog-icon">
               <Packageplus />
             </div>
             <Closebutton className="cursor" onClick={handleClose} />
-          </div>
+          </div> */}
           <div className="dialog-title">Reset Password</div>
         </DialogTitle>
         <DialogContent sx={{ padding: '0px 32px 40px 32px' }}>

@@ -11,6 +11,7 @@ import Textfield from "../../utils/Textfield";
 import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
 import { ToastError, ToastSuccess } from "../../services/ToastMsg";
+import Datefield from "../../utils/Datefield";
 
 const UpdateProductDetails = (props) => {
     const [open] = useState(props.value);
@@ -41,6 +42,7 @@ const UpdateProductDetails = (props) => {
     };
 
     const handleUpdate = () => {
+        debugger
         if(!formData.rackLocation){
             ToastError("Please enter Rack Location");
             return;
@@ -55,14 +57,18 @@ const UpdateProductDetails = (props) => {
             deliveryNumber: formData.deliveryNumber,
             orderNumber: formData.orderNumber,
             inwardDate: new Date(formData.inwardDate).toISOString(),
-            inwardFrom: formData.inwardFrom ||  "temp",
-            receivedBy: formData.receivedBy
+            inwardFrom: formData.inwardFrom? formData.inwardFrom: serialData.sourceLocation? serialData.sourceLocation: "temp",
+            receivedBy: formData.receivedBy,
+            qualityCheckDate: formData.qualityCheckDate? new Date(formData.qualityCheckDate).toISOString() : null,
+            qualityChecker: formData.qualityChecker,
+            qualityCheckerStatus: formData.qualityCheckerStatus
         }
         const url = `SmInboundStockCiis/UpdateInbounddata`
         postRequest(url, data)
             .then((res) => {
                 if (res.status === 200) {
-                    ToastSuccess("Product Details Updated Successfully")
+                    ToastSuccess("Product Details Updated Successfully");
+                    props.updateSerialData(formData);
                     props.handleProductDetails();
                 }
             })
@@ -119,6 +125,27 @@ const UpdateProductDetails = (props) => {
                             name={"rackLocation"}
                             value={formData.rackLocation}
                             placeholder="Enter rack location"
+                            onChange={handleInputChange}
+                        />
+                        <Datefield
+                            label="Quality Checker Date"
+                            placeholder="Quality Checker Date"
+                            name="qualityCheckDate"
+                            value={formData.qualityCheckDate}
+                            onChange={handleInputChange}
+                        />
+                        <Textfield
+                            label="Quality Checker"
+                            name="qualityChecker"
+                            value={formData.qualityChecker}
+                            placeholder="Enter Quality Checker name"
+                            onChange={handleInputChange}
+                        />
+                        <Textfield
+                            label="Quality Checker Status"
+                            name="qualityCheckerStatus"
+                            value={formData.qualityCheckerStatus}
+                            placeholder="Enter Quality Checker Status"
                             onChange={handleInputChange}
                         />
                     </div>

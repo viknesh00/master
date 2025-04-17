@@ -14,9 +14,9 @@ import { postRequest } from "../../services/ApiService";
 import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 
-const AddCompany = (props) => {
-  const [companyData] = props;
-  const [open] = useState(props.value);
+const AddCompany = ({ value: open, handleOpenAddCompany }) => {
+  //const [companyData] = props;
+  //const [open] = useState(props.value);
   const [showAlert, setShowAlert] = useState(false);
   const [formData, setFormData] = useState({});
 
@@ -35,7 +35,7 @@ const AddCompany = (props) => {
               .then((res) => {
                   if (res.status === 200) {
                     ToastSuccess("Company Added Successfully");
-                      props.handleOpenAddCompany();
+                    handleOpenAddCompany();
                   }
               })
               .catch((error) => {
@@ -45,7 +45,7 @@ const AddCompany = (props) => {
       }
 
   const handleClose = () => {
-    props.handleOpenAddCompany();
+    handleOpenAddCompany();
     console.log(formData)
   };
 

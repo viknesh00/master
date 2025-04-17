@@ -111,7 +111,7 @@ const StockInward = (props) => {
 
     const handleInputChange = (value) => {
         setSearchQuery(value);
-        setCurrentPage(1);
+        setCurrentPage(0);
         setSelectedRows([]);
     };
 
@@ -252,7 +252,7 @@ const StockInward = (props) => {
                     <button className="outer-firstsection-download" onClick={handleDownload}>
                         <Download /> Download
                     </button>
-                    <button className="outer-firstsection-add" onClick={handleOpenAddStock} disabled={getCookie("userType") === "Viewer"}>
+                    <button className="outer-firstsection-add" onClick={handleOpenAddStock} disabled={getCookie("userType") === "Viewer" || getCookie("userType") ==="QualityChecker"}>
                         <Plus /> Add Stock
                     </button>
                 </div>
@@ -363,13 +363,17 @@ const StockInward = (props) => {
                             <div className="table-data text-left w-[15%]">{item["rackLocation"]}</div>
                             <div className="table-data text-center w-[5%]">
                                 <VerticalDot
-                                    className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
                                     onClick={(event) => {
-                                        if (getCookie("userType") !== "Viewer") {
+                                        const userType = getCookie("userType");
+                                        if (userType !== "Viewer" && userType !== "QualityChecker") {
                                             handleVerticalDotClick(event, item);
                                         }
                                     }}
-
+                                    className={
+                                        getCookie("userType") === "Viewer" || getCookie("userType") === "QualityChecker"
+                                            ? "cursor-not-allowed"
+                                            : "cursor-pointer"
+                                    }
                                 />
                             </div>
                         </div>

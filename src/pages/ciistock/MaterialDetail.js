@@ -133,8 +133,12 @@ const MaterialDetail = () => {
 
     const filteredData = materialData.filter((item) => {
         const query = searchQuery.toLowerCase();
+        const serial = item["serialNumber"]?.toString().toLowerCase().includes(query);
+        //const serial = item["serialNumber"] || "";
 
-        const matchesSearch = Object.values(item).some((value) =>
+        const matchesSearch =
+        serial ||
+        Object.values(item).some((value) =>
             String(value).toLowerCase().includes(query)
         );
 
@@ -198,7 +202,7 @@ const MaterialDetail = () => {
 
     const handleInputChange = (value) => {
         setSearchQuery(value);
-        setCurrentPage(1);
+        setCurrentPage(0);
         setSelectedRows([]);
     };
 
@@ -281,6 +285,7 @@ const MaterialDetail = () => {
     };
 
     const handleMaterialClick = (serialNumber, serialData) => {
+        debugger
         navigate(`/cii-stock/${materialNumber}/${serialNumber}`, { state: { serialData, materialDescription } });
     };
 
@@ -353,7 +358,7 @@ const MaterialDetail = () => {
                         <button className="outer-firstsection-download" onClick={handleDownload}>
                             <Download /> Download
                         </button>
-                        <button className="outer-firstsection-add" onClick={handleOpenAddStock} disabled={getCookie("userType") === "Viewer"}>
+                        <button className="outer-firstsection-add" onClick={handleOpenAddStock} disabled={getCookie("userType") === "Viewer" || getCookie("userType") === "QualityChecker"}>
                             <Plus /> Add Stock
                         </button>
                     </div>
@@ -499,12 +504,13 @@ const MaterialDetail = () => {
                                 </div>
                                 <div className="table-data text-center w-[10%]">
                                     <VerticalDot
-                                        onClick={(event) => {
-                                            if (getCookie("userType") !== "Viewer") {
-                                                handleVerticalDotClick(event, item);
-                                            }
-                                        }}
-                                        className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
+                                    onClick={(event) => {
+                                        const userType = getCookie("userType");
+                                        if (userType !== "Viewer" && userType !== "QualityChecker") {
+                                            handleVerticalDotClick(event, item);
+                                        }
+                                    }}
+                                        className={getCookie("userType") === "Viewer" || getCookie("userType") === "QualityChecker" ? "cursor-not-allowed" : "cursor-pointer"}
                                     />
                                 </div>
                             </div>
