@@ -56,6 +56,7 @@ const MaterialDescription = () => {
         key: "",
         direction: "asc",
     });
+    const [serialDetails, setSerialDetails] = useState(serialData);
 
     const breadcrumbData = [
         { label: "CII Stock", path: "/cii-stock" },
@@ -186,7 +187,7 @@ const MaterialDescription = () => {
 
     const handleInputChange = (value) => {
         setSearchQuery(value);
-        setCurrentPage(1);
+        setCurrentPage(0);
         setSelectedRows([]);
     };
 
@@ -293,6 +294,10 @@ const MaterialDescription = () => {
         setShowProductDetails(prevState => !prevState)
     }
 
+    const handleUpdateSerialData = (updatedData) => {
+        setSerialDetails(updatedData); // update UI immediately
+    };
+
     const handleInwardDetails = () => {
         if(showInwardDetails){
             FetchSerialData();
@@ -348,30 +353,31 @@ const MaterialDescription = () => {
         <div>
             {showReturnDelivery && <AddReturnStock value={showReturnDelivery} serialData={serialData} handleReturnDelivery={handleReturnDelivery} />}
             {showAddDelivery && <AddDeliveryStock value={showAddDelivery} serialData={serialData} handleAddDelivery={handleAddDelivery} />}
-            {showProductDetails && <UpdateProductDetails value={showProductDetails} serialData={serialData} handleProductDetails={handleProductDetails} />}
-            {showInwardDetails && <UpdateStockInwardDetails value={showInwardDetails} serialData={serialData} handleInwardDetails={handleInwardDetails} />}
+            {showProductDetails && <UpdateProductDetails value={showProductDetails} serialData={serialData} handleProductDetails={handleProductDetails} updateSerialData={handleUpdateSerialData} />}
+            {showInwardDetails && <UpdateStockInwardDetails value={showInwardDetails} serialData={serialData} handleInwardDetails={handleInwardDetails} updateSerialData={handleUpdateSerialData} />}
             {showDeliveryDetails && <UpdateDeliveryDetails value={showDeliveryDetails} selectedRow={alertBox.data} serialData={serialData}  handleDeliveryDetails={handleDeliveryDetails} selectedMaterialData={selectedMaterialData} deliveryData={deliveryData} />}
             {showReturnDetails && <UpdateReturnDetails value={showReturnDetails} selectedRow={alertBox.data} serialData={serialData}selectedMaterialData={selectedMaterialData} handleReturnDetails={handleReturnDetails} />}
             <Navbar breadcrumbs={breadcrumbData} />
             <div className="outersection-container">
                 <div className="header-wrapper">
-                    <span className="main-title">{serialNumber}-{materialDescription}</span>
+                    <span className="main-title-materialDescription">{serialNumber}-{materialDescription}</span>
                     <div className="button-container">
                         <div className="print-btn">
-                            <Delete onClick={(event,item) => {
-                                if (getCookie("userType") !== "Viewer") {
-                                    handleVerticalDotClick(event, item);
+                            <Delete onClick={() => {
+                                const userType = getCookie("userType");
+                                if (userType !== "Viewer" && userType !== "QualityChecker") {
+                                    handledeleteSerialumber();
                                 }
                             }}
-                                className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"} />
+                                className={getCookie("userType") === "Viewer" || getCookie("userType") === "QualityChecker" ? "cursor-not-allowed" : "cursor-pointer"} />
                         </div>
                         <div className="print-btn" onClick={handlepdfDownload}><Download /></div>
 
-                        <button className="outer-firstsection-download" onClick={handleReturnDelivery} disabled={getCookie("userType") === "Viewer"}>
+                        <button className="outer-firstsection-download" onClick={handleReturnDelivery} disabled={getCookie("userType") === "Viewer" || getCookie("userType") === "QualityChecker"}>
                             <Plus /> Add Return
                         </button>
-                        <button className="outer-firstsection-add" onClick={handleAddDelivery} disabled={getCookie("userType") === "Viewer"}>
-                            <Plus /> Add Delivery
+                        <button className="outer-firstsection-add" onClick={handleAddDelivery} disabled={getCookie("userType") === "Viewer" || getCookie("userType") === "QualityChecker"}>
+                            <Plus /> Add Outward
                         </button>
                     </div>
                 </div>
@@ -380,8 +386,11 @@ const MaterialDescription = () => {
                     <span className="product-text">{materialDescription}</span>
                 </div> */}
 
-                <div className="product-details-card">
-                    <div className="product-details-header">
+                <div className="delivery-details-card">
+                    {/* <span className="product-details-title">Outward Details</span> */}
+
+                </div>
+                    <div className="outer-secondsection">
                         <span className="product-details-title">Product Details</span>
                         <Edit
                             className={`${getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor"}`}
@@ -392,7 +401,7 @@ const MaterialDescription = () => {
                             }}
                         />
                     </div>
-
+                <div className="product-details-card">
                     <div class="product-details">
                         <div class="detail-item">
                             <span class="detail-label">Material Number</span>
@@ -404,58 +413,79 @@ const MaterialDescription = () => {
                         </div>
                         <div class="detail-item">
                             <span class="detail-label">Rack location</span>
-                            <span class="detail-value">{serialData.rackLocation}</span>
+                            <span class="detail-value">{serialDetails.rackLocation}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Quality Checker Date</span>
+                            <span class="detail-value">{formatDate(serialDetails.qualityCheckDate)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Quality Checker</span>
+                            <span class="detail-value">{serialDetails.qualityChecker}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Quality Checker Status</span>
+                            <span class="detail-value">{serialDetails.qualityCheckerStatus}</span>
                         </div>
                     </div>
 
                 </div>
 
-                <div className="product-details-card">
-                    <div className="product-details-header">
-                        <span className="product-details-title">Inward Details</span>
-                        <Edit
-                            className={`${getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor"}`}
-                            onClick={(event) => {
-                                if (getCookie("userType") !== "Viewer") {
-                                    handleInwardDetails();
-                                }
-                            }}
-                        />
-                    </div>
+                <div className="delivery-details-card">
+                    {/* <span className="product-details-title">Outward Details</span> */}
 
+                </div>
+                    <div className="outer-secondsection">
+                        <span className="product-details-title">Inward Details</span>
+                    <Edit
+                        className={`${getCookie("userType") === "Viewer" || getCookie("userType") === "QualityChecker"
+                                ? "cursor-not-allowed"
+                                : "cursor-pointer"
+                            }`}
+                        onClick={(event) => {
+                            const userType = getCookie("userType");
+                            if (userType !== "Viewer" && userType !== "QualityChecker") {
+                                handleInwardDetails();
+                            }
+                        }}
+                    />
+
+                    </div>
+                    <div className="product-details-card">
                     <div class="product-details">
                         <div class="detail-item">
                             <span class="detail-label">Delivery Number</span>
-                            <span class="detail-value">{serialData.deliveryNumber}</span>
+                            <span class="detail-value">{serialDetails.deliveryNumber}</span>
                         </div>
                         <div class="detail-item">
                             <span class="detail-label">Order Number</span>
-                            <span class="detail-value">{serialData.orderNumber}</span>
+                            <span class="detail-value">{serialDetails.orderNumber}</span>
                         </div>
                         <div class="detail-item">
                             <span class="detail-label">Inward Date</span>
-                            <span class="detail-value">{formatDate(serialData.inwardDate)}</span>
+                            <span class="detail-value">{formatDate(serialDetails.inwardDate)}</span>
                         </div>
                         <div class="detail-item">
                             <span class="detail-label">Inward From</span>
-                            <span class="detail-value">{serialData.sourceLocation}</span>
+                            <span class="detail-value">{serialDetails.sourceLocation}</span>
                         </div>
                         <div class="detail-item">
                             <span class="detail-label">Received By</span>
-                            <span class="detail-value">{serialData.receivedBy}</span>
+                            <span class="detail-value">{serialDetails.receivedBy}</span>
                         </div>
                     </div>
                 </div>
                 <div className="delivery-details-card">
-                    <span className="product-details-title">Delivery Details</span>
+                    {/* <span className="product-details-title">Outward Details</span> */}
 
                 </div>
-                {/* <div className="outer-secondsection">
-                    <div >
+                <div className="outer-secondsection">
+                    {/* <div >
 
-                    </div>
-                    <Search onChange={handleInputChange} />
-                </div> */}
+                    </div> */}
+                    {/* <Search onChange={handleInputChange} /> */}
+                    <span className="product-details-title">Outward Details</span>
+                </div>
                 <div className="div-table">
                     <div className="div-head">
                         <div className="text-center w-[5%]">
@@ -516,12 +546,17 @@ const MaterialDescription = () => {
                             <div className="table-data text-left w-[20%]">{item["sentby"]}</div>
                             <div className="table-data text-center w-[10%]">
                                 <VerticalDot
+                                    className={`${getCookie("userType") === "Viewer" || getCookie("userType") === "QualityChecker"
+                                        ? "cursor-not-allowed"
+                                        : "cursor-pointer"
+                                        }`}
                                     onClick={(event) => {
-                                        if (getCookie("userType") !== "Viewer") {
+                                        const userType = getCookie("userType");
+                                        if (userType !== "Viewer" && userType !== "QualityChecker") {
                                             handleVerticalDotClick(event, item, "delivery");
                                         }
                                     }}
-                                    className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
+
                                 />
                             </div>
 
@@ -567,14 +602,15 @@ const MaterialDescription = () => {
                 </div>
 
                 <div className="delivery-details-card">
+                    {/* <span className="product-details-title">Return Details</span> */}
+                </div>
+                <div className="outer-secondsection">
+                    {/* <div >
+
+                    </div> */}
+                    {/* <Search onChange={handleReturnInputChange} /> */}
                     <span className="product-details-title">Return Details</span>
                 </div>
-                {/* <div className="outer-secondsection">
-                    <div >
-
-                    </div>
-                    <Search onChange={handleReturnInputChange} />
-                </div> */}
                 <div className="div-table">
                     <div className="div-head">
                         <div className="text-center w-[5%]">
@@ -642,13 +678,26 @@ const MaterialDescription = () => {
                             <div className="table-data text-left w-[15%]">{item["returnedReason"]}</div>
                             <div className="table-data text-center w-[5%]">
                                 <VerticalDot
+                                    className={`${getCookie("userType") === "Viewer" || getCookie("userType") === "QualityChecker"
+                                        ? "cursor-not-allowed"
+                                        : "cursor-pointer"
+                                        }`}
+                                    onClick={(event) => {
+                                        const userType = getCookie("userType");
+                                        if (userType !== "Viewer" && userType !== "QualityChecker") {
+                                            handleVerticalDotClick(event, item, "return");
+                                        }
+                                    }}
+
+                                />
+                                {/* <VerticalDot
                                     onClick={(event) => {
                                         if (getCookie("userType") !== "Viewer") {
                                             handleVerticalDotClick(event, item, "return");
                                         }
                                     }}
-                                    className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
-                                />
+                                    className={getCookie("userType") === "Viewer" || "QualityChecker" ? "cursor-not-allowed" : "cursor-pointer"}
+                                /> */}
                             </div>
 
                         </div>

@@ -79,6 +79,7 @@ const CompanyManagement = () => {
     }
 
     const handleOpenAddCompany = () => {
+        debugger
         if(showAddMaterial){
         fetchCompanyDetails();
         }
@@ -129,7 +130,7 @@ const CompanyManagement = () => {
 
     const handleInputChange = (value) => {
         setSearchQuery(value);
-        setCurrentPage(1);
+        setCurrentPage(0);
         setSelectedRows([]);
     };
 
@@ -232,7 +233,7 @@ const CompanyManagement = () => {
                         <button className="outer-firstsection-download" onClick={handleDownload}>
                             <Download /> Download
                         </button>
-                        <button className="outer-firstsection-add" onClick={handleOpenAddCompany} disabled={getCookie("userType") === "Viewer"}>
+                        <button className="outer-firstsection-add" onClick={handleOpenAddCompany} disabled={getCookie("userType") === "Viewer" || getCookie("userType") ==="QualityChecker"}>
                             <Plus /> Add Company
                         </button>
                     </div>
@@ -307,15 +308,19 @@ const CompanyManagement = () => {
                                 </span>
                             </div>
                             <div className="table-data text-center w-[5%]">
-                                <VerticalDot
-                                    className={getCookie("userType") === "Viewer" ? "cursor-not-allowed" : "cursor-pointer"}
-                                    onClick={(event) => {
-                                        if (getCookie("userType") !== "Viewer") {
-                                            handleVerticalDotClick(event, item);
+                                    <VerticalDot
+                                        onClick={(event) => {
+                                            const userType = getCookie("userType");
+                                            if (userType !== "Viewer" && userType !== "QualityChecker") {
+                                                handleVerticalDotClick(event, item);
+                                            }
+                                        }}
+                                        className={
+                                            getCookie("userType") === "Viewer" || getCookie("userType") === "QualityChecker"
+                                                ? "cursor-not-allowed"
+                                                : "cursor-pointer"
                                         }
-                                    }}
-
-                                />
+                                    />
                             </div>
                         </div>
                     ))}

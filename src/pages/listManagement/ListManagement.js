@@ -30,7 +30,7 @@ const ListManagement = () => {
 
     const handleInputChange = (value) => {
         setSearchQuery(value);
-        setCurrentPage(1);
+        setCurrentPage(0);
     };
 
     const handlePageChange = (event, value) => {

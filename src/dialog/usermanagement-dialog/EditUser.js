@@ -30,7 +30,7 @@ const EditUser = (props) => {
         "userId" : selectedrow.userCode || "",
         "userName": selectedrow.userName || "",
         "email": selectedrow.email || "",
-        "userType": selectedrow.userType && ["Admin", "Viewer", "Contributor"].includes(selectedrow.userType) 
+        "userType": selectedrow.userType && ["Admin", "Viewer", "Contributor","QualityChecker"].includes(selectedrow.userType) 
         ? selectedrow.userType : "",
         "accessLevel": selectedrow.accessLevel || "",
         "status": selectedrow.isActive === true ? "Active" : selectedrow.isActive === false ? "Inactive" : ""
@@ -84,6 +84,8 @@ const EditUser = (props) => {
             ? "Read-only access"
             : value === "Contributor"
             ? "Read and write access"
+            : value === "QualityChecker"
+            ? "Quality Checking Access"
             : ""
           : prevData.accessLevel,
     }));
@@ -135,7 +137,7 @@ const EditUser = (props) => {
                 value={formData.userType}
                 placeholder="Select User Type"
                 onChange={handleInputChange}
-                options={["Admin", "Viewer", "Contributor"]}
+                options={["Admin", "Viewer", "Contributor","Quality Checker"]}
             />
             <Textfield
                 label="Access Level"
