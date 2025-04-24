@@ -45,6 +45,10 @@ const EditWarehouse = (props) => {
   }
 
   const handleUpdate = () => {
+    if (!formData.warehouseId || !formData.warehouseName || !formData.location) {
+      ToastError("Please enter Warehouse Id,Warehouse Name and Location");
+      return; // Stop further execution if validation fails
+    }
     let Data = {};
      Data = {...Data,
         ExistTenentCode: selectedWarehouseData.tenentCode,
@@ -62,7 +66,7 @@ const EditWarehouse = (props) => {
         }
       })
       .catch((error) => {
-        console.error("API Error:", error);
+        console.error(error.response.data);
       });
   }
 
@@ -82,12 +86,12 @@ const EditWarehouse = (props) => {
 
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle sx={{ padding: '32px 32px 40px 32px' }}>
-          <div className="dialog-title-contianer">
+          {/* <div className="dialog-title-contianer">
             <div className="dialog-icon">
               <Packageplus />
             </div>
             <Closebutton className="cursor" onClick={handleClose} />
-          </div>
+          </div> */}
           <div className="dialog-title">Update Warehouse</div>
         </DialogTitle>
         <DialogContent sx={{ padding: '0px 32px 40px 32px' }}>

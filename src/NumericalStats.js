@@ -153,237 +153,170 @@
             }
         
         return(
-            <div>
-                <CardContent>
-                    <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-lg font-semibold flex items-center">
-                            <span className="p-2 bg-black text-white rounded-[6px] mr-2">
-                                <Packageplus size={16} />
-                            </span>
-                            CII Stock
-                        </h2>
+            <div className="p-4 sm:p-6">
+  {/* CII Stock */}
+  <CardContent>
+    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
+      <h2 className="text-lg font-semibold flex items-center">
+        <span className="p-2 bg-black text-white rounded-[6px] mr-2">
+          <Packageplus size={16} />
+        </span>
+        CII Stock
+      </h2>
 
-                        <div className="flex items-center gap-2 ml-auto">
-                            <FilterDateField
-                            label="fromdate"
-                            placeholder="From Date"
-                            onSelectionChange={onSelectionChange}
-                            maxDate={filterValue.todate}
-                            resetSelect={resetSelect}
-                            />
-                            <FilterDateField
-                            label="todate"
-                            placeholder="To Date"
-                            onSelectionChange={onSelectionChange}
-                            minDate={filterValue.fromdate}
-                            resetSelect={resetSelect}
-                            />
-                            {/* Buttons */}
-                            <button className="tick-btn" onClick={handleApplyFilter}>
-                                <TickButton />
-                            </button>
-                            <button className="reset-btn" onClick={handleClearFilter}>
-                                <CloseButton />
-                            </button>
-                        </div>
-                    </div>
+      <div className="flex flex-col sm:flex-row flex-wrap items-center gap-2 ml-auto">
+        <FilterDateField
+          label="fromdate"
+          placeholder="From Date"
+          onSelectionChange={onSelectionChange}
+          maxDate={filterValue.todate}
+          resetSelect={resetSelect}
+        />
+        <FilterDateField
+          label="todate"
+          placeholder="To Date"
+          onSelectionChange={onSelectionChange}
+          minDate={filterValue.fromdate}
+          resetSelect={resetSelect}
+        />
+        <button className="tick-btn" onClick={handleApplyFilter}>
+          <TickButton />
+        </button>
+        <button className="reset-btn" onClick={handleClearFilter}>
+          <CloseButton />
+        </button>
+      </div>
+    </div>
 
-                    <div className="grid grid-cols-7 gap-4 justify-center items-center">
-                        <div className="flex items-center justify-center">
-                            {pieCiiData.some(data => data.value > 0) ? (
-                                <ResponsiveContainer width="100%" height={150} >
-                                    <PieChart>
-                                        <Pie
-                                            data={pieCiiData}
-                                            dataKey="value"
-                                            innerRadius={50}
-                                            outerRadius={70}
-                                            paddingAngle={0}
-                                        >
-                                            {pieCiiData.map((entry, index) => (
-                                                <Cell key={`cell-${index}`} fill={entry.color} />
-                                            ))}
-                                        </Pie>
-                                    </PieChart>
-                                </ResponsiveContainer>
-                            ) : (
-                                <p className="text-gray-500">No Data Found</p>
-                            )}
-                        </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-7 gap-4 justify-center items-center">
+      <div className="flex items-center justify-center">
+        {pieCiiData.some(data => data.value > 0) ? (
+          <ResponsiveContainer width="100%" height={150}>
+            <PieChart>
+              <Pie
+                data={pieCiiData}
+                dataKey="value"
+                innerRadius={50}
+                outerRadius={70}
+                paddingAngle={0}
+              >
+                {pieCiiData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} />
+                ))}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
+        ) : (
+          <p className="text-gray-500">No Data Found</p>
+        )}
+      </div>
 
-                        {pieCiiData.map((item, index) => (
-                            <div key={index} className="flex flex-col items-center">
-                                <div className="w-32 h-32 cursor-pointer" onClick={ciiStockStatus}>
-                                    <CircularProgressbarWithChildren
-                                        value={(item.value / item.totalStock) * 100}
-                                        styles={{
-                                            path: {
-                                                stroke: item.color,
-                                            },
-                                            trail: {
-                                                stroke: "#e6e6e6",
-                                            },
-                                        }}
-                                    >
-                                        <div className="text-center">
-                                            <p className="text-sm text-gray-500">{item.name}</p>
-                                            <p className="font-semibold text-lg">{item.value}</p>
-                                        </div>
-                                    </CircularProgressbarWithChildren>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </CardContent>
-
-                <CardContent>
-                    <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-lg font-semibold flex items-center">
-                            <span className="p-2 bg-black text-white rounded-[6px] mr-2">
-                                <Packageplus size={16} />
-                            </span>
-                            Non-CII Stock
-                        </h2>
-
-                        <div className="flex items-center gap-2 ml-auto">
-                            <FilterDateField
-                            label="fromdate"
-                            placeholder="From Date"
-                            onSelectionChange={onSelectionChange}
-                            maxDate={filterValue.todate}
-                            resetSelect={resetSelect}
-                            />
-                            <FilterDateField
-                            label="todate"
-                            placeholder="To Date"
-                            onSelectionChange={onSelectionChange}
-                            minDate={filterValue.fromdate}
-                            resetSelect={resetSelect}
-                            />
-                            {/* Buttons */}
-                            <button className="tick-btn" onClick={handleApplyFilter}>
-                                <TickButton />
-                            </button>
-                            <button className="reset-btn" onClick={handleClearFilter}>
-                                <CloseButton />
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-7 gap-4 justify-center items-center">
-                    <div className="flex items-center justify-center">
-            {pieNonCiiData.some(data => data.value > 0) ? (
-                <ResponsiveContainer width="100%" height={150}>
-                    <PieChart>
-                        <Pie
-                            data={pieNonCiiData}
-                            dataKey="value"
-                            innerRadius={50}
-                            outerRadius={70}
-                            paddingAngle={0}
-                        >
-                            {pieNonCiiData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={entry.color} />
-                            ))}
-                        </Pie>
-                    </PieChart>
-                </ResponsiveContainer>
-            ) : (
-                <p className="text-gray-500">No Data Found</p>
-            )}
+      {pieCiiData.map((item, index) => (
+        <div key={index} className="flex flex-col items-center">
+          <div
+            className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 cursor-pointer"
+            onClick={ciiStockStatus}
+          >
+            <CircularProgressbarWithChildren
+              value={(item.value / item.totalStock) * 100}
+              styles={{
+                path: { stroke: item.color },
+                trail: { stroke: "#e6e6e6" },
+              }}
+            >
+              <div className="text-center">
+                <p className="text-xs sm:text-sm text-gray-500">{item.name}</p>
+                <p className="font-semibold text-base sm:text-lg">{item.value}</p>
+              </div>
+            </CircularProgressbarWithChildren>
+          </div>
         </div>
+      ))}
+    </div>
+  </CardContent>
 
-                        {pieNonCiiData.map((item, index) => (
-                            <div key={index} className="flex flex-col items-center">
-                                <div className="w-32 h-32 cursor-pointer" onClick={nonCiiStockStatus}>
-                                    <CircularProgressbarWithChildren
-                                        value={(item.value / item.totalStock) * 100}
-                                        styles={{
-                                            path: {
-                                                stroke: item.color,
-                                            },
-                                            trail: {
-                                                stroke: "#e6e6e6",
-                                            },
-                                        }}
-                                    >
-                                        <div className="text-center">
-                                            <p className="text-sm text-gray-500">{item.name}</p>
-                                            <p className="font-semibold text-lg">{item.value}</p>
-                                        </div>
-                                    </CircularProgressbarWithChildren>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </CardContent>
-                {/* <div className="flex gap-6 pt-0 px-6 pb-6 ">
-                    {stockData.map((stock, index) => (
-                        <div
-                            key={index}
-                            className="shadow-md rounded-md border bg-white rounded-2xl shadow-lg p-6 flex-1 flex flex-col gap-6"
-                        >
-                            <div className="flex justify-between items-center">
-                                <div className="flex items-center gap-2">
-                                    <span className="p-2 bg-black text-white rounded-[6px] mr-2">
-                                        <Packageplus size={16} />
-                                    </span>
-                                    <h2 className="font-semibold text-lg">{stock.title}</h2>
-                                </div>
-                                <div className="flex space-x-2">
-                                    <DashboardDatefield
-                                        label="Inward Date"
-                                        name="FromDate"
-                                        value={formData.InwardDate}
-                                        placeholder="From Date"
-                                        onChange={handleInputChange}
-                                    />
-                                    <DashboardDatefield
-                                        label="Inward Date"
-                                        name="ToDate"
-                                        value={formData.InwardDate}
-                                        placeholder="To Date"
-                                        onChange={handleInputChange}
-                                    />
-                                </div>
-                            </div>
+  {/* Non-CII Stock */}
+  <CardContent>
+    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
+      <h2 className="text-lg font-semibold flex items-center">
+        <span className="p-2 bg-black text-white rounded-[6px] mr-2">
+          <Packageplus size={16} />
+        </span>
+        Non-CII Stock
+      </h2>
 
-                            <div className="flex justify-around items-center">
-                                <div className="w-32">
-                                    <CircularProgressbarWithChildren
-                                        value={100}
-                                        styles={buildStyles({
-                                            pathColor: "#046C7A",
-                                            textColor: "#000",
-                                            trailColor: "#f0f0f0",
-                                        })}
-                                    >
-                                        <div className="text-center">
-                                            <p className="text-sm text-gray-500">Total Delivered</p>
-                                            <p className="font-semibold text-lg">{stock.delivered}</p>
-                                        </div>
-                                    </CircularProgressbarWithChildren>
-                                </div>
-                                <div className="w-32">
-                                    <CircularProgressbarWithChildren
-                                        value={100}
-                                        styles={buildStyles({
-                                            pathColor: "#5D36FF",
-                                            textColor: "#000",
-                                            trailColor: "#f0f0f0",
-                                        })}
-                                    >
-                                        <div className="text-center">
-                                            <p className="text-sm text-gray-500">Total Returned</p>
-                                            <p className="font-semibold text-lg">{stock.returned}</p>
-                                        </div>
-                                    </CircularProgressbarWithChildren>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div> */}
-            </div>        
+      <div className="flex flex-col sm:flex-row flex-wrap items-center gap-2 ml-auto">
+        <FilterDateField
+          label="fromdate"
+          placeholder="From Date"
+          onSelectionChange={onSelectionChange}
+          maxDate={filterValue.todate}
+          resetSelect={resetSelect}
+        />
+        <FilterDateField
+          label="todate"
+          placeholder="To Date"
+          onSelectionChange={onSelectionChange}
+          minDate={filterValue.fromdate}
+          resetSelect={resetSelect}
+        />
+        <button className="tick-btn" onClick={handleApplyFilter}>
+          <TickButton />
+        </button>
+        <button className="reset-btn" onClick={handleClearFilter}>
+          <CloseButton />
+        </button>
+      </div>
+    </div>
+
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-7 gap-4 justify-center items-center">
+      <div className="flex items-center justify-center">
+        {pieNonCiiData.some(data => data.value > 0) ? (
+          <ResponsiveContainer width="100%" height={150}>
+            <PieChart>
+              <Pie
+                data={pieNonCiiData}
+                dataKey="value"
+                innerRadius={50}
+                outerRadius={70}
+                paddingAngle={0}
+              >
+                {pieNonCiiData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} />
+                ))}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
+        ) : (
+          <p className="text-gray-500">No Data Found</p>
+        )}
+      </div>
+
+      {pieNonCiiData.map((item, index) => (
+        <div key={index} className="flex flex-col items-center">
+          <div
+            className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 cursor-pointer"
+            onClick={nonCiiStockStatus}
+          >
+            <CircularProgressbarWithChildren
+              value={(item.value / item.totalStock) * 100}
+              styles={{
+                path: { stroke: item.color },
+                trail: { stroke: "#e6e6e6" },
+              }}
+            >
+              <div className="text-center">
+                <p className="text-xs sm:text-sm text-gray-500">{item.name}</p>
+                <p className="font-semibold text-base sm:text-lg">{item.value}</p>
+              </div>
+            </CircularProgressbarWithChildren>
+          </div>
+        </div>
+      ))}
+    </div>
+  </CardContent>
+</div>
+
             
         );
     }

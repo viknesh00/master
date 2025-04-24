@@ -24,6 +24,10 @@ const AddWarehouse = (props) => {
 
 
   const handleAddwarehouse = () => {
+        if (!formData.warehouseId || !formData.warehouseName || !formData.location) {
+          ToastError("Please enter Warehouse Id,Warehouse Name and Location");
+          return; // Stop further execution if validation fails
+        }
           let Data = {};
           Data = { ...Data,
             CompanyCode : companyId,
@@ -41,7 +45,7 @@ const AddWarehouse = (props) => {
                   }
               })
               .catch((error) => {
-                ToastError("Entered Warehouse ID Already Exists");
+                ToastError(error.response.data);
                   
               });
       }
@@ -69,12 +73,12 @@ const AddWarehouse = (props) => {
       {showAlert && <SaveAlert value={showAlert} handleAlert={handleAlert} handleClose={handleClose} />}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle sx={{ padding: '32px 32px 40px 32px' }}>
-          <div className="dialog-title-contianer">
+          {/* <div className="dialog-title-contianer">
             <div className="dialog-icon">
               <Packageplus />
             </div>
             <Closebutton className="cursor" onClick={handleClose} />
-          </div>
+          </div> */}
           <div className="dialog-title">Add Warehouse</div>
         </DialogTitle>
         <DialogContent sx={{ padding: '0px 32px 40px 32px' }}>

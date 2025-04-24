@@ -44,6 +44,10 @@ const EditCompany = (props) => {
 
   const handleUpdate = () => {
     debugger
+        if (!formData.companyId || !formData.companyName || !formData.domainName) {
+          ToastError("Please enter Company Id,Company Name and Domain Name");
+          return; // Stop further execution if validation fails
+        }
     let Data = {};
      Data = {...Data,
         ExistCompanyId: selectedcompanyData.pk_CompanyCode,
@@ -60,7 +64,7 @@ const EditCompany = (props) => {
         }
       })
       .catch((error) => {
-        console.error("API Error:", error);
+        console.error(error.response.data);
       });
   }
 
@@ -80,12 +84,12 @@ const EditCompany = (props) => {
 
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle sx={{ padding: '32px 32px 40px 32px' }}>
-          <div className="dialog-title-contianer">
+          {/* <div className="dialog-title-contianer">
             <div className="dialog-icon">
               <Packageplus />
             </div>
             <Closebutton className="cursor" onClick={handleClose} />
-          </div>
+          </div> */}
           <div className="dialog-title">Update Company</div>
         </DialogTitle>
         <DialogContent sx={{ padding: '0px 32px 40px 32px' }}>

@@ -167,7 +167,7 @@ const MaterialDetail = () => {
     });
 
     const inwardFromOptions = [
-        ...new Set(Material_data.map((item) => item.inwardFrom)),
+        ...new Set(materialData.map((item) => item.sourceLocation)),
     ].map((value) => ({ id: value, name: value }));
 
     const isValidDate = (value) => {

@@ -31,6 +31,10 @@ const AddUser = (props) => {
 
   const handleAddUser = () => {
     debugger
+        if (!formData.userId || !formData.userName || !formData.email || !formData.userType) {
+          ToastError("Please enter User Id,User Name, Email and UserType");
+          return; // Stop further execution if validation fails
+        }
           let Data = {};
           Data = { ...Data,
             UserCode :parseInt(formData.userId),
@@ -51,7 +55,7 @@ const AddUser = (props) => {
                   }
               })
               .catch((error) => {
-                ToastError("Entered User ID Already Exists");
+                ToastError(error.response.data);
                   
               });
       }
@@ -91,12 +95,12 @@ const AddUser = (props) => {
       {showAlert && <SaveAlert value={showAlert} handleAlert={handleAlert} handleClose={handleClose} />}
       <Dialog open={open} onClose={handleClose} maxWidth={"xl"}>
         <DialogTitle sx={{ padding: '32px 32px 40px 32px' }}>
-          <div className="dialog-title-contianer">
+          {/* <div className="dialog-title-contianer">
             <div className="dialog-icon">
               <Packageplus />
             </div>
             <Closebutton className="cursor" onClick={handleClose} />
-          </div>
+          </div> */}
           <div className="dialog-title">Add User</div>
         </DialogTitle>
         <DialogContent sx={{ padding: '0px 32px 40px 32px' }}>

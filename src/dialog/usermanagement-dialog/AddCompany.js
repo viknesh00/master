@@ -23,6 +23,10 @@ const AddCompany = ({ value: open, handleOpenAddCompany }) => {
 
   const handleAddcompany = () => {
     debugger
+    if (!formData.companyId || !formData.companyName || !formData.domainName) {
+      ToastError("Please enter Company Id,Company Name and Domain Name");
+      return; // Stop further execution if validation fails
+    }
           let Data = {};
           Data = { ...Data,
             CompanyId :formData.companyId,
@@ -39,7 +43,7 @@ const AddCompany = ({ value: open, handleOpenAddCompany }) => {
                   }
               })
               .catch((error) => {
-                ToastError("Entered Company ID Already Exists");
+                ToastError(error.response.data);
                   
               });
       }
@@ -67,12 +71,12 @@ const AddCompany = ({ value: open, handleOpenAddCompany }) => {
       {showAlert && <SaveAlert value={showAlert} handleAlert={handleAlert} handleClose={handleClose} />}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle sx={{ padding: '32px 32px 40px 32px' }}>
-          <div className="dialog-title-contianer">
+          {/* <div className="dialog-title-contianer">
             <div className="dialog-icon">
               <Packageplus />
             </div>
             <Closebutton className="cursor" onClick={handleClose} />
-          </div>
+          </div> */}
           <div className="dialog-title">Add Company</div>
         </DialogTitle>
         <DialogContent sx={{ padding: '0px 32px 40px 32px' }}>
