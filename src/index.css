@@ -87,27 +87,36 @@ code {
   background-color: #F6F6F6;
 }
 
-.sidebar-layout{
-  width: 260px;
-  display: flex;
-  background-color: #F6F6F6;
-
+.no-select {
+  user-select: none !important;
 }
 
-.sidebar-minimize{
-  width: 76px;
+.pin-resize{
   display: flex;
-  background-color: #F6F6F6;
-
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 16px;
 }
+
 .sidebar-title {
   padding: 10px 26px;
   align-items: center;
+  justify-content: center;
   background-color: #000000;
   gap: 10px;
   height: 72px;
   display: flex;
 }
+
+.sidebar-wrapper {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  background-color: #F6F6F6;
+  width: 100%;
+}
+
 
 .title-heading{
   color: #ffffff;
@@ -186,7 +195,11 @@ code {
 }
 
 .section {
-  padding: 8px 4px 8px 4px;
+  padding: 8px 4px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
 }
 
 .active {
@@ -213,6 +226,13 @@ code {
   background-color: #E6E6E6;
 }
 
+.footer-text{
+  cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
+}
 .footer-companyname{
   font-size: 14px;
   line-height: 16.8px;
@@ -277,6 +297,21 @@ code {
 .menu-item {
   position: relative;
 }
+
+.icon-size {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+.text-ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+
 
 .tooltip-container {
   position: relative;

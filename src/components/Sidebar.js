@@ -3,11 +3,10 @@ import { NavLink } from "react-router-dom";
 import LeftSideMenu from "./LeftSideMenu";
 import { ReactComponent as LogoutIcon } from "../assets/svg/logout.svg";
 const Sidebar = (props) => {
-    const { handleToggleMenu, isCollapsed } = props;
+    const { handleToggleMenu, isCollapsed, isPinned, setIsPinned } = props;
 
     return (
-        <aside className={`h-screen flex-col transition-all duration-300 fixed top-0 left-0 ${isCollapsed ? "sidebar-minimize" : "sidebar-layout"
-            }`}>
+        <aside className="sidebar-wrapper">
             <div className="sidebar-title">
                 <img src="/assets/images/Logomark.png" alt="Logo" className="title-logo" />
                 {!isCollapsed && <div className="title-heading">NATOASSET</div>}
@@ -21,6 +20,22 @@ const Sidebar = (props) => {
                     <img src="/assets/svg/menu-open.svg" alt="Logo" />
                 </div>
             }
+            <div
+                onClick={(e) => {
+                    e.stopPropagation();
+                    setIsPinned((prev) => !prev);
+                }}
+            >
+                {isPinned ?
+                    <div className={`${!isCollapsed ? "close-btn" : "close-btn-minimize"} `} >
+                        <img src="/assets/svg/pin.svg" alt="Logo" />
+                    </div>
+                    :
+                    <div className={`${!isCollapsed ? "close-btn" : "close-btn-minimize"} `} >
+                        <img src="/assets/svg/unpin.svg" alt="Logo" />
+                    </div>
+                }
+            </div>
             <LeftSideMenu isCollapsed={isCollapsed} />
 
             <div className="footer-section">
@@ -34,8 +49,8 @@ const Sidebar = (props) => {
                                         isActive ? "active block" : "inactive block"
                                     }
                                 >
-                                    <LogoutIcon />
-                                    {!isCollapsed && "Logout"}
+                                    <span className="icon-size"><LogoutIcon /></span>
+                                    <span className="text-ellipsis">{!isCollapsed && "Logout"}</span>
                                 </NavLink>
                                 {isCollapsed && <span className="tooltip">Logout</span>}
                             </div>
@@ -46,7 +61,7 @@ const Sidebar = (props) => {
                     {!isCollapsed ? (
                         <>
                             <span
-                                style={{ cursor: "pointer" }}
+                                className="footer-text"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     window.open("http://www.natobotics.com", "_blank");
