@@ -14,7 +14,7 @@ const Login = (props) => {
       const [open] = useState(props.value);
       const [showAlert, setShowAlert] = useState(false);
     const navigate = useNavigate();
-    const { setName } = useUser();
+    const { setName, setFullName  } = useUser();
 
     const handleLogin = (e) => {
         debugger
@@ -39,6 +39,7 @@ const Login = (props) => {
                         localStorage.setItem("isAuthenticated", "true"); // Set after successful login
                         localStorage.setItem("username", username); 
                         setName(username);
+                        setFullName(res.data[0].userName);
                         navigate("/dashboard");
                         ToastSuccess("Login Successfully");
                         const userData = {

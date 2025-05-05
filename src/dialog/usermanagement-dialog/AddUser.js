@@ -85,6 +85,8 @@ const AddUser = (props) => {
             ? "Read and write access"
             : value === "QualityChecker"
             ? "Quality Checking Access"
+            : value === "CollectionPointer"
+            ? "Collection Point Access"
             : ""
           : prevData.accessLevel,
     }));
@@ -130,7 +132,7 @@ const AddUser = (props) => {
                 value={formData.userType}
                 placeholder="Select User Type"
                 onChange={handleInputChange}
-                options={["Admin", "Viewer", "Contributor","QualityChecker"]}
+                options={["Admin", "Viewer", "Contributor","QualityChecker","CollectionPointer"]}
               />
               <Textfield
                 label="Access Level"
@@ -146,6 +148,7 @@ const AddUser = (props) => {
                 placeholder="Enter Password"
                 value={formData.password}
                 onChange={handleInputChange}
+                readOnly={true}
               />
             {/* </div> */}
           </div>

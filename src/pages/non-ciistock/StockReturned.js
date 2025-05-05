@@ -22,6 +22,7 @@ import AddStockReturned from "../../dialog/nonciistock-dialog/AddStockReturned";
 import UpdateStockReturned from "../../dialog/nonciistock-dialog/UpdateStockReturned";
 import { getRequest, postRequest } from "../../services/ApiService";
 import { getCookie } from "../../services/Cookies";
+import { isLimitedUser } from '../../services/Cookies';
 import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 const StockReturned = () => {
@@ -254,14 +255,14 @@ const StockReturned = () => {
             {showUpdateStockReturned && <UpdateStockReturned value={showUpdateStockReturned} materialNumber={materialNumber} materialDescription={materialDescription} selectedMaterialData={selectedMaterialData} handleUpdateStockReturned={handleUpdateStockReturned} />}
             <div className="outer-firstsection">
                 <div className="outer-firstsection-header">
-                <span className="outer-firstsection-title">{materialNumber}</span><span className="outer-firstsection-title">-{materialDescription}</span>
+                <span className="outer-firstsectioncii-title">{materialNumber}</span><span className="outer-firstsectioncii-title">-{materialDescription}</span>
                 </div>
                 <div className="outer-firstsection-actions">
                     <Search placeholder="Search" onChange={handleInputChange} />
                     <button className="outer-firstsection-download" onClick={handleDownload}>
                         <Download /> Download
                     </button>
-                    <button className="outer-firstsection-add" onClick={handleOpenAddReturn} disabled={getCookie("userType") === "Viewer" || getCookie("userType") ==="QualityChecker"}>
+                    <button className="outer-firstsection-add" onClick={handleOpenAddReturn} disabled={isLimitedUser()}>
                         <Plus /> Add Return
                     </button>
                 </div>
@@ -392,16 +393,11 @@ const StockReturned = () => {
                             <div className="table-data text-center w-[5%]">
                                 <VerticalDot
                                     onClick={(event) => {
-                                        const userType = getCookie("userType");
-                                        if (userType !== "Viewer" && userType !== "QualityChecker") {
+                                        if (!isLimitedUser()) {
                                             handleVerticalDotClick(event, item);
                                         }
                                     }}
-                                    className={
-                                        getCookie("userType") === "Viewer" || getCookie("userType") === "QualityChecker"
-                                            ? "cursor-not-allowed"
-                                            : "cursor-pointer"
-                                    }
+                                    className={isLimitedUser() ? "cursor-not-allowed" : "cursor-pointer"}
                                 />
                             </div>
                         </div>

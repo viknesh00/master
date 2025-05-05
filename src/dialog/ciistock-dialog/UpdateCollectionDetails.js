@@ -12,10 +12,10 @@ import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
 import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 import Datefield from "../../utils/Datefield";
+import DropdownField from "../../utils/DropDown";
 import { useUser } from "../../UserContext";
 
-const UpdateProductDetails = (props) => {
-    debugger
+const UpdateCollectionDetails = (props) => {
     const [open] = useState(props.value);
     const { serialData } = props;
     const [showAlert, setShowAlert] = useState(false);
@@ -26,13 +26,14 @@ const UpdateProductDetails = (props) => {
         if (serialData) {
             setFormData({
                 ...serialData,
-                qualityChecker: fullName,
+                collectionPointer: fullName,
+                collectionPointStatus: serialData.collectionPointStatus || "",
             });
         }
     }, [serialData, fullName]);
 
     const handleClose = () => {
-        props.handleProductDetails();
+        props.handleCollectionDetails();
         console.log(formData);
     };
 
@@ -49,8 +50,8 @@ const UpdateProductDetails = (props) => {
 
     const handleUpdate = () => {
         debugger
-        if(!formData.qualityCheckDate){
-            ToastError("Please select Quality checker date");
+        if(!formData.rackLocation){
+            ToastError("Please enter Rack Location");
             return;
         }
         let data = {};
@@ -59,23 +60,23 @@ const UpdateProductDetails = (props) => {
             materialNumber: formData.materialNumber,
             serialNumber: formData.serialNumber,
             existSerialNumber: serialData.serialNumber,
-            rackLocation: serialData.rackLocation,
+            rackLocation: formData.rackLocation,
             deliveryNumber: formData.deliveryNumber,
             orderNumber: formData.orderNumber,
             inwardDate: new Date(formData.inwardDate).toISOString(),
             inwardFrom: formData.inwardFrom? formData.inwardFrom: serialData.sourceLocation? serialData.sourceLocation: "temp",
             receivedBy: formData.receivedBy,
-            qualityCheckDate: formData.qualityCheckDate? new Date(formData.qualityCheckDate).toISOString() : null,
-            qualityChecker: formData.qualityChecker,
-            qualityCheckerStatus: formData.qualityCheckerStatus
+            collectionPointDate: formData.collectionPointDate? new Date(formData.collectionPointDate).toISOString() : null,
+            collectionPointerName: formData.collectionPointer,
+            CollectionPointStatus: formData.collectionPointStatus
         }
-        const url = `SmInboundStockCiis/UpdateInbounddata`
+        const url = `SmOutboundStockCiis/CollectionPointUpdate`
         postRequest(url, data)
             .then((res) => {
                 if (res.status === 200) {
-                    ToastSuccess("Product Details Updated Successfully");
+                    ToastSuccess("Collection Point Details Updated Successfully");
                     props.updateSerialData(formData);
-                    props.handleProductDetails();
+                    props.handleCollectionDetails();
                 }
             })
             .catch((error) => {
@@ -95,7 +96,7 @@ const UpdateProductDetails = (props) => {
                         </div>
                         <Closebutton className="cursor" onClick={handleClose} />
                     </div> */}
-                    <div className="dialog-title">Update Product Details</div>
+                    <div className="dialog-title">Update Collection Details</div>
                 </DialogTitle>
                 <DialogContent sx={{ padding: "0px 32px 40px 32px" }}>
                     <div className="addstock-details">
@@ -126,35 +127,43 @@ const UpdateProductDetails = (props) => {
                             onChange={handleInputChange}
                             readOnly={true}
                         />
-                        {/* <Textfield
+                        <Textfield
                             label={<span>Rack Location<span className="error">*</span></span>}
                             name={"rackLocation"}
                             value={formData.rackLocation}
                             placeholder="Enter rack location"
                             onChange={handleInputChange}
-                        /> */}
+                        />
                         <Datefield
-                            label="Quality Checker Date"
-                            placeholder="Quality Checker Date"
-                            name="qualityCheckDate"
-                            value={formData.qualityCheckDate}
+                            label="Collection Point Date"
+                            placeholder="Collection Point Date"
+                            name="collectionPointDate"
+                            value={formData.collectionPointDate}
                             onChange={handleInputChange}
                         />
                         <Textfield
-                            label="Quality Checker"
-                            name="qualityChecker"
-                            value={formData.qualityChecker}
-                            placeholder="Enter Quality Checker name"
+                            label="Collection Pointer"
+                            name="collectionPointer"
+                            value={formData.collectionPointer}
+                            placeholder="Enter Collection Pointer name"
                             onChange={handleInputChange}
                             readOnly={true}
                         />
-                        <Textfield
-                            label="Quality Checker Status"
+                        <DropdownField
+                            label={<span>Collection Point Status<span className="error">*</span></span>}
+                            name="collectionPointStatus"
+                            value={formData.collectionPointStatus}
+                            placeholder="Select Collection Point Status"
+                            onChange={handleInputChange}
+                            options={["In Hand", "Delivered"]}
+                        />
+                        {/* <Textfield
+                            label="Collection Pointer Status"
                             name="qualityCheckerStatus"
                             value={formData.qualityCheckerStatus}
-                            placeholder="Enter Quality Checker Status"
+                            placeholder="Enter Collection Pointer Status"
                             onChange={handleInputChange}
-                        />
+                        /> */}
                     </div>
 
                 </DialogContent>
@@ -173,4 +182,4 @@ const UpdateProductDetails = (props) => {
     );
 };
 
-export default UpdateProductDetails;
+export default UpdateCollectionDetails;

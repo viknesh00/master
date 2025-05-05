@@ -43,4 +43,9 @@ export const getCookie = (cname) => {
     console.log(userList);
   
   };
+
+  export const isLimitedUser = () => {
+    const userType = getCookie("userType");
+    return ["Viewer", "QualityChecker", "CollectionPointer"].includes(userType);
+  };
   

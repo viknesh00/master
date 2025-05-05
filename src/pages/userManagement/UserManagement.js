@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import AddUser from '../../dialog/usermanagement-dialog/AddUser';
 import EditUser from "../../dialog/usermanagement-dialog/EditUser";
 import { getCookie } from "../../services/Cookies";
+import { isLimitedUser } from '../../services/Cookies';
 
 const UserManagement = () => {
     const navigate = useNavigate();
@@ -238,7 +239,7 @@ const UserManagement = () => {
                         <button className="outer-firstsection-download" onClick={handleDownload}>
                             <Download /> Download
                         </button>
-                        <button className="outer-firstsection-add" onClick={handleOpenAddUser} disabled={getCookie("userType") === "Viewer" || getCookie("userType") ==="QualityChecker"}>
+                        <button className="outer-firstsection-add" onClick={handleOpenAddUser} disabled={isLimitedUser()}>
                             <Plus /> Add User
                         </button>
                     </div>
@@ -325,16 +326,11 @@ const UserManagement = () => {
                             <div className="table-data text-center w-[5%]">
                                 <VerticalDot
                                     onClick={(event) => {
-                                        const userType = getCookie("userType");
-                                        if (userType !== "Viewer" && userType !== "QualityChecker") {
+                                        if (!isLimitedUser()) {
                                             handleVerticalDotClick(event, item);
                                         }
                                     }}
-                                    className={
-                                        getCookie("userType") === "Viewer" || getCookie("userType") === "QualityChecker"
-                                            ? "cursor-not-allowed"
-                                            : "cursor-pointer"
-                                    }
+                                    className={isLimitedUser() ? "cursor-not-allowed" : "cursor-pointer"}
                                 />
                             </div>
                         </div>

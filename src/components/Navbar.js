@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 const Navbar = ({ breadcrumbs }) => {
     const navigate = useNavigate();
-    const { name } = useUser();
+    const { name, fullName } = useUser();
     return (
         <div className="navbar">
             <div className="navigation">
@@ -38,7 +38,7 @@ const Navbar = ({ breadcrumbs }) => {
             <div className="navbar-profile">
                 <Profile />
                 <div className="flex flex-col">
-                    <span className="username">Nato Admin</span>
+                    <span className="username">{fullName}</span>
                     <span className="useremail">{name}</span>
                 </div>
             </div>

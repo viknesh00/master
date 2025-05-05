@@ -25,6 +25,7 @@ import AddStock from "../../dialog/ciistock-dialog/AddStock";
 import MovedAlert from "../../dialog/MovedAlert";
 import { getRequest, postRequest } from "../../services/ApiService";
 import { getCookie } from "../../services/Cookies";
+import { isLimitedUser } from '../../services/Cookies';
 
 const MaterialDetail = () => {
     const navigate = useNavigate();
@@ -58,6 +59,7 @@ const MaterialDetail = () => {
     const [resetSelect, setResetSelect] = useState(false);
 
     useEffect(() => {
+        debugger
         fetchMaterialDetails();
         fetchMaterialAnalysiticsCiiData();
         
@@ -352,13 +354,13 @@ const MaterialDetail = () => {
 
                 <div className="outer-firstsection">
                     <div className="outer-firstsection-header">
-                        <span className="outer-firstsection-title">{materialNumber}</span><span className="outer-firstsection-title">-{materialDescription}</span>
+                        <span className="outer-firstsectioncii-title">{materialNumber}</span><span className="outer-firstsectioncii-title">-{materialDescription}</span>
                     </div>
                     <div className="outer-firstsection-actions">
                         <button className="outer-firstsection-download" onClick={handleDownload}>
                             <Download /> Download
                         </button>
-                        <button className="outer-firstsection-add" onClick={handleOpenAddStock} disabled={getCookie("userType") === "Viewer" || getCookie("userType") === "QualityChecker"}>
+                        <button className="outer-firstsection-add" onClick={handleOpenAddStock} disabled={isLimitedUser()}>
                             <Plus /> Add Stock
                         </button>
                     </div>
@@ -504,13 +506,12 @@ const MaterialDetail = () => {
                                 </div>
                                 <div className="table-data text-center w-[10%]">
                                     <VerticalDot
-                                    onClick={(event) => {
-                                        const userType = getCookie("userType");
-                                        if (userType !== "Viewer" && userType !== "QualityChecker") {
-                                            handleVerticalDotClick(event, item);
-                                        }
-                                    }}
-                                        className={getCookie("userType") === "Viewer" || getCookie("userType") === "QualityChecker" ? "cursor-not-allowed" : "cursor-pointer"}
+                                        onClick={(event) => {
+                                            if (!isLimitedUser()) {
+                                                handleVerticalDotClick(event, item);
+                                            }
+                                        }}
+                                        className={isLimitedUser() ? "cursor-not-allowed" : "cursor-pointer"}
                                     />
                                 </div>
                             </div>

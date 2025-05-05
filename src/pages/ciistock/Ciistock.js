@@ -16,6 +16,7 @@ import EditMaterial from "../../dialog/ciistock-dialog/EditMaterial";
 import { getRequest, postRequest } from "../../services/ApiService";
 import Addciistock from "../../dialog/ciistock-dialog/Addciistock";
 import { getCookie } from "../../services/Cookies";
+import { isLimitedUser } from '../../services/Cookies';
 import { useLocation } from "react-router-dom";
 import { useUser } from "../../UserContext";
 import CustomSelect from "../../utils/CustomSelect";
@@ -301,7 +302,7 @@ const Ciistock = (props) => {
                         <button className="outer-firstsection-download" onClick={handleDownload}>
                             <Download /> Download
                         </button>
-                        <button className="outer-firstsection-add" onClick={handleOpenAddMaterial} disabled={getCookie("userType") === "Viewer" || getCookie("userType") ==="QualityChecker"}>
+                        <button className="outer-firstsection-add" onClick={handleOpenAddMaterial} disabled={isLimitedUser()}>
                             <Plus /> Add Material
                         </button>
                     </div>
@@ -400,16 +401,11 @@ const Ciistock = (props) => {
                             <div className="table-data text-center w-[5%]">
                                 <VerticalDot
                                     onClick={(event) => {
-                                        const userType = getCookie("userType");
-                                        if (userType !== "Viewer" && userType !== "QualityChecker") {
+                                        if (!isLimitedUser()) {
                                             handleVerticalDotClick(event, item);
                                         }
                                     }}
-                                    className={
-                                        getCookie("userType") === "Viewer" || getCookie("userType") === "QualityChecker"
-                                            ? "cursor-not-allowed"
-                                            : "cursor-pointer"
-                                    }
+                                    className={isLimitedUser() ? "cursor-not-allowed" : "cursor-pointer"}
                                 />
                             </div>
                         </div>

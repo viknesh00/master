@@ -30,7 +30,7 @@ const EditUser = (props) => {
         "userId" : selectedrow.userCode || "",
         "userName": selectedrow.userName || "",
         "email": selectedrow.email || "",
-        "userType": selectedrow.userType && ["Admin", "Viewer", "Contributor","QualityChecker"].includes(selectedrow.userType) 
+        "userType": selectedrow.userType && ["Admin", "Viewer", "Contributor","QualityChecker","CollectionPointer"].includes(selectedrow.userType) 
         ? selectedrow.userType : "",
         "accessLevel": selectedrow.accessLevel || "",
         "status": selectedrow.isActive === true ? "Active" : selectedrow.isActive === false ? "Inactive" : ""
@@ -90,6 +90,8 @@ const EditUser = (props) => {
             ? "Read and write access"
             : value === "QualityChecker"
             ? "Quality Checking Access"
+            : value === "CollectionPointer"
+            ? "Collection Point Access"
             : ""
           : prevData.accessLevel,
     }));

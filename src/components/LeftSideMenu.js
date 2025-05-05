@@ -49,10 +49,10 @@ const LeftSideMenu = (props) => {
                       isActive ? "active block" : "inactive block"
                     }
                   >
-                    <span className="icon-size">{link.icon}</span>
-                    {!isCollapsed && (
-                      <span className="text-ellipsis">{link.name}</span>
-                    )}
+                    {link.icon}
+                    {!isCollapsed && link.name}
+
+
                   </NavLink>
                   {isCollapsed && <span className="tooltip">{link.name}</span>}
                 </div>

@@ -18,6 +18,7 @@ import { getRequest, postRequest } from "../../services/ApiService";
 import AddWarehouse from '../../dialog/usermanagement-dialog/AddWarehouse';
 import EditWarehouse from "../../dialog/usermanagement-dialog/EditWarehouse";
 import { getCookie } from "../../services/Cookies";
+import { isLimitedUser } from '../../services/Cookies';
 
 const WarehouseManagement = () => {
     const navigate = useNavigate();
@@ -235,7 +236,7 @@ const WarehouseManagement = () => {
                         <button className="outer-firstsection-download" onClick={handleDownload}>
                             <Download /> Download
                         </button>
-                        <button className="outer-firstsection-add" onClick={handleOpenAddWarehouse} disabled={getCookie("userType") === "Viewer" || getCookie("userType") ==="QualityChecker"}>
+                        <button className="outer-firstsection-add" onClick={handleOpenAddWarehouse} disabled={isLimitedUser()}>
                             <Plus /> Add Warehouse
                         </button>
                     </div>
@@ -305,19 +306,14 @@ const WarehouseManagement = () => {
                                 </span>
                             </div>
                             <div className="table-data text-center w-[5%]">
-                            <VerticalDot
-                                        onClick={(event) => {
-                                            const userType = getCookie("userType");
-                                            if (userType !== "Viewer" && userType !== "QualityChecker") {
-                                                handleVerticalDotClick(event, item);
-                                            }
-                                        }}
-                                        className={
-                                            getCookie("userType") === "Viewer" || getCookie("userType") === "QualityChecker"
-                                                ? "cursor-not-allowed"
-                                                : "cursor-pointer"
+                                <VerticalDot
+                                    onClick={(event) => {
+                                        if (!isLimitedUser()) {
+                                            handleVerticalDotClick(event, item);
                                         }
-                                    />
+                                    }}
+                                    className={isLimitedUser() ? "cursor-not-allowed" : "cursor-pointer"}
+                                />
                             </div>
                         </div>
                     ))}

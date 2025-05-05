@@ -20,6 +20,7 @@ import AddStockDelivered from "../../dialog/nonciistock-dialog/AddStockDelivered
 import UpdateStockDelivered from "../../dialog/nonciistock-dialog/UpdateStockDelivered";
 import { getRequest, postRequest } from "../../services/ApiService";
 import { getCookie } from "../../services/Cookies";
+import { isLimitedUser } from '../../services/Cookies';
 import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 const StockDelivered = (props) => {
@@ -241,14 +242,14 @@ const StockDelivered = (props) => {
 
             <div className="outer-firstsection">
                 <div className="outer-firstsection-header">
-                <span className="outer-firstsection-title">{materialNumber}</span><span className="outer-firstsection-title">-{materialDescription}</span>
+                <span className="outer-firstsectioncii-title">{materialNumber}</span><span className="outer-firstsectioncii-title">-{materialDescription}</span>
                 </div>
                 <div className="outer-firstsection-actions">
                 <Search placeholder="Search" onChange={handleInputChange} />
                     <button className="outer-firstsection-download" onClick={handleDownload}>
                         <Download /> Download
                     </button>
-                    <button className="outer-firstsection-add" onClick={handleOpenAddDelivery} disabled={getCookie("userType") === "Viewer" || getCookie("userType") ==="QualityChecker"}>
+                    <button className="outer-firstsection-add" onClick={handleOpenAddDelivery} disabled={isLimitedUser()}>
                         <Plus /> Add Delivery
                     </button>
                 </div>
@@ -360,16 +361,11 @@ const StockDelivered = (props) => {
                             <div className="table-data text-center w-[5%]">
                                 <VerticalDot
                                     onClick={(event) => {
-                                        const userType = getCookie("userType");
-                                        if (userType !== "Viewer" && userType !== "QualityChecker") {
+                                        if (!isLimitedUser()) {
                                             handleVerticalDotClick(event, item);
                                         }
                                     }}
-                                    className={
-                                        getCookie("userType") === "Viewer" || getCookie("userType") === "QualityChecker"
-                                            ? "cursor-not-allowed"
-                                            : "cursor-pointer"
-                                    }
+                                    className={isLimitedUser() ? "cursor-not-allowed" : "cursor-pointer"}
                                 />
                             </div>
                         </div>
