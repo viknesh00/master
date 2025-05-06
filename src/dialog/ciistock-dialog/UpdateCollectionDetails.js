@@ -50,8 +50,8 @@ const UpdateCollectionDetails = (props) => {
 
     const handleUpdate = () => {
         debugger
-        if(!formData.rackLocation){
-            ToastError("Please enter Rack Location");
+        if(!formData.rackLocation || !formData.collectionPointDate){
+            ToastError("Please enter Rack Location and Collection Point Date");
             return;
         }
         let data = {};
