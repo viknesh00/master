@@ -454,7 +454,7 @@ const MaterialDescription = () => {
                         <Edit
                             className={`${getCookie("userType") === "Viewer" || getCookie("userType") === "QualityChecker" ? "cursor-not-allowed" : "cursor"}`}
                             onClick={(event) => {
-                                if (getCookie("userType") !== "Viewer" || getCookie("userType") !== "QualityChecker") {
+                                if (getCookie("userType") !== "Viewer" && getCookie("userType") !== "QualityChecker") {
                                     handleCollectionDetails();
                                 }
                             }}
