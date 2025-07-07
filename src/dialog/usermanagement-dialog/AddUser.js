@@ -37,7 +37,7 @@ const AddUser = (props) => {
         }
           let Data = {};
           Data = { ...Data,
-            UserCode :parseInt(formData.userId),
+            UserCode :formData.userId,
             UserName :formData.userName,
             Email :formData.email,
             UserType :formData.userType,
