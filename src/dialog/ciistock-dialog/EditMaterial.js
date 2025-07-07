@@ -12,13 +12,14 @@ import Description from "../../utils/Description";
 import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
 import { ToastError, ToastSuccess } from "../../services/ToastMsg";
+import { useUser } from "../../UserContext.js";
 
 const EditMaterial = (props) => {
   const [open] = useState(props.value);
   const {selectedrow} = props;
   const [showAlert, setShowAlert] = useState(false);
   const [formData, setFormData] = useState({});
-
+  const { name  } = useUser();
 
   useEffect(() => {
     if (selectedrow) {
@@ -44,7 +45,7 @@ const EditMaterial = (props) => {
       ToastError("Please enter the Material Number and Material Description");
       return;
     };
-    const url = `SmInboundStockCiis/update/${formData.ExistingNumber}/${formData.MaterialNumber}/${formData.MaterialDescription}`;
+    const url = `SmInboundStockCiis/update/${formData.ExistingNumber}/${formData.MaterialNumber}/${formData.MaterialDescription}/${name}`;
     postRequest(url)
       .then((res) => {
         if (res.status === 200) {
@@ -90,6 +91,7 @@ const EditMaterial = (props) => {
               placeholder="Enter Material Number"
               onChange={handleInputChange}
               name="MaterialNumber"
+              readOnly = {true}
             />
             <div className="grid-span">
               <Description

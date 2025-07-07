@@ -20,7 +20,7 @@ const UpdateCollectionDetails = (props) => {
     const { serialData } = props;
     const [showAlert, setShowAlert] = useState(false);
     const [formData, setFormData] = useState({});
-    const { fullName } = useUser();
+    const { fullName, name } = useUser();
 
     useEffect(() => {
         if (serialData) {
@@ -57,6 +57,7 @@ const UpdateCollectionDetails = (props) => {
         let data = {};
         data = {
             ...data,
+            username: name,
             materialNumber: formData.materialNumber,
             serialNumber: formData.serialNumber,
             existSerialNumber: serialData.serialNumber,
@@ -143,7 +144,7 @@ const UpdateCollectionDetails = (props) => {
                         />
                         <Textfield
                             label="Collection Pointer"
-                            name="collectionPointer"
+                            name="collectionPointerName"
                             value={formData.collectionPointer}
                             placeholder="Enter Collection Pointer name"
                             onChange={handleInputChange}

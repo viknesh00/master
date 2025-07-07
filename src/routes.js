@@ -3,6 +3,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Notification from "./pages/Notification";
 import Ciistock from "./pages/ciistock/Ciistock";
+import Reports from "./pages/ciistock/Reports";
 import Management from "./pages/Management";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./services/ProtectedRoute";
@@ -32,9 +33,11 @@ const routes = [
             { path: "cii-stock", element: <Ciistock /> },
             { path: "cii-stock/:materialNumber", element: <MaterialDetail /> }, // Define route for Material Detail
             { path: "cii-stock/:materialNumber/:serialNumbar", element: <MaterialDescription /> },
+            { path: "reports", element: <Reports /> },
             { path: "non-cii-stock", element: <Nonciistock /> },
             { path: "non-cii-stock/:materialNumber", element: <NonciiMaterialDetail /> },
             { path: "management", element: <Management /> },
+            { path: "log-management",element: <Management/>},
             { path: "list-management", element: <ListManagement/>},
             { path: "company-management", element: <CompanyManagement/>},
             { path: "company-management/:companyId", element: <WarehouseManagement /> },

@@ -14,12 +14,14 @@ import Description from "../../utils/Description";
 import { postRequest } from "../../services/ApiService";
 import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 import DropdownField from "../../utils/DropDown";
+import { useUser } from "../../UserContext";
 
 const UpdateReturnDetails = (props) => {
     const [open] = useState(props.value);
     const { selectedRow, serialData,selectedMaterialData} = props;
     const [showAlert, setShowAlert] = useState(false);
     const [formData, setFormData] = useState({});
+    const { name } = useUser();
 
     useEffect(() => {
         if (selectedRow && serialData) {
@@ -62,6 +64,7 @@ const UpdateReturnDetails = (props) => {
         let Data = {};
         Data = {
             ...Data,
+            username: name,
             materialNumber: serialData.materialNumber,
             serialNumber: serialData.serialNumber,
             materialDescription: serialData.materialDescription,

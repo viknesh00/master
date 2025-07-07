@@ -21,15 +21,15 @@ import { useLocation } from "react-router-dom";
 import { useUser } from "../../UserContext";
 import CustomSelect from "../../utils/CustomSelect";
 import { ToastError, ToastSuccess } from "../../services/ToastMsg";
-import Chip from '@mui/material/Chip';
+import FilterDateField from "../../utils/FilterDateField";
+import { ReactComponent as TickButton } from "../../assets/svg/tickbutton.svg";
+import { ReactComponent as CloseButton } from "../../assets/svg/closebutton.svg";
 
-const Ciistock = (props) => {
+const Reports = (props) => {
     const { name } = useUser();
     const navigate = useNavigate();
-    const location = useLocation();
-    //const filterType = location.state?.filter;
     const breadcrumbData = [
-        { label: "CII Stock", path: "" },
+        { label: "Reports", path: "" },
     ];
     const [ciiStockData, setCiiStockData] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
@@ -47,7 +47,11 @@ const Ciistock = (props) => {
     const [serialOptions, setSerialOptions] = useState([]);
     const [formData, setFormData] = useState({ serialNumber: "" });
     const [searchTerm, setSearchTerm] = useState("");
-    const [filterType, setFilterType] = useState(location.state?.filter || "");
+    const [filterValue, setFilterValue] = useState({});
+    const [fromDate, setFromDate] = useState(null);
+    const [toDate, setToDate] = useState(null);
+    const [inwardFrom, setInwardFrom] = useState("")
+    const [resetSelect, setResetSelect] = useState(false);
 
     useEffect(() => {
         fetchciistockdata();
@@ -60,107 +64,88 @@ const Ciistock = (props) => {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [filterType]);
+    }, []);
 
-    const filterLabels = {
-        newstock: "New Stock",
-        used: "Used Stock",
-        damaged: "Damaged Stock",
-        inhand: "Inhand Stock",
-        breakfix: "Breakfix Stock"
+    const fetchciistockdata = () => {
+        const url = `SmInboundStockCiis/GetReportStockCiis/${name}`;
+        
+        getRequest(url)
+          .then((res) => {
+              if (res.status === 200) {
+                // const updatedData = res.data.map(item => {
+                //     const newStock = item.newstock || 0;
+                //     const usedStock = item.usedstock || 0;
+                //     const stockinHand = newStock + usedStock;
+                //     const status = stockinHand > 0 ? 'Available' : 'Not Available';
+                //     return { ...item, stockinHand, status };
+                //   });
+                  setCiiStockData(res.data)
+              }
+          })
+          .catch((error) => {
+              console.error("API Error:", error);
+          });
     };
 
-const fetchciistockdata = () => {
-    debugger
-    const url = `SmInboundStockCiis/GetSmInboundStockCiis/${name}`;
-
-    getRequest(url)
-        .then((res) => {
-            if (res.status === 200) {
-                debugger
-                const updatedData = res.data.map(item => {
-                    const newStock = item.newstock || 0;
-                    const used = item.usedstock || 0;
-                    const inhand = newStock + used;
-                    const damaged = item.damaged || 0;
-                    const breakfix = item.breakFix || 0;
-                    const status = inhand > 0 ? 'Available' : 'Not Available';
-                    return { ...item, inhand,used,damaged,breakfix, status };
-                });
-
-                // Declare finalData outside the if block
-                let finalData = updatedData;
-
-                if (
-                    filterType &&
-                    ["used", "newstock", "damaged", "inhand", "breakfix"].includes(filterType)
-                ) {
-                    finalData = updatedData.filter(item => item[filterType] > 0);
-                }
-
-                setCiiStockData(finalData); // Now always defined
-            }
-        })
-        .catch((error) => {
-            console.error("API Error:", error);
-        });
-};
-
-const Delete = () => {
-    setFilterType(""); // or null
-    fetchciistockdata(); // re-fetch full data without filter
-};
-
-
     const handleRemoveMaterial = (value) => {
-        const url = `SmInboundStockCiis/${value}/${false}/${name}`
+        const url = `SmInboundStockCiis/${value}/${false}`
         postRequest(url)
-            .then((res) => {
-                if (res.status === 200) {
-                    ToastSuccess("Material Deleted Successfully");
-                    fetchciistockdata();
-                }
-            })
-            .catch((error) => {
-                console.error("API Error:", error);
-            });
+          .then((res) => {
+              if (res.status === 200) {
+                ToastSuccess("Material Deleted Successfully");
+                fetchciistockdata();
+              }
+          })
+          .catch((error) => {
+              console.error("API Error:", error);
+          });
     }
 
     const handleOpenAddMaterial = () => {
-        if (showAddMaterial) {
+        if(showAddMaterial){
             fetchciistockdata();
         }
         setShowAddMaterial(prevState => !prevState);
     };
 
     const handleOpenEditMaterial = () => {
-        if (showEditMaterial) {
+        if(showEditMaterial){
             fetchciistockdata();
         }
         setShowEditMaterial(prevState => !prevState);
     };
 
     const filteredData = ciiStockData.filter((item) => {
-        
+        debugger
         const query = searchQuery.toLowerCase();
-
+    
         const materialMatch = item["materialNumber"]?.toString().toLowerCase().includes(query);
-
+    
         const matchesSearch =
             materialMatch ||
             Object.values(item).some((value) =>
                 String(value).toLowerCase().includes(query)
             );
+        const inwardDate = new Date(item.inwardDate);
+        const from = fromDate ? new Date(fromDate) : null;
+        const to = toDate ? new Date(toDate) : null;
 
+        const matchesDate =
+        (!from && !to) ||
+        (from && !to && inwardDate >= from) ||
+        (!from && to && inwardDate <= to) ||
+        (from && to && inwardDate >= from && inwardDate <= to);
+
+    
         if (activeTab === "Available") {
             return matchesSearch && item["status"] === "Available";
         } else if (activeTab === "Not Available") {
             return matchesSearch && item["status"] === "Not Available";
         }
-
-        return matchesSearch;
+    
+        return matchesSearch && matchesDate;
     });
-
+    
 
     const isValidDate = (value) => {
         const date = new Date(value);
@@ -193,42 +178,68 @@ const Delete = () => {
     );
 
     const handleInputChange = (value) => {
-        debugger
         setSearchQuery(value);
         setCurrentPage(0);
         setSelectedRows([]);
     };
 
+    const handleApplyFilter = () => {
+    setFromDate(filterValue.fromdate || null);
+    setToDate(filterValue.todate || null);
+    };
+
+    const onSelectionChange = (value, field) => {
+        setResetSelect(false)
+        setFilterValue(prevState => ({
+            ...prevState,
+            [field]: value
+        }));
+    }
+
+    // const inwardFromOptions = [
+    //     { label: "Inward Date", value: "inwarddate" },
+    //     { label: "Outward Date", value: "outwarddate" }
+    // ];
+
+
+    const handleClearFilter = () => {
+        setFromDate(null);
+        setToDate(null);
+        //setInwardFrom("")
+        setFilterValue({})
+        setResetSelect(true)
+    }
+
     const getsearchValue = (value) => {
         if (!value.trim()) {
             setSerialOptions([]); // Clear dropdown if input is empty
             return;
-        }
-
-        console.log("API Call:", value); // Debugging: Check if API is being triggered
-
-        const url = `SmInboundStockCiis/SearchSerialNumber/${name}/${value}`;
-
-        postRequest(url)
+          }
+      
+          console.log("API Call:", value); // Debugging: Check if API is being triggered
+      
+          const url = `SmInboundStockCiis/SearchSerialNumber/${name}/${value}`;
+      
+          postRequest(url)
             .then((res) => {
                 if (res.status === 200 && res.data) {
-
+  
                     const Options = [
                         ...new Set(res.data.map((item) => item)),
                     ].map((value) => ({ id: value, name: value.serialNumber }));
-
+  
                     setSerialOptions(Options); // Update dropdown
                 }
             })
             .catch((error) => {
-                console.error("API Error:", error);
+              console.error("API Error:", error);
             });
     }
 
-    const onSelectionChange = (value, field) => {
-        navigate(`/cii-stock/${value.id.materialNumber}`, { state: { materialDescription: value.id.materialDescription } });
-        //navigate(`/cii-stock/${value.id.materialNumber}/${value.id.serialNumber}`, { state: { serialData : value.id, materialDescription : value.id.materialDescription } });
-    }
+    // const handleMaterialClick = (value, field) =>{
+    //     navigate(`/cii-stock/${value.id.materialNumber}`, { state: { materialDescription : value.id.materialDescription } });
+    //     //navigate(`/cii-stock/${value.id.materialNumber}/${value.id.serialNumber}`, { state: { serialData : value.id, materialDescription : value.id.materialDescription } });
+    // }
 
     const handlePageChange = (event, value) => {
         setCurrentPage(value);
@@ -260,7 +271,7 @@ const Delete = () => {
     );
 
     const handleDownload = () => {
-        const keysToKeep = ["materialNumber", "materialDescription", "newstock", "usedstock", "inhand", "damaged", "breakFix", "status"];
+        const keysToKeep = ["materialNumber", "serialNumber", "inwardDate","outboundDate", "status"];
         const cleanedData = filteredData.map(item =>
             Object.fromEntries(
                 keysToKeep
@@ -274,7 +285,7 @@ const Delete = () => {
         const worksheet = XLSX.utils.json_to_sheet(dataToExport);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "CII Stock");
-        XLSX.writeFile(workbook, "CII_Stock.xlsx");
+        XLSX.writeFile(workbook, "CII_StockReports.xlsx");
     };
 
     const handleSort = (key) => {
@@ -304,50 +315,88 @@ const Delete = () => {
         setAlertBox({ visible: false, x: 0, y: 0, data: null });
     };
 
+        const formatDate = (dateString) => {
+        if (!dateString) return ""; // Return empty string if dateString is null or undefined
+    
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return ""; // Return empty string if the date is invalid
+    
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = date.getFullYear();
+    
+        return `${day}/${month}/${year}`;
+    };
+
 
     return (
         <div>
-            {showAddMaterial && <Addciistock value={showAddMaterial} handleOpenAddMaterial={handleOpenAddMaterial} />}
-            {showEditMaterial && <EditMaterial value={showEditMaterial} selectedrow={alertBox.data} handleOpenEditMaterial={handleOpenEditMaterial} />}
             <Navbar breadcrumbs={breadcrumbData} />
             <div className="outersection-container">
-                <div style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: "space-between", width: "100%" }}>
-                    <span className="main-title">CII Stock</span>
-                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                {/* <div style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: "space-between", width: "100%" }}> */}
+                    <span className="main-title">Reports</span>
+                    {/* <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                         <label>Search Serial Number:</label>
                         <CustomSelect
                             options={serialOptions}
                             placeholder="Search Serial Number"
                             getsearchValue={getsearchValue}
                             onSelectionChange={onSelectionChange}
-                        //resetSelect={resetSelect}
+                            //resetSelect={resetSelect}
                         />
-                    </div>
-                </div>
+                    </div> */}
+                {/* </div> */}
                 <div className="outer-firstsection">
                     <div className="outer-firstsection-header">
                         <span className="outer-firstsection-title">CII Stock</span>
                         <span className="outer-firstsection-subtitle">
                             {filteredData.length} Materials
                         </span>
-                        {/* <span className="outer-firstsection-subtitle"> */}
-                        {filterType?
-                            <Chip  label = {filterLabels[filterType] ||filterType}
-                            onDelete={Delete}
-                            sx={{ margin: "3px", fontSize: "12px" }}
-                            />
-                          : ""            
-                        }                
-                        {/* </span> */}
                     </div>
-                    <div className="outer-firstsection-actions">
+                    {/* <div className="outer-firstsection-actions"> */}
+                                        {/* <div className="outer-secondsection"> */}
+                                            <div className="outer-firstsection-header">
+                                                {/* <CustomSelect
+                                                    options={inwardFromOptions}
+                                                    placeholder="Date"
+                                                    onSelectionChange={onSelectionChange}
+                                                    resetSelect={resetSelect}
+                                                /> */}
+                                                <FilterDateField
+                                                    label="fromdate"
+                                                    placeholder="From Date"
+                                                    onSelectionChange={onSelectionChange}
+                                                    maxDate={filterValue.todate}
+                                                    resetSelect={resetSelect}
+                                                />
+                                                <FilterDateField
+                                                    label="todate"
+                                                    placeholder="To Date"
+                                                    onSelectionChange={onSelectionChange}
+                                                    minDate={filterValue.fromdate}
+                                                    resetSelect={resetSelect}
+                                                />
+                                                <div className="outer-firstsection-actions">
+                                                    <div className="tick-btn" onClick={handleApplyFilter}><TickButton /></div>
+                                                    <div className="reset-btn" onClick={handleClearFilter}>
+                                                        <CloseButton />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {/* <div className="outer-firstsection-actions">
+                                                <div className="tick-btn" onClick={handleApplyFilter}><TickButton /></div>
+                                                <div className="reset-btn" onClick={handleClearFilter}>
+                                                    <CloseButton />
+                                                </div>
+                                            </div> */}
+                                        {/* </div> */}
                         <button className="outer-firstsection-download" onClick={handleDownload}>
                             <Download /> Download
                         </button>
-                        <button className="outer-firstsection-add" onClick={handleOpenAddMaterial} disabled={isLimitedUser()}>
+                        {/* <button className="outer-firstsection-add" onClick={handleOpenAddMaterial} disabled={isLimitedUser()}>
                             <Plus /> Add Material
-                        </button>
-                    </div>
+                        </button> */}
+                    {/* </div> */}
                 </div>
                 <div className="outer-secondsection">
                     <div className="tabs">
@@ -390,38 +439,20 @@ const Delete = () => {
                             )}
                         </div>
                         <div className="table-header text-left w-[25%]" onClick={() => handleSort("materialDescription")}>
-                            Material Description
+                            Serial Number
                             {sortConfig.key === "materialDescription" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("inhand")}>
-                            Stock In Hand
-                            {sortConfig.key === "inhand" && (
+                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("inwardDate")}>
+                            Inward Date
+                            {sortConfig.key === "inwardDate" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[13%]" onClick={() => handleSort("newstock")}>
-                            New Stock
-                            {sortConfig.key === "newstock" && (
-                                sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
-                            )}
-                        </div>
-                        <div className="table-header text-left w-[13%]" onClick={() => handleSort("usedstock")}>
-                            Used Stock
-                            {sortConfig.key === "usedstock" && (
-                                sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
-                            )}
-                        </div>
-                        <div className="table-header text-left w-[10%]" onClick={() => handleSort("damaged")}>
-                            Damaged
-                            {sortConfig.key === "damaged" && (
-                                sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
-                            )}
-                        </div>
-                        <div className="table-header text-left w-[10%]" onClick={() => handleSort("breakFix")}>
-                            BreakFix
-                            {sortConfig.key === "breakFix" && (
+                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("outboundDate")}>
+                            Outward Date
+                            {sortConfig.key === "outboundDate" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
@@ -431,42 +462,41 @@ const Delete = () => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[5%]"></div>
                     </div>
                     <div className="max-h-[400px] overflow-y-auto">
-                        {paginatedData.map((item, index) => (
-                            <div key={index} className="div-data">
-                                <div className="text-center w-[5%]">
-                                    <input
-                                        type="checkbox"
-                                        className="table-checkbox"
-                                        checked={selectedRows.includes(item["materialNumber"])}
-                                        onChange={() => handleCheckboxChange(item["materialNumber"])}
-                                    />
-                                </div>
-                                <div className="table-data text-hyper text-left w-[15%]" onClick={() => handleMaterialClick(item["materialNumber"], item["materialDescription"])}>{item["materialNumber"]}</div>
-                                <div className="table-data text-left w-[25%]">{item["materialDescription"]}</div>
-                                <div className="table-data text-left w-[15%]">{item["inhand"] ?? 0}</div>
-                                <div className="table-data text-left w-[10%]">{item["newstock"] ?? 0}</div>
-                                <div className="table-data text-left w-[10%]">{item["usedstock"] ?? 0}</div>
-                                <div className="table-data text-left w-[10%]">{item["damaged"] ?? 0}</div>
-                                <div className="table-data text-left w-[10%]">{item["breakFix"] ?? 0}</div>
-                                <div className="table-data text-left w-[15%]">
-                                    <span className={`${item["status"] === "Available" ? "status-available" : item["status"] === "Not Available" ? "status-not-available" : "status-unknown"}`}>{item["status"]}</span>
-                                </div>
-                                <div className="table-data text-center w-[5%]">
-                                    <VerticalDot
-                                        onClick={(event) => {
-                                            if (!isLimitedUser()) {
-                                                handleVerticalDotClick(event, item);
-                                            }
-                                        }}
-                                        className={isLimitedUser() ? "cursor-not-allowed" : "cursor-pointer"}
-                                    />
-                                </div>
+                    {paginatedData.map((item, index) => (
+                        <div key={index} className="div-data">
+                            <div className="text-center w-[5%]">
+                                <input
+                                    type="checkbox"
+                                    className="table-checkbox"
+                                    checked={selectedRows.includes(item["materialNumber"])}
+                                    onChange={() => handleCheckboxChange(item["materialNumber"])}
+                                />
                             </div>
-                        ))}
-                    </div>
+                            <div className="table-data text-hyper text-left w-[15%]" onClick={() => handleMaterialClick(item["materialNumber"], item["materialDescription"])}>{item["materialNumber"]}</div>
+                            {/* <div className="table-data text-left w-[15%]">{item["materialNumber"]}</div> */}
+                            <div className="table-data text-left w-[25%]">{item["serialNumber"]}</div>
+                            <div className="table-data text-left w-[15%]">{formatDate(item["inwardDate"])}</div>
+                            <div className="table-data text-left w-[15%]">{formatDate(item["outboundDate"])|| "N/A"}</div>
+                            <div className="table-data text-left w-[15%]">{item["status"]}</div> 
+
+                            {/* <div className="table-data text-left w-[15%]">
+                                <span className={`${item["status"] === "Available" ? "status-available" : item["status"] === "Not Available" ? "status-not-available" : "status-unknown"}`}>{item["status"]}</span>
+                            </div> */}
+                            {/* <div className="table-data text-center w-[5%]">
+                                <VerticalDot
+                                    onClick={(event) => {
+                                        if (!isLimitedUser()) {
+                                            handleVerticalDotClick(event, item);
+                                        }
+                                    }}
+                                    className={isLimitedUser() ? "cursor-not-allowed" : "cursor-pointer"}
+                                />
+                            </div> */}
+                        </div>
+                    ))}
+                </div>
                 </div>
 
                 {alertBox.visible && (
@@ -517,4 +547,4 @@ const Delete = () => {
     );
 };
 
-export default Ciistock;
+export default Reports;

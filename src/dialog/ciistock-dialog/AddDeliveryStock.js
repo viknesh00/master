@@ -12,11 +12,13 @@ import Datefield from "../../utils/Datefield";
 import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
 import { ToastError, ToastSuccess } from "../../services/ToastMsg";
+import { useUser } from "../../UserContext";
 
 
 const AddDeliveryStock = (props) => {
     const [open] = useState(props.value);
     const { serialData } = props;
+    const { fullName, name } = useUser();
     const [showAlert, setShowAlert] = useState(false);
     const [formData, setFormData] = useState({});
 
@@ -33,6 +35,7 @@ const AddDeliveryStock = (props) => {
         let Data = {};
         Data = {
             ...Data,
+            username: name,
             deliveryNumber:  Math.floor((Math.abs(Math.sin(new Date().getTime())) * 100) % 100).toString().padStart(2, '0'),
             materialNumber: serialData.materialNumber,
             serialNumber: serialData.serialNumber,

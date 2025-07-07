@@ -22,8 +22,10 @@ import { getRequest, postRequest } from "../../services/ApiService";
 import { getCookie } from "../../services/Cookies";
 import { isLimitedUser } from '../../services/Cookies';
 import { ToastError, ToastSuccess } from "../../services/ToastMsg";
+import { useUser } from "../../UserContext";
 
 const StockInward = (props) => {
+    const { name } = useUser();
     const location = useLocation();
     const materialNumber = location.pathname.split('/').pop();
     const { materialDescription } = location.state || {};
@@ -201,7 +203,7 @@ const StockInward = (props) => {
 
     const handleRemoveMaterial = (deliveryNumber,inboundStockNonCIIKey) => {
         debugger
-                const url = `SmInboundStockNonCiis/DeleteNonStockInbounddata/${materialNumber}/${deliveryNumber}/${inboundStockNonCIIKey}`
+                const url = `SmInboundStockNonCiis/DeleteNonStockInbounddata/${materialNumber}/${deliveryNumber}/${inboundStockNonCIIKey}/${name}`
                 postRequest(url)
                   .then((res) => {
                       if (res.status === 200) {

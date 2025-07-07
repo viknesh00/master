@@ -204,7 +204,7 @@ const Nonciistock = () => {
     };
 
     const handleRemoveMaterial = (value) => {
-            const url = `SmInboundStockCiis/${value}/${false}`
+            const url = `SmInboundStockCiis/${value}/${false}/${name}`
             postRequest(url)
               .then((res) => {
                   if (res.status === 200) {

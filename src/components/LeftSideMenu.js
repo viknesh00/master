@@ -22,6 +22,7 @@ const LeftSideMenu = (props) => {
       links: [
         { path: "/cii-stock", name: "CII Stock", icon: <Stockinhand /> },
         { path: "/non-cii-stock", name: "Non-CII Stock", icon: <Stockinhand /> },
+        { path: "/reports", name: "Reports", icon: <Stockinhand /> },
       ],
     },
     {

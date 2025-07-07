@@ -12,6 +12,7 @@ import SaveAlert from "../SaveAlert";
 import Datefield from "../../utils/Datefield";
 import { postRequest } from "../../services/ApiService";
 import { ToastError, ToastSuccess } from "../../services/ToastMsg";
+import { useUser } from "../../UserContext";
 
 const UpdateDeliveryDetails = (props) => {
 
@@ -19,6 +20,7 @@ const UpdateDeliveryDetails = (props) => {
     const {selectedRow,serialData,deliveryData,selectedMaterialData} = props;
     const [showAlert, setShowAlert] = useState(false);
     const [formData, setFormData] = useState({});
+    const { fullName, name } = useUser();
 
      useEffect(() => {
         if (selectedRow && serialData) {
@@ -52,6 +54,7 @@ const UpdateDeliveryDetails = (props) => {
             let Data = {};
             Data = {
                 ...Data,
+                username: name,
                 materialNumber: serialData.materialNumber,
                 serialNumber: serialData.serialNumber,
                 orderNumber: formData.orderNumber, 

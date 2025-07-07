@@ -13,9 +13,11 @@ import Datefield from "../../utils/Datefield";
 import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
 import { ToastError, ToastSuccess } from "../../services/ToastMsg";
+import { useUser } from "../../UserContext";
 
 const AddStockDelivered = (props) => {
     const location = useLocation();
+    const { name } = useUser();
     const {materialDescription } = props;
     const materialNumber = location.pathname.split('/').pop();
     const [open] = useState(props.value);
@@ -36,6 +38,7 @@ const AddStockDelivered = (props) => {
         let Data = {};
         Data = {
             ...Data,
+            username: name,
             materialNumber: materialNumber,
             materialDescription: materialDescription,
             deliveryNumber: formData.deliveryNumber,

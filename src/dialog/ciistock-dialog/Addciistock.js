@@ -12,20 +12,23 @@ import Description from "../../utils/Description";
 import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
 import { ToastError, ToastSuccess } from "../../services/ToastMsg";
+import { useUser } from "../../UserContext.js";
 
 
 const Addnonciistock = (props) => {
   const [open] = useState(props.value);
   const [showAlert, setShowAlert] = useState(false);
   const [formData, setFormData] = useState({});
+  const { name  } = useUser();
 
 
   const handleAddnonciistock = () => {
+    debugger
     if (!formData.MaterialNumber || !formData.MaterialDescription) {
         ToastError("Please enter the Material Number and Material Description");
         return; // Stop execution if validation fails
     }
-          const url = `SmInboundStockCiis/Material/${formData.MaterialNumber}/${formData.MaterialDescription}`;
+          const url = `SmInboundStockCiis/Material/${formData.MaterialNumber}/${formData.MaterialDescription}/${name}`;
   
           postRequest(url)
               .then((res) => {

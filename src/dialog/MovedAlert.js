@@ -8,10 +8,12 @@ import { ReactComponent as FlipForward } from "../assets/svg/flip-forward.svg";
 import { postRequest } from "../services/ApiService";
 import { ToastError, ToastSuccess } from "../services/ToastMsg";
 import DropdownField from "../utils/DropDown";
+import { useUser } from "../UserContext";
 
 
 
 const MovedAlert = (props) => {
+  const { name } = useUser();
   const [open] = useState(props.value);
   const {materialNumber, serialNumber} = props;
     const [formData, setFormData] = useState({});
@@ -26,7 +28,7 @@ const MovedAlert = (props) => {
       return ToastError("Please select the Status Change");
     }
     const status = formData.statusChange
-    const url = `SmInboundStockCiis/${materialNumber}/${serialNumber}/${status}`;
+    const url = `SmInboundStockCiis/UpdateSerialStatus/${materialNumber}/${serialNumber}/${status}/${name}`;
     postRequest(url)
               .then((res) => {
                   if (res.status === 200) {
@@ -35,6 +37,7 @@ const MovedAlert = (props) => {
                   }
               })
               .catch((error) => {
+                //console.log("error",error);
                   ToastError(error.response.data);
               });
   }

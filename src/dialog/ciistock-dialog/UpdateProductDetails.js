@@ -20,7 +20,7 @@ const UpdateProductDetails = (props) => {
     const { serialData } = props;
     const [showAlert, setShowAlert] = useState(false);
     const [formData, setFormData] = useState({});
-    const { fullName } = useUser();
+    const { fullName, name } = useUser();
 
     useEffect(() => {
         if (serialData) {
@@ -56,6 +56,7 @@ const UpdateProductDetails = (props) => {
         let data = {};
         data = {
             ...data,
+            userName: name,
             materialNumber: formData.materialNumber,
             serialNumber: formData.serialNumber,
             existSerialNumber: serialData.serialNumber,

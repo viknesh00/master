@@ -129,9 +129,15 @@
                 }));
             };
 
-            const ciiStockStatus = ()=>{
-                navigate("/cii-stock");
-            }
+            const ciiStockStatus = (filterType) => {
+              debugger
+              navigate("/cii-stock", { state: { filter: filterType } });
+              //navigate("/reports");
+            };
+            // const ciiStockStatus = ()=>{
+            //     navigate("/cii-stock");
+            //     //navigate("/reports");
+            // }
 
             const nonCiiStockStatus = ()=>{
                 navigate("/non-cii-stock");
@@ -215,7 +221,7 @@
         <div key={index} className="flex flex-col items-center">
           <div
             className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 cursor-pointer"
-            onClick={ciiStockStatus}
+            onClick={() => ciiStockStatus(item.name.toLowerCase().replace(" ", ""))}
           >
             <CircularProgressbarWithChildren
               value={(item.value / item.totalStock) * 100}

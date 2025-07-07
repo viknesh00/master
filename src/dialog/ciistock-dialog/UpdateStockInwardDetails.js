@@ -12,9 +12,11 @@ import Datefield from "../../utils/Datefield";
 import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
 import { ToastError, ToastSuccess } from "../../services/ToastMsg";
+import { useUser } from "../../UserContext";
 
 const UpdateStockInwardDetails = (props) => {
     const { serialData } = props;
+    const { fullName, name } = useUser();
     const [open] = useState(props.value);
     const [showAlert, setShowAlert] = useState(false);
     const [formData, setFormData] = useState({});
@@ -35,6 +37,7 @@ const UpdateStockInwardDetails = (props) => {
         let data = {};
         data = {
             ...data,
+            username: name,
             materialNumber: formData.materialNumber,
             serialNumber: formData.serialNumber,
             existSerialNumber: serialData.serialNumber,
@@ -52,7 +55,7 @@ const UpdateStockInwardDetails = (props) => {
         postRequest(url, data)
             .then((res) => {
                 if (res.status === 200) {
-                    ToastSuccess("Product Details Updated Successfully");
+                    ToastSuccess("Inward Details Updated Successfully");
                     props.updateSerialData(formData);
                     props.handleInwardDetails();
                 }
