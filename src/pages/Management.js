@@ -345,7 +345,7 @@ const LogManagement = (props) => {
                     </div>
                     {/* <div className="outer-firstsection-actions"> */}
                                         {/* <div className="outer-secondsection"> */}
-                                            <div className="outer-firstsection-header">
+                                            {/* <div className="outer-firstsection-header">
                                                 <FilterDateField
                                                     label="fromdate"
                                                     placeholder="From Date"
@@ -366,7 +366,7 @@ const LogManagement = (props) => {
                                                         <CloseButton />
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> */}
                                             {/* <div className="outer-firstsection-actions">
                                                 <div className="tick-btn" onClick={handleApplyFilter}><TickButton /></div>
                                                 <div className="reset-btn" onClick={handleClearFilter}>
