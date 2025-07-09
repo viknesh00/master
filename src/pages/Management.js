@@ -434,32 +434,32 @@ const LogManagement = (props) => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[13%]" onClick={() => handleSort("modified_date")}>
+                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("modified_date")}>
                             Modified Date
                             {sortConfig.key === "modified_date" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("activities")}>
+                        <div className="table-header text-left w-[25%]" onClick={() => handleSort("activities")}>
                             Activities
                             {sortConfig.key === "activities" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("exist_record")}>
+                        <div className="table-header text-left w-[25%]" onClick={() => handleSort("exist_record")}>
                             Exist Changes
                             {sortConfig.key === "exist_record" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("new_record")}>
+                        <div className="table-header text-left w-[25%]" onClick={() => handleSort("new_record")}>
                             New Changes
                             {sortConfig.key === "new_record" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
                     </div>
-                    <div className="max-h-[400px] overflow-y-auto">
+                    <div className="max-h-[400px] overflow-y-auto overflow-X-auto">
                     {paginatedData.map((item, index) => (
                         <div key={index} className="div-data">
                             <div className="text-center w-[5%]">
@@ -473,10 +473,10 @@ const LogManagement = (props) => {
                             <div className="table-data text-hyper text-left w-[22%]">{item["user_Id"]}</div>
                             <div className="table-data text-left w-[20%]">{item["marterialNumber"]}</div>
                             <div className="table-data text-left w-[15%]">{item["serialNumber"]}</div>
-                            <div className="table-data text-left w-[13%]">{formatDate(item["modified_date"])}</div>
-                            <div className="table-data text-left w-[15%]">{item["activities"]}</div> 
-                            <div className="table-data text-left w-[15%]">{item["exist_record"]}</div>
-                            <div className="table-data text-left w-[15%]">{item["new_record"]}</div>
+                            <div className="table-data text-left w-[15%]">{formatDate(item["modified_date"])}</div>
+                            <div className="table-data text-left w-[25%]">{item["activities"]}</div> 
+                            <div className="table-data text-left w-[25%]">{item["exist_record"]}</div>
+                            <div className="table-data text-left w-[25%]">{item["new_record"]}</div>
 
                             {/* <div className="table-data text-left w-[15%]">
                                 <span className={`${item["status"] === "Available" ? "status-available" : item["status"] === "Not Available" ? "status-not-available" : "status-unknown"}`}>{item["status"]}</span>

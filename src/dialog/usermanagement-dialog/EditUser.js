@@ -143,7 +143,7 @@ const EditUser = (props) => {
                 value={formData.userType}
                 placeholder="Select User Type"
                 onChange={handleInputChange}
-                options={["Admin", "Viewer", "Contributor","Quality Checker"]}
+                options={["Admin", "Viewer", "Contributor","QualityChecker","CollectionPointer"]}
             />
             <Textfield
                 label="Access Level"

@@ -477,7 +477,7 @@ const Reports = (props) => {
                             <div className="table-data text-hyper text-left w-[15%]" onClick={() => handleMaterialClick(item["materialNumber"], item["materialDescription"])}>{item["materialNumber"]}</div>
                             {/* <div className="table-data text-left w-[15%]">{item["materialNumber"]}</div> */}
                             <div className="table-data text-left w-[25%]">{item["serialNumber"]}</div>
-                            <div className="table-data text-left w-[15%]">{formatDate(item["inwardDate"])}</div>
+                            <div className="table-data text-left w-[15%]">{formatDate(item["inwardDate"])|| "N/A"}</div>
                             <div className="table-data text-left w-[15%]">{formatDate(item["outboundDate"])|| "N/A"}</div>
                             <div className="table-data text-left w-[15%]">{item["status"]}</div> 
 
