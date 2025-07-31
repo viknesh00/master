@@ -22,6 +22,7 @@ import { useUser } from "../../UserContext";
 import CustomSelect from "../../utils/CustomSelect";
 import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 import Chip from '@mui/material/Chip';
+import AddBulkCiiStock from "../../dialog/ciistock-dialog/AddBulkCiiStock";
 
 const Ciistock = (props) => {
     const { name } = useUser();
@@ -35,6 +36,7 @@ const Ciistock = (props) => {
     const [currentPage, setCurrentPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [showAddMaterial, setShowAddMaterial] = useState(false);
+    const [showAddBulkMaterial, setShowAddBulkMaterial] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedRows, setSelectedRows] = useState([]);
     const [sortConfig, setSortConfig] = useState({
@@ -131,6 +133,13 @@ const Delete = () => {
             fetchciistockdata();
         }
         setShowAddMaterial(prevState => !prevState);
+    };
+    
+    const handleOpenAddBulkMaterial = () => {
+        if (showAddBulkMaterial) {
+            fetchciistockdata();
+        }
+        setShowAddBulkMaterial(prevState => !prevState);
     };
 
     const handleOpenEditMaterial = () => {
@@ -308,6 +317,7 @@ const Delete = () => {
     return (
         <div>
             {showAddMaterial && <Addciistock value={showAddMaterial} handleOpenAddMaterial={handleOpenAddMaterial} />}
+            {showAddBulkMaterial && <AddBulkCiiStock value={showAddBulkMaterial} handleOpenAddBulkMaterial={handleOpenAddBulkMaterial} />}
             {showEditMaterial && <EditMaterial value={showEditMaterial} selectedrow={alertBox.data} handleOpenEditMaterial={handleOpenEditMaterial} />}
             <Navbar breadcrumbs={breadcrumbData} />
             <div className="outersection-container">
@@ -346,6 +356,9 @@ const Delete = () => {
                         </button>
                         <button className="outer-firstsection-add" onClick={handleOpenAddMaterial} disabled={isLimitedUser()}>
                             <Plus /> Add Material
+                        </button>
+                        <button className="outer-firstsection-add" onClick={handleOpenAddBulkMaterial} disabled={isLimitedUser()}>
+                            <Plus /> Add Bulk Material
                         </button>
                     </div>
                 </div>

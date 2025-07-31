@@ -28,9 +28,14 @@ const Addnonciistock = (props) => {
         ToastError("Please enter the Material Number and Material Description");
         return; // Stop execution if validation fails
     }
-          const url = `SmInboundStockCiis/Material/${formData.MaterialNumber}/${formData.MaterialDescription}/${name}`;
+        let data = {
+      userName: name,
+      materialNumber: formData.MaterialNumber,
+      materialDescription: formData.MaterialDescription
+    }
+          const url = `SmInboundStockCiis/Material`;
   
-          postRequest(url)
+          postRequest(url,data)
               .then((res) => {
                   if (res.status === 200) {
                     ToastSuccess("Material Added Successfully");

@@ -45,8 +45,14 @@ const EditMaterial = (props) => {
       ToastError("Please enter the Material Number and Material Description");
       return;
     };
-    const url = `SmInboundStockCiis/update/${formData.ExistingNumber}/${formData.MaterialNumber}/${formData.MaterialDescription}/${name}`;
-    postRequest(url)
+    let data = {
+      userName: name,
+      existMaterialNumber: formData.ExistingNumber,
+      materialNumber: formData.MaterialNumber,
+      materialDescription: formData.MaterialDescription
+    }
+    const url = `SmInboundStockCiis/update`;
+    postRequest(url,data)
       .then((res) => {
         if (res.status === 200) {
           ToastSuccess("Material Updated Successfully");

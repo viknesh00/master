@@ -15,6 +15,8 @@ import ListManagement from "./pages/listManagement/ListManagement";
 import CompanyManagement from "./pages/userManagement/CompanyManagement";
 import WarehouseManagement from "./pages/userManagement/WarehouseManagement";
 import UserManagement from "./pages/userManagement/UserManagement";
+import PoolStockCheck from "./pages/PoolStockCheck";
+
 const routes = [
     // Public Route
     { path: "/", element: <Login /> },
@@ -34,6 +36,7 @@ const routes = [
             { path: "cii-stock/:materialNumber", element: <MaterialDetail /> }, // Define route for Material Detail
             { path: "cii-stock/:materialNumber/:serialNumbar", element: <MaterialDescription /> },
             { path: "reports", element: <Reports /> },
+            { path: "poolstockcheck", element: <PoolStockCheck /> },
             { path: "non-cii-stock", element: <Nonciistock /> },
             { path: "non-cii-stock/:materialNumber", element: <NonciiMaterialDetail /> },
             { path: "management", element: <Management /> },
