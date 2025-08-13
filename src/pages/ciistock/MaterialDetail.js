@@ -26,6 +26,8 @@ import MovedAlert from "../../dialog/MovedAlert";
 import { getRequest, postRequest } from "../../services/ApiService";
 import { getCookie } from "../../services/Cookies";
 import { isLimitedUser } from '../../services/Cookies';
+import { ToastSuccess} from "../../services/ToastMsg";
+import { ToastError} from "../../services/ToastMsg";
 
 const MaterialDetail = () => {
     const navigate = useNavigate();
@@ -119,16 +121,18 @@ const MaterialDetail = () => {
     }
 
     const handledeleteSerialumber = () => {
-        const url = `SmInboundStockCiis/serial/${materialNumber}/${selectedSerialNumber}`
+        const url = `SmInboundStockCiis/serialNumberHardDelete/${materialNumber}/${selectedSerialNumber}`
         postRequest(url)
             .then((res) => {
                 if (res.status === 200) {
+                    ToastSuccess("Serial Number Deleted Successfully");
                     fetchMaterialDetails();
                     setAlertBox({ visible: false, x: 0, y: 0, data: null });
                 }
             })
             .catch((error) => {
                 console.error("API Error:", error);
+                ToastError(error.response.data);
             });
     }
 
@@ -527,12 +531,12 @@ const MaterialDetail = () => {
                             left: alertBox.x,
                         }}
                     >
-                        {/* <button
+                        <button
                             className="dropdown-item"
                             onClick={() => handledeleteSerialumber()}
                         >
                             <span><Delete /></span> Delete
-                        </button> */}
+                        </button>
                         <button
                             className="dropdown-item"
                             onClick={() => handlemovedtoused()}
