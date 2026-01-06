@@ -416,13 +416,13 @@ const LogManagement = (props) => {
                                 onChange={handleSelectAllChange}
                             />
                         </div>
-                        <div className="table-header text-left w-[22%]" onClick={() => handleSort("user_Id")}>
+                        <div className="table-header text-left w-[28%]" onClick={() => handleSort("user_Id")}>
                             User ID
                             {sortConfig.key === "user_Id" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[20%]" onClick={() => handleSort("marterialNumber")}>
+                        <div className="table-header text-left w-[30%]" onClick={() => handleSort("marterialNumber")}>
                             Material Number
                             {sortConfig.key === "marterialNumber" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
@@ -434,7 +434,7 @@ const LogManagement = (props) => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("modified_date")}>
+                        <div className="table-header text-left w-[18%]" onClick={() => handleSort("modified_date")}>
                             Modified Date
                             {sortConfig.key === "modified_date" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
@@ -470,10 +470,10 @@ const LogManagement = (props) => {
                                     onChange={() => handleCheckboxChange(item["materialNumber"])}
                                 />
                             </div>
-                            <div className="table-data text-hyper text-left w-[22%]">{item["user_Id"]}</div>
-                            <div className="table-data text-left w-[20%]">{item["marterialNumber"]}</div>
+                            <div className="table-data text-hyper text-left w-[28%]">{item["user_Id"]}</div>
+                            <div className="table-data text-left w-[30%]">{item["marterialNumber"]}</div>
                             <div className="table-data text-left w-[15%]">{item["serialNumber"]}</div>
-                            <div className="table-data text-left w-[15%]">{formatDate(item["modified_date"])}</div>
+                            <div className="table-data text-left w-[18%]">{formatDate(item["modified_date"])}</div>
                             <div className="table-data text-left w-[25%]">{item["activities"]}</div> 
                             <div className="table-data text-left w-[25%]">{item["exist_record"]}</div>
                             <div className="table-data text-left w-[25%]">{item["new_record"]}</div>

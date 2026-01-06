@@ -61,7 +61,8 @@ const UpdateStockInward = (props) => {
             inwardFrom: formData.inwardFrom || "",
             quantityReceived: formData.enterQuantity,
             receivedBy: formData.receivedBy || "",
-            rackLocation: formData.rackLocation || ""
+            rackLocation: formData.rackLocation || "",
+            InboundStockNonCIIKey: selectedMaterialData.inboundStockNonCIIKey
         }
         const url = `SmInboundStockNonCiis/UpdateNonStockInbounddata`;
 

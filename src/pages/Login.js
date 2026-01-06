@@ -7,6 +7,7 @@ import { cookieKeys,getCookie } from ".././services/Cookies";
 import Ciistock from "./ciistock/Ciistock.js";
 import { toast } from "react-toastify";
 import { ToastError, ToastSuccess } from "../services/ToastMsg.js";
+import {CircularProgress,} from "@mui/material";
 
 const Login = (props) => {
     const [username, setUsername] = useState("");
@@ -15,61 +16,64 @@ const Login = (props) => {
       const [showAlert, setShowAlert] = useState(false);
     const navigate = useNavigate();
     const { setName, setFullName  } = useUser();
+    const [loading, setLoading] = useState(false);
 
-    const handleLogin = (e) => {
-        debugger
-        e.preventDefault();
-        let Data = {};
-        Data = {
-            ...Data,
-            Email: username,
-            Password: password,
-        }
-        if (username == "" || password == "") {
-            ToastError("User Name and Password should not empty");
-        }else{ 
-        const url = `Login/Login`;
-        postRequest(url, Data)
-            .then((res) => {
-                if (res.status === 200) {
-                    if(res.data[0].userStatus == null){
-                        setShowAlert(true);
-                    }
-                    else{
-                        localStorage.setItem("isAuthenticated", "true"); // Set after successful login
-                        localStorage.setItem("username", username); 
-                        setName(username);
-                        setFullName(res.data[0].userName);
-                        navigate("/dashboard");
-                        ToastSuccess("Login Successfully");
-                        const userData = {
-                            userName: res.data[0].userName,
-                            userCode: res.data[0].userCode,
-                            email: res.data[0].email,
-                            userType: res.data[0].userType,
-                            isActive: res.data[0].isActive,
-                            accessLevel: res.data[0].accessLevel
-                        }
-                        cookieKeys({ ...userData });
-                    }
+   const handleLogin = (e) => {
+    e.preventDefault();
 
-                }
-                else {
-                    ToastError("Login failed. Please check your credentials.");
-                }
-            })
-            .catch((error) => {
-                ToastError("Login failed. Please check your credentials.");
-                console.error("API Error:", error);
-            });
-        }
-        // if (username === "admin@natobotics.com" && password === "Welcome@Nat0b0tics") {
-        //     localStorage.setItem("isAuthenticated", "true"); 
-        //     navigate("/dashboard");
-        // } else {
-        //     alert("Invalid credentials");
-        // }
+    if (loading) return; // 🔒 Prevent multiple clicks
+
+    if (username === "" || password === "") {
+        ToastError("User Name and Password should not empty");
+        return;
+    }
+
+    setLoading(true); // 🔒 Lock button
+
+    const Data = {
+        Email: username,
+        Password: password,
     };
+
+    postRequest("Login/Login", Data)
+        .then((res) => {
+            if (res.status === 200) {
+                if (res.data[0].userStatus == null) {
+                    setShowAlert(true);
+                } else {
+                    localStorage.setItem("isAuthenticated", "true");
+                    localStorage.setItem("username", username);
+
+                    setName(username);
+                    setFullName(res.data[0].userName);
+
+                    const userData = {
+                        userName: res.data[0].userName,
+                        userCode: res.data[0].userCode,
+                        email: res.data[0].email,
+                        userType: res.data[0].userType,
+                        isActive: res.data[0].isActive,
+                        accessLevel: res.data[0].accessLevel
+                    };
+
+                    cookieKeys({ ...userData });
+
+                    ToastSuccess("Login Successfully"); // ✅ only once
+                    navigate("/dashboard");
+                }
+            } else {
+                ToastError("Login failed. Please check your credentials.");
+            }
+        })
+        .catch((error) => {
+            ToastError("Login failed. Please check your credentials.");
+            console.error("API Error:", error);
+        })
+        .finally(() => {
+            setLoading(false); // 🔓 Unlock button
+        });
+};
+
 
     const handleClose = () => {
         //props.handleOpenAddCompany();
@@ -134,7 +138,7 @@ const Login = (props) => {
                     type="submit" 
                     className="w-full mt-4 bg-black text-white py-2 rounded shadow hover:bg-gray-800"
                 >
-                    Sign in
+                     {loading ? <CircularProgress size={24} color="inherit" /> : "Sign in"}
                 </button>
             </form>
             <p className="text-center mt-4 text-gray-700 text-sm">

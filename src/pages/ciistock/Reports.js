@@ -271,7 +271,7 @@ const Reports = (props) => {
     );
 
     const handleDownload = () => {
-        const keysToKeep = ["materialNumber", "serialNumber", "inwardDate","outboundDate", "status"];
+        const keysToKeep = ["materialNumber", "serialNumber","materialDescription", "inwardDate","outboundDate", "status"];
         const cleanedData = filteredData.map(item =>
             Object.fromEntries(
                 keysToKeep
@@ -438,9 +438,15 @@ const Reports = (props) => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[25%]" onClick={() => handleSort("materialDescription")}>
-                            Serial Number
+                        <div className="table-header text-left w-[35%]" onClick={() => handleSort("materialDescription")}>
+                            Material Description
                             {sortConfig.key === "materialDescription" && (
+                                sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
+                            )}
+                        </div>
+                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("serialNumber")}>
+                            Serial Number
+                            {sortConfig.key === "serialNumber" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
@@ -475,8 +481,8 @@ const Reports = (props) => {
                                 />
                             </div>
                             <div className="table-data text-hyper text-left w-[15%]" onClick={() => handleMaterialClick(item["materialNumber"], item["materialDescription"])}>{item["materialNumber"]}</div>
-                            {/* <div className="table-data text-left w-[15%]">{item["materialNumber"]}</div> */}
-                            <div className="table-data text-left w-[25%]">{item["serialNumber"]}</div>
+                            <div className="table-data text-left w-[35%]">{item["materialDescription"]}</div>
+                            <div className="table-data text-left w-[15%]">{item["serialNumber"]}</div>
                             <div className="table-data text-left w-[15%]">{formatDate(item["inwardDate"])|| "N/A"}</div>
                             <div className="table-data text-left w-[15%]">{formatDate(item["outboundDate"])|| "N/A"}</div>
                             <div className="table-data text-left w-[15%]">{item["status"]}</div> 

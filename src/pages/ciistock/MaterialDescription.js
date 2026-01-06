@@ -26,7 +26,6 @@ import { getCookie } from "../../services/Cookies";
 import { isLimitedUser } from '../../services/Cookies';
 
 const MaterialDescription = () => {
-    debugger
     const navigate = useNavigate();
     const location = useLocation();
     const [materialNumber, serialNumber] = location.pathname.split('/').slice(-2);
@@ -64,7 +63,7 @@ const MaterialDescription = () => {
 
     const breadcrumbData = [
         { label: "CII Stock", path: "/cii-stock" },
-        { label: `${materialNumber}`, path: `/cii-stock/${materialNumber}`, state : {materialDescription} },
+        { label: `${materialNumber}`, path: `/cii-stock/${materialNumber}`, state : {materialDescription,serialNumber} },
         { label: `${serialNumber}`, path: "" },
     ];
 

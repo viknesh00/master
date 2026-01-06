@@ -23,7 +23,8 @@ import { isLimitedUser } from '../../services/Cookies';
 const UserManagement = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const companyId = location.pathname.split('/').pop();
+    const companyId = location.pathname.split('/')[2];
+    const companyIds = location.pathname.split('/').pop();
     const { companyName } = location.state || {};
     const { WarehouseName } = location.state || {};
     const breadcrumbData = [
@@ -122,7 +123,7 @@ const UserManagement = () => {
     );
 
     const fetchuserDetails = () => {
-                    const url = `UserManagement/GetUserList/${companyId}`
+                    const url = `UserManagement/GetUserList/${companyIds}`
                     getRequest(url)
                         .then((res) => {
                             if (res.status === 200) {
@@ -275,7 +276,7 @@ const UserManagement = () => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[25%]" onClick={() => handleSort("email")}>
+                        <div className="table-header text-left w-[35%]" onClick={() => handleSort("email")}>
                             Email
                             {sortConfig.key === "email" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
@@ -315,7 +316,7 @@ const UserManagement = () => {
                             {/* <div className="table-data text-hyper text-left w-[20%]" onClick={() => handleMaterialClick(item["userCode"])}>{item["userCode"]}</div> */}
                             <div className="table-data text-hyper text-left w-[20%]">{item["userCode"]}</div>
                             <div className="table-data text-left w-[25%]">{item["userName"]}</div>
-                            <div className="table-data text-left w-[25%]">{item["email"]}</div>
+                            <div className="table-data text-left w-[35%]">{item["email"]}</div>
                             <div className="table-data text-left w-[25%]">{item["userType"]}</div>
                             <div className="table-data text-left w-[25%]">{item["accessLevel"]}</div>
                             <div className="table-data text-left w-[20%]">

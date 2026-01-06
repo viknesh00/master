@@ -235,7 +235,7 @@ const Delete = () => {
     }
 
     const onSelectionChange = (value, field) => {
-        navigate(`/cii-stock/${value.id.materialNumber}`, { state: { materialDescription: value.id.materialDescription } });
+        navigate(`/cii-stock/${value.id.materialNumber}`, { state: { materialDescription: value.id.materialDescription,serialNumber:value.id.serialNumber } });
         //navigate(`/cii-stock/${value.id.materialNumber}/${value.id.serialNumber}`, { state: { serialData : value.id, materialDescription : value.id.materialDescription } });
     }
 
@@ -295,7 +295,7 @@ const Delete = () => {
     };
 
     const handleMaterialClick = (materialNumber, materialDescription) => {
-        navigate(`/cii-stock/${materialNumber}`, { state: { materialDescription } });
+        navigate(`/cii-stock/${materialNumber}`, { state: { materialDescription, serialNumber:null } });
     };
 
     const handleVerticalDotClick = (event, item) => {
@@ -402,7 +402,7 @@ const Delete = () => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[25%]" onClick={() => handleSort("materialDescription")}>
+                        <div className="table-header text-left w-[50%]" onClick={() => handleSort("materialDescription")}>
                             Material Description
                             {sortConfig.key === "materialDescription" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
@@ -458,7 +458,7 @@ const Delete = () => {
                                     />
                                 </div>
                                 <div className="table-data text-hyper text-left w-[15%]" onClick={() => handleMaterialClick(item["materialNumber"], item["materialDescription"])}>{item["materialNumber"]}</div>
-                                <div className="table-data text-left w-[25%]">{item["materialDescription"]}</div>
+                                <div className="table-data text-left w-[50%]">{item["materialDescription"]}</div>
                                 <div className="table-data text-left w-[15%]">{item["inhand"] ?? 0}</div>
                                 <div className="table-data text-left w-[10%]">{item["newstock"] ?? 0}</div>
                                 <div className="table-data text-left w-[10%]">{item["usedstock"] ?? 0}</div>

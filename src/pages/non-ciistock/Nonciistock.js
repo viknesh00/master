@@ -297,7 +297,7 @@ const Nonciistock = () => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[25%]" onClick={() => handleSort("materialDescription")}>
+                        <div className="table-header text-left w-[50%]" onClick={() => handleSort("materialDescription")}>
                             Material Description
                             {sortConfig.key === "materialDescription" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
@@ -341,7 +341,7 @@ const Nonciistock = () => {
                                     />
                                 </div>
                                 <div className="table-data text-hyper text-left w-[15%]" onClick={() => handleMaterialClick(item["materialNumber"], item["materialDescription"])}>{item["materialNumber"]}</div>
-                                <div className="table-data text-left w-[25%]">{item["materialDescription"]}</div>
+                                <div className="table-data text-left w-[50%]">{item["materialDescription"]}</div>
                                 <div className="table-data text-left w-[15%]">{item["stockinHand"]}</div>
                                 <div className="table-data text-left w-[10%]">{item["newstock"]}</div>
                                 <div className="table-data text-left w-[10%]">{item["usedstock"]}</div>

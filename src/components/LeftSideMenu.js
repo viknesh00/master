@@ -31,7 +31,7 @@ const LeftSideMenu = (props) => {
       links: [
         { path: "/company-management", name: "User Management", icon: <User /> },
         { path: "/log-management", name: "Log Management", icon: <Log /> },
-        { path: "/list-management", name: "List Management", icon: <List /> },
+        // { path: "/list-management", name: "List Management", icon: <List /> },
       ],
     },
   ];

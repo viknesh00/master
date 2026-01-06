@@ -108,7 +108,7 @@ code {
 
   background-color: #000000;
   gap: 10px;
-  height: 72px;
+  min-height: 72px !important;
   display: flex;
 }
 

@@ -209,6 +209,7 @@ const StockInward = (props) => {
                       if (res.status === 200) {
                         ToastSuccess("Deleted Successfuly");
                         fetchMaterialDetails();
+                        props.fetchMaterialAnalysiticsNonCiiData();
                       }
                   })
                   .catch((error) => {

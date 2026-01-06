@@ -33,7 +33,7 @@ const MaterialDetail = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const materialNumber = location.pathname.split('/').pop();
-    const { materialDescription } = location.state || {};
+    const { materialDescription, serialNumber } = location.state || {};
     const [isPanelVisible, setPanelVisible] = useState(true);
     const [showMovetoused, setShowMovedtoused] = useState(false);
     const breadcrumbData = [
@@ -103,7 +103,7 @@ const MaterialDetail = () => {
     }
 
     const fetchMaterialDetails = () => {
-        const url = `SmInboundStockCiis/${materialNumber}`
+        const url = `SmInboundStockCiis/${materialNumber}/${serialNumber}`
         getRequest(url)
             .then((res) => {
                 if (res.status === 200) {
@@ -265,7 +265,7 @@ const MaterialDetail = () => {
     );
 
     const handleDownload = () => {
-        const keysToKeep = ["serialNumber", "inwardDate", "sourceLocation", "receivedBy", "rackLocation","status"];
+        const keysToKeep = ["serialNumber","materialNumber", "inwardDate", "sourceLocation", "receivedBy", "rackLocation","status"];
         const cleanedData = filteredData.map(item =>
             Object.fromEntries(
                 keysToKeep
@@ -347,7 +347,7 @@ const MaterialDetail = () => {
                     {isPanelVisible && (
                         <div className="grid-container">
                             <StockCard title="Total Stock" value={analyticsData[0]?.totalstock || 0} bgColor="#000000" />
-                            <StockCard title="New Stock" value={analyticsData[0]?.inhandstock || 0} bgColor="#039855" />
+                            <StockCard title="New Stock" value={analyticsData[0]?.newstock || 0} bgColor="#039855" />
                             <StockCard title="Outward Stock" value={analyticsData[0]?.outwardstock || 0} bgColor="#FF6600" />
                             <StockCard title="Used Stock" value={analyticsData[0]?.usedstock || 0} bgColor="#046C7A" />
                             <StockCard title="BreakFix Stock" value={analyticsData[0]?.breakfixstock || 0} bgColor="#5D36FF"/>
@@ -457,6 +457,12 @@ const MaterialDetail = () => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
+                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("materialNumber")}>
+                            Material Number
+                            {sortConfig.key === "materialNumber" && (
+                                sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
+                            )}
+                        </div>
                         <div className="table-header text-left w-[15%]" onClick={() => handleSort("inwardDate")}>
                             Inward Date
                             {sortConfig.key === "inwardDate" && (
@@ -501,6 +507,7 @@ const MaterialDetail = () => {
                                     />
                                 </div>
                                 <div className="table-data text-hyper text-left w-[15%]" onClick={() => handleMaterialClick(item["serialNumber"], item, item["orderNumber"])}>{item["serialNumber"]}</div>
+                                <div className="table-data text-left w-[15%]">{item["materialNumber"]}</div>
                                 <div className="table-data text-left w-[15%]">{formatDate(item["inwardDate"])}</div>
                                 <div className="table-data text-left w-[15%]">{item["sourceLocation"]}</div>
                                 <div className="table-data text-left w-[15%]">{item["receivedBy"]}</div>
