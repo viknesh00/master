@@ -24,6 +24,7 @@ import UpdateCollectionDetails from "../../dialog/ciistock-dialog/UpdateCollecti
 import { postRequest } from "../../services/ApiService";
 import { getCookie } from "../../services/Cookies";
 import { isLimitedUser } from '../../services/Cookies';
+import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 const MaterialDescription = () => {
     const navigate = useNavigate();
@@ -360,6 +361,34 @@ const MaterialDescription = () => {
             });
     }
 
+        const handledeleteOutwardData = () => {
+        const url = `SmOutboundStockCiis/DeleteOutboundData/${materialNumber}/${serialNumber}/${selectedMaterialData.outBoundStockCIIKey}`
+        postRequest(url)
+            .then((res) => {
+                if (res.status === 200) {
+                    ToastSuccess("Outward Stock Deleted Successfully");
+                    FetchSerialData();
+                }
+            })
+            .catch((error) => {
+                console.error("API Error:", error);
+            });
+    }
+
+    const handledeleteReturnData = () => {
+        const url = `SmOutboundStockCiis/DeleteReturnData/${materialNumber}/${serialNumber}/${selectedMaterialData.returnStockCIIKey}`
+        postRequest(url)
+            .then((res) => {
+                if (res.status === 200) {
+                    ToastSuccess("Return Stock Deleted Successfully");
+                    FetchSerialData();
+                }
+            })
+            .catch((error) => {
+                console.error("API Error:", error);
+            });
+    }
+
     return (
         <div>
             {showReturnDelivery && <AddReturnStock value={showReturnDelivery} serialData={serialData} handleReturnDelivery={handleReturnDelivery} />}
@@ -625,6 +654,17 @@ const MaterialDescription = () => {
                             onClick={() => alertBox.table === "delivery" ? setShowDeliveryDetails(true) : alertBox.table === "return" ? setShowReturnDetails(true) : ""}
                         >
                             <span><Edit /></span> Update
+                        </button>
+                        <button
+                            className="dropdown-item"
+                            onClick={() =>
+                                alertBox.table === "return"
+                                    ? handledeleteReturnData()
+                                    : handledeleteOutwardData()
+                            }
+
+                        >
+                            <span><Delete /></span> Delete
                         </button>
                     </div>
                 )}
