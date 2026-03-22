@@ -15,6 +15,7 @@ const NonciiMaterialDetail = () => {
     const location = useLocation();
     const materialNumber = location.pathname.split('/').pop();
     const [analyticsData, setAnalyticsData] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [isPanelVisible, setPanelVisible] = useState(true);
     const breadcrumbData = [
         { label: "Non-CII Stock", path: "/non-cii-stock" },
@@ -33,10 +34,12 @@ const NonciiMaterialDetail = () => {
     }, []);
 
     const fetchMaterialAnalysiticsNonCiiData = () => {
+        setLoading(true);
             const url = `SmInboundStockNonCiis/AnalyticsNonCII/${materialNumber}`
             postRequest(url)
                 .then((res) => {
                     if (res.status === 200) {
+                        setLoading(false);
                         setAnalyticsData(res.data);
                     }
                 })
@@ -66,6 +69,11 @@ const NonciiMaterialDetail = () => {
 
     return (
         <div>
+            {loading && (
+                <div className="loader-overlay">
+                    <div className="spinner"></div>
+                </div>
+            )}
             <Navbar breadcrumbs={breadcrumbData} />
             <div className="outersection-container">
                 {/* <span className="main-title">{materialNumber}</span> */}

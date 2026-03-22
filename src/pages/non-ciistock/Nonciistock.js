@@ -27,6 +27,7 @@ const Nonciistock = () => {
     const breadcrumbData = [
         { label: "Non-CII Stock", path: "" },
     ];
+    const [loading, setLoading] = useState(true);
     const [nonciiStockData, setNonCiiStockData] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -55,11 +56,13 @@ const Nonciistock = () => {
     }, []);
 
         const fetchnonciistockdata = () => {
+            setLoading(true);
             const url = `SmInboundStockNonCiis/GetSmInboundNonStockCiis/${name}`;
             
             getRequest(url)
               .then((res) => {
                   if (res.status === 200) {
+                    setLoading(false);
                     const updatedData = res.data.map(item => {
                         const newStock = item.newstock || 0;
                         const usedStock = item.usedstock || 0;
@@ -173,7 +176,7 @@ const Nonciistock = () => {
     );
 
     const handleDownload = () => {
-        const keysToKeep = ["materialNumber", "materialDescription", "newstock", "usedstock", "stockinHand", "status"];
+        const keysToKeep = ["materialNumber", "materialDescription", "newstock", "usedstock", "stockinHand", "rackLocation", "status"];
         const cleanedData = filteredData.map(item =>
             Object.fromEntries(
                 keysToKeep
@@ -235,6 +238,11 @@ const Nonciistock = () => {
 
     return (
         <div>
+            {loading && (
+                <div className="loader-overlay">
+                    <div className="spinner"></div>
+                </div>
+            )}
             {showAddMaterial && <Addnonciistock value={showAddMaterial} handleOpenAddMaterial={handleOpenAddMaterial} />}
             {showEditMaterial && <EditMaterial value={showEditMaterial} selectedrow={alertBox.data} handleOpenEditMaterial={handleOpenEditMaterial} />}
             <Navbar breadcrumbs={breadcrumbData} />
@@ -321,7 +329,13 @@ const Nonciistock = () => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[10%]" onClick={() => handleSort("status")}>
+                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("rackLocation")}>
+                            Rack Location
+                            {sortConfig.key === "Rack Location" && (
+                                sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
+                            )}
+                        </div>
+                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("status")}>
                             Status
                             {sortConfig.key === "Status" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
@@ -345,7 +359,9 @@ const Nonciistock = () => {
                                 <div className="table-data text-left w-[15%]">{item["stockinHand"]}</div>
                                 <div className="table-data text-left w-[10%]">{item["newstock"]}</div>
                                 <div className="table-data text-left w-[10%]">{item["usedstock"]}</div>
-                                <div className="table-data text-left w-[10%]">
+                                <div className="table-data text-left w-[15%]">{item["rackLocation"]}</div>
+
+                                <div className="table-data text-left w-[15%]">
                                     <span className={`${item["status"] === "Available" ? "status-available" : item["status"] === "Not Available" ? "status-not-available" : "status-unknown"}`}>{item["status"]}</span>
                                 </div>
                                 <div className="table-data text-center w-[5%]">

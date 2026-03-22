@@ -29,6 +29,7 @@ const StockInward = (props) => {
     const location = useLocation();
     const materialNumber = location.pathname.split('/').pop();
     const { materialDescription } = location.state || {};
+    const [loading, setLoading] = useState(true);
     const [showUpdateStockInward, setshowUpdateStockInward] = useState(false);
     const [selectedMaterialData, setSelectedMaterialData] = useState("");
     const [materialData, setMaterilaData] = useState([]);
@@ -120,10 +121,13 @@ const StockInward = (props) => {
 
         const fetchMaterialDetails = () => {
             debugger
+            setLoading(true);
             const url = `SmInboundStockNonCiis/GetInwardNonStockCiis/${materialNumber}`
             getRequest(url)
                 .then((res) => {
                     if (res.status === 200) {
+                        setLoading(false);
+
                         // res.data.forEach((item) => {
                         //     if (item.inwardDate) item.inwardDate = item.inwardDate;
                         //     if (item.createdDate) item.createdDate = formatDate(item.createdDate);
@@ -244,6 +248,11 @@ const StockInward = (props) => {
     }
     return (
         <div>
+            {loading && (
+                <div className="loader-overlay">
+                    <div className="spinner"></div>
+                </div>
+            )}
             {showStock && <AddStockInward value={showStock} materialNumber={materialNumber} materialDescription={materialDescription} handleOpenAddStock={handleOpenAddStock} />}
             {showUpdateStockInward && <UpdateStockInward value={showUpdateStockInward} materialNumber={materialNumber} materialDescription={materialDescription} selectedMaterialData={selectedMaterialData} selectedRow={alertBox.data} handleUpdateStockInward={handleUpdateStockInward} />}
 
@@ -327,8 +336,14 @@ const StockInward = (props) => {
                             sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                         )}
                     </div>
-                    <div className="table-header text-left w-[12%]" onClick={() => handleSort("deliveredQuantity")}>
+                    <div className="table-header text-left w-[12%]" onClick={() => handleSort("totalQuantity")}>
                         Quantity Received
+                        {sortConfig.key === "totalQuantity" && (
+                            sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
+                        )}
+                    </div>
+                    <div className="table-header text-left w-[12%]" onClick={() => handleSort("deliveredQuantity")}>
+                        Current Stock
                         {sortConfig.key === "deliveredQuantity" && (
                             sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                         )}
@@ -362,6 +377,7 @@ const StockInward = (props) => {
                             <div className="table-data text-left w-[15%]">{item["orderNumber"]}</div>
                             <div className="table-data text-left w-[12%]">{formatDate(item["inwardDate"])}</div>
                             <div className="table-data text-left w-[13%]">{item["sourceLocation"]}</div>
+                            <div className="table-data text-left w-[12%]">{item["totalQuantity"]}</div>
                             <div className="table-data text-left w-[12%]">{item["deliveredQuantity"]}</div>
                             <div className="table-data text-left w-[10%]">{item["receivedBy"]}</div>
                             <div className="table-data text-left w-[15%]">{item["rackLocation"]}</div>

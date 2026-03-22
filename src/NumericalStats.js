@@ -29,7 +29,8 @@
         const [fromDate, setFromDate] = useState(null);
         const [toDate, setToDate] = useState(null);
         const [inwardFrom, setInwardFrom] = useState("")
-        const [resetSelect, setResetSelect] = useState(false);     
+        const [resetSelect, setResetSelect] = useState(false);
+        const [loading, setLoading] = useState(true);     
             const [pieCiiData, setCiiPieData] = useState([
                 { name: "In Hand", value: 0, color: "#009E4C",totalStock : "" + "" + "" },
                 { name: "New Stock", value: 0, color: "#046C7A",totalStock : "" + "" + "" },
@@ -61,13 +62,14 @@
                 fetchDashboarddata();
             },[]);
         
-                const fetchDashboarddata = () => {  
+                const fetchDashboarddata = () => {
+                  setLoading(true);  
                     const url = `SmInboundStockNonCiis/DashBoard/${name}`;
                     
                     postRequest(url)
                     .then((res) => {
                         if (res.status === 200) {
-        
+                          setLoading(false);
                             let ciiInhand = res.data.ciiCounts[0].inhandstock;
                             let ciiNewStock = res.data.ciiCounts[0].newstock;
                             let ciiUsed = res.data.ciiCounts[0].usedstock;
@@ -321,6 +323,11 @@
       ))}
     </div>
   </CardContent>
+  {loading && (
+    <div className="loader-overlay">
+        <div className="spinner"></div>
+    </div>
+)}
 </div>
 
             

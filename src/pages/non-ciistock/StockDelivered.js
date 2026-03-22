@@ -29,6 +29,7 @@ const StockDelivered = (props) => {
     const location = useLocation();
     const materialNumber = location.pathname.split('/').pop();
     const { materialDescription } = location.state || {};
+    const [loading, setLoading] = useState(true);
     const [showUpdateStockDelivered, setShowUpdateStockDelivered] = useState(false);
     const [selectedMaterialData, setSelectedMaterialData] = useState("");
     const [materialData, setMaterilaData] = useState([]);
@@ -67,10 +68,12 @@ const StockDelivered = (props) => {
 
     const fetchMaterialDetails = () => {
                 debugger
+                setLoading(true);
                 const url = `SmInboundStockNonCiis/DeliveredDataList/${materialNumber}`
                 getRequest(url)
                     .then((res) => {
                         if (res.status === 200) {
+                            setLoading(false);
                             // res.data.forEach((item) => {
                             //     if (item.inwardDate) item.inwardDate = item.inwardDate;
                             //     if (item.createdDate) item.createdDate = formatDate(item.createdDate);
@@ -240,6 +243,11 @@ const StockDelivered = (props) => {
     }
     return (
         <div>
+            {loading && (
+                <div className="loader-overlay">
+                    <div className="spinner"></div>
+                </div>
+            )}
             {showAddDelivered && <AddStockDelivered value={showAddDelivered} materialDescription={materialDescription} handleOpenAddDelivery={handleOpenAddDelivery} />}
             {showUpdateStockDelivered && <UpdateStockDelivered value={showUpdateStockDelivered} materialDescription={materialDescription} selectedMaterialData={selectedMaterialData} handleUpdateStockDelivered={handleUpdateStockDelivered} />}
 

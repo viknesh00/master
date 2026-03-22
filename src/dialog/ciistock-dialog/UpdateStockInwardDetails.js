@@ -44,7 +44,7 @@ const UpdateStockInwardDetails = (props) => {
             rackLocation: formData.rackLocation,
             deliveryNumber: formData.deliveryNumber,
             orderNumber: formData.orderNumber,
-            inwardDate: new Date(formData.inwardDate).toISOString(),
+            inwardDate: formData.inwardDate ? new Date(formData.inwardDate).toISOString() : null,
             inwardFrom: formData.sourceLocation ||  "temp",
             receivedBy: formData.receivedBy,
             qualityChecker: serialData.qualityChecker,
@@ -52,7 +52,7 @@ const UpdateStockInwardDetails = (props) => {
             qualityCheckDate: serialData.qualityCheckDate
         }
         const url = `SmInboundStockCiis/UpdateInbounddata`
-        postRequest(url, data)
+        postRequest(url, [data])
             .then((res) => {
                 if (res.status === 200) {
                     ToastSuccess("Inward Details Updated Successfully");

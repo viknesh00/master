@@ -31,6 +31,7 @@ const MaterialDescription = () => {
     const location = useLocation();
     const [materialNumber, serialNumber] = location.pathname.split('/').slice(-2);
     const { serialData, materialDescription } = location.state || {};
+    const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [returnCurrentPage, setReturnCurrentPage] = useState(0);
@@ -95,11 +96,14 @@ const MaterialDescription = () => {
     };
 
      const FetchSerialData = () => {
+        debugger
+        setLoading(true);
             const url = `SmOutboundStockCiis/${materialNumber}/${serialNumber}/${serialData.orderNumber}`;
             
             postRequest(url)
               .then((res) => {
                   if (res.status === 200) {
+                    setLoading(false);
                       res.data.deliveryData.forEach((item) => {
                           if (item.inwardDate) item.inwardDate = formatDate(item.inwardDate);
                           if (item.outBoundDate) item.outBoundDate = formatDate(item.outBoundDate);
@@ -391,6 +395,11 @@ const MaterialDescription = () => {
 
     return (
         <div>
+            {loading && (
+                <div className="loader-overlay">
+                    <div className="spinner"></div>
+                </div>
+            )}
             {showReturnDelivery && <AddReturnStock value={showReturnDelivery} serialData={serialData} handleReturnDelivery={handleReturnDelivery} />}
             {showAddDelivery && <AddDeliveryStock value={showAddDelivery} serialData={serialData} handleAddDelivery={handleAddDelivery} />}
             {showProductDetails && <UpdateProductDetails value={showProductDetails} serialData={serialData} handleProductDetails={handleProductDetails} updateSerialData={handleUpdateSerialData} />}
@@ -623,7 +632,7 @@ const MaterialDescription = () => {
                                 />
                             </div>
                             <div className="table-data text-left w-[15%]">{item["outBoundOrderNumber"]}</div>
-                            <div className="table-data text-left w-[15%]">{formatDate(item["outBoundDate"])}</div>
+                            <div className="table-data text-left w-[15%]">{item["outBoundDate"]}</div>
                             <div className="table-data text-left w-[15%]">{item["receiverName"]}</div>
                             <div className="table-data text-left w-[20%]">{item["targetLocation"]}</div>
                             <div className="table-data text-left w-[20%]">{item["sentby"]}</div>

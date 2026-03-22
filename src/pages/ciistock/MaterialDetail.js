@@ -22,6 +22,7 @@ import Material_data from "../../data/material_data.json";
 import FilterDateField from "../../utils/FilterDateField";
 import CustomSelect from "../../utils/CustomSelect";
 import AddStock from "../../dialog/ciistock-dialog/AddStock";
+import BulkEdit from "../../dialog/ciistock-dialog/BulkEdit";
 import MovedAlert from "../../dialog/MovedAlert";
 import { getRequest, postRequest } from "../../services/ApiService";
 import { getCookie } from "../../services/Cookies";
@@ -48,6 +49,7 @@ const MaterialDetail = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedRows, setSelectedRows] = useState([]);
     const [showStock, setShowStock] = useState(false);
+    const [showBulkEditStock, setShowBulkEditStock] = useState(false);
     const [activeTab, setActiveTab] = useState("View all");
     const [alertBox, setAlertBox] = useState({ visible: false, x: 0, y: 0, data: null });
     const [sortConfig, setSortConfig] = useState({
@@ -59,6 +61,7 @@ const MaterialDetail = () => {
     const [toDate, setToDate] = useState(null);
     const [inwardFrom, setInwardFrom] = useState("")
     const [resetSelect, setResetSelect] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         debugger
@@ -90,10 +93,12 @@ const MaterialDetail = () => {
     };
 
       const fetchMaterialAnalysiticsCiiData = () => {
+        setLoading(true);
         const url = `SmInboundStockNonCiis/AnalyticsCII/${materialNumber}`
         postRequest(url)
             .then((res) => {
                 if (res.status === 200) {
+                    setLoading(false);
                     setAnalyticsData(res.data);
                 }
             })
@@ -103,10 +108,13 @@ const MaterialDetail = () => {
     }
 
     const fetchMaterialDetails = () => {
+        setLoading(true);
+
         const url = `SmInboundStockCiis/${materialNumber}/${serialNumber}`
         getRequest(url)
             .then((res) => {
                 if (res.status === 200) {
+                    setLoading(false);
                     res.data.forEach((item) => {
                         if (item.inwardDate) item.inwardDate = item.inwardDate;
                         if (item.createdDate) item.createdDate = formatDate(item.createdDate);
@@ -246,22 +254,22 @@ const MaterialDetail = () => {
 
     const handleSelectAllChange = (event) => {
         if (event.target.checked) {
-            setSelectedRows(paginatedData.map((item) => item["Material Number"]));
+            setSelectedRows(paginatedData.map((item) => item["serialNumber"]));
         } else {
             setSelectedRows([]);
         }
     };
 
-    const handleCheckboxChange = (materialNumber) => {
+    const handleCheckboxChange = (serialNumber) => {
         setSelectedRows((prevSelectedRows) =>
-            prevSelectedRows.includes(materialNumber)
-                ? prevSelectedRows.filter((item) => item !== materialNumber)
-                : [...prevSelectedRows, materialNumber]
+            prevSelectedRows.includes(serialNumber)
+                ? prevSelectedRows.filter((item) => item !== serialNumber)
+                : [...prevSelectedRows, serialNumber]
         );
     };
 
     const isAllSelected = selectedRows.length > 0 && paginatedData.every((item) =>
-        selectedRows.includes(item["Material Number"])
+        selectedRows.includes(item["serialNumber"])
     );
 
     const handleDownload = () => {
@@ -302,8 +310,18 @@ const MaterialDetail = () => {
     const handleOpenAddStock = () => {
         if(showStock){
             fetchMaterialDetails();
+            fetchMaterialAnalysiticsCiiData();
         }
         setShowStock(prevState => !prevState);
+    }
+
+    const handleOpenBulkEditStock = () => {
+        if(showBulkEditStock){
+            fetchMaterialDetails();
+            fetchMaterialAnalysiticsCiiData();
+            setSelectedRows([]);
+        }
+        setShowBulkEditStock(prevState => !prevState);
     }
 
     const handleVerticalDotClick = (event, item) => {
@@ -324,14 +342,21 @@ const MaterialDetail = () => {
 
     const handlemovedtoused = () => {
         if(showMovetoused){
-            fetchMaterialDetails(); 
+            fetchMaterialDetails();
+            fetchMaterialAnalysiticsCiiData(); 
         }
         setShowMovedtoused(prevState => !prevState);
         setAlertBox({ visible: false, x: 0, y: 0, data: null });
     }
     return (
         <div>
+            {loading && (
+                <div className="loader-overlay">
+                    <div className="spinner"></div>
+                </div>
+            )}
             {showStock && <AddStock value={showStock} materialDescription={materialDescription} materialNumber={materialNumber} handleOpenAddStock={handleOpenAddStock} />}
+            {showBulkEditStock && <BulkEdit value={showBulkEditStock} materialDescription={materialDescription} materialNumber={materialNumber} selectedSerialNumbers={selectedRows} handleOpenBulkEditStock={handleOpenBulkEditStock} />}
             {showMovetoused && <MovedAlert value={showMovetoused} materialNumber={materialNumber} serialNumber={selectedSerialNumber} handlemovedtoused={handlemovedtoused} />}
             <Navbar breadcrumbs={breadcrumbData} />
             <div className="outersection-container">
@@ -481,7 +506,7 @@ const MaterialDetail = () => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[12%]" onClick={() => handleSort("rackLocation")}>
+                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("rackLocation")}>
                             Racks Location
                             {sortConfig.key === "rackLocation" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
@@ -493,7 +518,18 @@ const MaterialDetail = () => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[10%]"></div>
+                        <div className="table-header text-left w-[15%]">
+                            <button
+                                className={`outer-firstsection-add ${selectedRows.length === 0
+                                        ? "cursor-not-allowed opacity-40"
+                                        : "cursor-pointer"
+                                    }`}
+                                onClick={selectedRows.length > 0 ? handleOpenBulkEditStock : undefined}
+                                disabled={selectedRows.length === 0 || isLimitedUser()}
+                            >
+                                Bulk Edit
+                            </button>
+                        </div>
                     </div>
                     <div className="max-h-[400px] overflow-y-auto">
                         {paginatedData.map((item, index) => (
@@ -511,11 +547,11 @@ const MaterialDetail = () => {
                                 <div className="table-data text-left w-[15%]">{formatDate(item["inwardDate"])}</div>
                                 <div className="table-data text-left w-[15%]">{item["sourceLocation"]}</div>
                                 <div className="table-data text-left w-[15%]">{item["receivedBy"]}</div>
-                                <div className="table-data text-left w-[12%]">{item["rackLocation"]}</div>
+                                <div className="table-data text-left w-[15%]">{item["rackLocation"]}</div>
                                 <div className="table-data text-left w-[15%]">
                                     <span className={`${item["status"] === "New" ? "status-available" : item["status"] === "Damaged" ? "status-not-available" : "status-unknown"}`}>{item["status"]}</span>
                                 </div>
-                                <div className="table-data text-center w-[10%]">
+                                <div className="table-data text-center w-[15%]">
                                     <VerticalDot
                                         onClick={(event) => {
                                             if (!isLimitedUser()) {

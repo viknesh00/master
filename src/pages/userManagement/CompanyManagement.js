@@ -26,6 +26,7 @@ const CompanyManagement = () => {
     const breadcrumbData = [
         { label: "Company Management", path: "" },
     ];
+    const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [companyData, setCompanyData] = useState([]);
@@ -54,10 +55,12 @@ const CompanyManagement = () => {
     }, []);
 
     const fetchCompanyDetails = () => {
+        setLoading(true);
             const url = `UserManagement/GetCompanyList/${name}`
             getRequest(url)
                 .then((res) => {
                     if (res.status === 200) {
+                        setLoading(false);
                         setCompanyData(res.data);
                     }
                 })
@@ -217,6 +220,11 @@ const CompanyManagement = () => {
 
     return (
         <div>
+            {loading && (
+                <div className="loader-overlay">
+                    <div className="spinner"></div>
+                </div>
+            )}
             {showAddMaterial && <AddCompany value={showAddMaterial} handleOpenAddCompany={handleOpenAddCompany} />}
             {showEditMaterial && <EditCompany value={showEditMaterial} selectedrow={alertBox.data} selectedcompanyData={selectedcompanyData} handleOpenEditCompany={handleOpenEditCompany} />}
             <Navbar breadcrumbs={breadcrumbData} />

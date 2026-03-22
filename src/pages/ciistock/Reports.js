@@ -31,6 +31,8 @@ const Reports = (props) => {
     const breadcrumbData = [
         { label: "Reports", path: "" },
     ];
+    
+    const [loading, setLoading] = useState(true);
     const [ciiStockData, setCiiStockData] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -67,11 +69,13 @@ const Reports = (props) => {
     }, []);
 
     const fetchciistockdata = () => {
+        setLoading(true);
         const url = `SmInboundStockCiis/GetReportStockCiis/${name}`;
         
         getRequest(url)
           .then((res) => {
               if (res.status === 200) {
+                    setLoading(false);
                 // const updatedData = res.data.map(item => {
                 //     const newStock = item.newstock || 0;
                 //     const usedStock = item.usedstock || 0;
@@ -271,7 +275,7 @@ const Reports = (props) => {
     );
 
     const handleDownload = () => {
-        const keysToKeep = ["materialNumber", "serialNumber","materialDescription", "inwardDate","outboundDate", "status"];
+        const keysToKeep = ["materialNumber", "serialNumber","materialDescription","rackLocation", "inwardDate","outboundDate", "status"];
         const cleanedData = filteredData.map(item =>
             Object.fromEntries(
                 keysToKeep
@@ -297,7 +301,7 @@ const Reports = (props) => {
     };
 
     const handleMaterialClick = (materialNumber, materialDescription) => {
-        navigate(`/cii-stock/${materialNumber}`, { state: { materialDescription } });
+        navigate(`/cii-stock/${materialNumber}`, { state: { materialDescription, serialNumber:null } });
     };
 
     const handleVerticalDotClick = (event, item) => {
@@ -331,6 +335,11 @@ const Reports = (props) => {
 
     return (
         <div>
+            {loading && (
+                <div className="loader-overlay">
+                    <div className="spinner"></div>
+                </div>
+            )}
             <Navbar breadcrumbs={breadcrumbData} />
             <div className="outersection-container">
                 {/* <div style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: "space-between", width: "100%" }}> */}
@@ -438,7 +447,7 @@ const Reports = (props) => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[35%]" onClick={() => handleSort("materialDescription")}>
+                        <div className="table-header text-left w-[40%]" onClick={() => handleSort("materialDescription")}>
                             Material Description
                             {sortConfig.key === "materialDescription" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
@@ -447,6 +456,12 @@ const Reports = (props) => {
                         <div className="table-header text-left w-[15%]" onClick={() => handleSort("serialNumber")}>
                             Serial Number
                             {sortConfig.key === "serialNumber" && (
+                                sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
+                            )}
+                        </div>
+                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("rackLocation")}>
+                            Rack Location
+                            {sortConfig.key === "rackLocation" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
@@ -481,8 +496,9 @@ const Reports = (props) => {
                                 />
                             </div>
                             <div className="table-data text-hyper text-left w-[15%]" onClick={() => handleMaterialClick(item["materialNumber"], item["materialDescription"])}>{item["materialNumber"]}</div>
-                            <div className="table-data text-left w-[35%]">{item["materialDescription"]}</div>
+                            <div className="table-data text-left w-[40%]">{item["materialDescription"]}</div>
                             <div className="table-data text-left w-[15%]">{item["serialNumber"]}</div>
+                            <div className="table-data text-left w-[15%]">{item["rackLocation"]}</div>
                             <div className="table-data text-left w-[15%]">{formatDate(item["inwardDate"])|| "N/A"}</div>
                             <div className="table-data text-left w-[15%]">{formatDate(item["outboundDate"])|| "N/A"}</div>
                             <div className="table-data text-left w-[15%]">{item["status"]}</div> 

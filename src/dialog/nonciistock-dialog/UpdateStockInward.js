@@ -32,7 +32,7 @@ const UpdateStockInward = (props) => {
             "orderNumber": selectedMaterialData.orderNumber,
             "inwardDate": selectedMaterialData.inwardDate,
             "inwardFrom": selectedMaterialData.sourceLocation,
-            "enterQuantity":selectedMaterialData.deliveredQuantity,
+            "enterQuantity":selectedMaterialData.totalQuantity,
             "receivedBy":selectedMaterialData.receivedBy,
             "rackLocation":selectedMaterialData.rackLocation
           });

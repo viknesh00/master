@@ -29,6 +29,7 @@ const WarehouseManagement = () => {
         { label: "Company Management", path: "/company-management" },
         { label: `${companyName}`, path: "" },
     ];
+    const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [warehouseData, setWarehouseData] = useState([]);
@@ -57,10 +58,12 @@ const WarehouseManagement = () => {
     }, []);
 
         const fetchWarehouseDetails = () => {
+            setLoading(true);
                 const url = `UserManagement/GetTenetList/${companyId}`
                 getRequest(url)
                     .then((res) => {
                         if (res.status === 200) {
+                            setLoading(false);
                             setWarehouseData(res.data);
                         }
                     })
@@ -219,6 +222,11 @@ const WarehouseManagement = () => {
 
     return (
         <div>
+            {loading && (
+                <div className="loader-overlay">
+                    <div className="spinner"></div>
+                </div>
+            )}
             {showAddMaterial && <AddWarehouse value={showAddMaterial} handleOpenAddWarehouse={handleOpenAddWarehouse} />}
             {showEditMaterial && <EditWarehouse value={showEditMaterial} selectedrow={alertBox.data} selectedWarehouseData={selectedWarehouseData} handleOpenEditWarehouse={handleOpenEditWarehouse} />}
             <Navbar breadcrumbs={breadcrumbData} />

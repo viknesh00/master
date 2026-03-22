@@ -32,6 +32,7 @@ const UserManagement = () => {
         { label: `${companyName}`, path: `/company-management/${companyId}`, state:{companyName} },
         { label: `${WarehouseName}`, path: "" },
     ];
+    const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [userData, setUserData] = useState([]);
@@ -123,10 +124,12 @@ const UserManagement = () => {
     );
 
     const fetchuserDetails = () => {
+        setLoading(true);
                     const url = `UserManagement/GetUserList/${companyIds}`
                     getRequest(url)
                         .then((res) => {
                             if (res.status === 200) {
+                                setLoading(false);
                                 setUserData(res.data);
                             }
                         })
@@ -223,6 +226,11 @@ const UserManagement = () => {
 
     return (
         <div>
+            {loading && (
+                <div className="loader-overlay">
+                    <div className="spinner"></div>
+                </div>
+            )}
             {showAddMaterial && <AddUser value={showAddMaterial} handleOpenAddUser={handleOpenAddUser} />}
             {showEditMaterial && <EditUser value={showEditMaterial} selectedrow={alertBox.data} selectedUserData={selectedUserData} handleOpenEditUser={handleOpenEditUser} />}
             <Navbar breadcrumbs={breadcrumbData} />

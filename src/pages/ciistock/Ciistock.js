@@ -32,6 +32,7 @@ const Ciistock = (props) => {
     const breadcrumbData = [
         { label: "CII Stock", path: "" },
     ];
+    const [loading, setLoading] = useState(true);
     const [ciiStockData, setCiiStockData] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -74,12 +75,14 @@ const Ciistock = (props) => {
 
 const fetchciistockdata = () => {
     debugger
+    setLoading(true); 
     const url = `SmInboundStockCiis/GetSmInboundStockCiis/${name}`;
 
     getRequest(url)
         .then((res) => {
             if (res.status === 200) {
                 debugger
+                setLoading(false); 
                 const updatedData = res.data.map(item => {
                     const newStock = item.newstock || 0;
                     const used = item.usedstock || 0;
@@ -316,6 +319,11 @@ const Delete = () => {
 
     return (
         <div>
+            {loading && (
+                <div className="loader-overlay">
+                    <div className="spinner"></div>
+                </div>
+            )}
             {showAddMaterial && <Addciistock value={showAddMaterial} handleOpenAddMaterial={handleOpenAddMaterial} />}
             {showAddBulkMaterial && <AddBulkCiiStock value={showAddBulkMaterial} handleOpenAddBulkMaterial={handleOpenAddBulkMaterial} />}
             {showEditMaterial && <EditMaterial value={showEditMaterial} selectedrow={alertBox.data} handleOpenEditMaterial={handleOpenEditMaterial} />}
