@@ -103,7 +103,7 @@ const AddStock = (props) => {
         data.append("MaterialNumber", materialNumber);
         data.append("MaterialDescription", materialDescription);
         data.append("OrderNumber", formData.OrderNumber || "");
-        data.append("Inwarddate", formData.InwardDate ? new Date(formData.InwardDate).toISOString() : "");
+        data.append("Inwarddate", formData.InwardDate ? new Date(formData.InwardDate).toLocaleDateString('en-CA') : "");
         data.append("ReceivedBy", formData.ReceivedBy || "");
         data.append("RacKLocation", formData.RackLocation || "");
         data.append("InwardFrom", formData.InwardFrom || "");  

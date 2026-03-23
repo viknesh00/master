@@ -41,7 +41,7 @@ const AddStockInward = (props) => {
             materialDescription: materialDescription,
             deliveryNumber: formData.deliveryNumber,
             orderNumber: formData.orderNumber || "",
-            inwardDate: formData.inwardDate? new Date(formData.inwardDate).toISOString() : null, 
+            inwardDate: formData.inwardDate ? new Date(formData.inwardDate).toLocaleDateString('en-CA'): null,
             inwardFrom: formData.inwardFrom || "",
             quantityReceived: formData.enterQuantity,
             receivedBy: formData.receivedBy || "",

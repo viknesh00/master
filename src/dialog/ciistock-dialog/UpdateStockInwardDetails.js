@@ -44,7 +44,7 @@ const UpdateStockInwardDetails = (props) => {
             rackLocation: formData.rackLocation,
             deliveryNumber: formData.deliveryNumber,
             orderNumber: formData.orderNumber,
-            inwardDate: formData.inwardDate ? new Date(formData.inwardDate).toISOString() : null,
+            inwardDate: formData.inwardDate ? new Date(formData.inwardDate).toLocaleDateString('en-CA') : null,
             inwardFrom: formData.sourceLocation ||  "temp",
             receivedBy: formData.receivedBy,
             qualityChecker: serialData.qualityChecker,

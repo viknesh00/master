@@ -50,7 +50,7 @@ const AddReturnStock = (props) => {
             materialDescription: serialData.materialDescription,
             orderNumber: formData.OrderNumber,
             locationReturnedFrom: formData.ReturnLocation || "",
-            returneddate: formData.ReturnDate? new Date(formData.ReturnDate).toISOString() : null,
+            returneddate: formData.ReturnDate? new Date(formData.ReturnDate).toLocaleDateString('en-CA') : null,
             returnedBy: formData.ReceivedBy || "",
             rackLocation: formData.RackLocation || "",
             returnType: formData.ReturnType,

@@ -43,7 +43,7 @@ const AddStockDelivered = (props) => {
             materialDescription: materialDescription,
             deliveryNumber: formData.deliveryNumber,
             orderNumber: formData.orderNumber || "",
-            outboundDate: formData.outboundDate? new Date(formData.outboundDate).toISOString() : null,
+            outboundDate: formData.outboundDate? new Date(formData.outboundDate).toLocaleDateString('en-CA') : null,
             receiverName: formData.receiverName || "",
             deliveredQuantity: formData.quantityDelivered,
             targetLocation: formData.targetLocation || "",
@@ -55,10 +55,10 @@ const AddStockDelivered = (props) => {
         postRequest(url, Data)
             .then((res) => {
                 if (res.status === 200) {
-                    ToastSuccess("Stock Added Successfully");
+                    ToastSuccess("Stock Delivered Successfully");
                     props.handleOpenAddDelivery();
                 }
-            })
+            })  
             .catch((error) => {
                 ToastError(error.response.data);
             });

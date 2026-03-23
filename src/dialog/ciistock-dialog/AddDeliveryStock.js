@@ -42,7 +42,7 @@ const AddDeliveryStock = (props) => {
             materialDescription: serialData.materialDescription,
             orderNumber: formData.OrderNumber,
             outBounddate: formData.OutBoundDate
-            ? new Date(formData.OutBoundDate).toISOString()  // Convert to UTC Date format
+            ? new Date(formData.OutBoundDate).toLocaleDateString('en-CA')  // Convert to UTC Date format
             : null,
             targetLocation: formData.TargetLocation || "",
             receiverName: formData.ReceiverName || "",

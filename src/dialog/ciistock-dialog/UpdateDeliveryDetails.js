@@ -59,7 +59,7 @@ const UpdateDeliveryDetails = (props) => {
                 serialNumber: serialData.serialNumber,
                 orderNumber: formData.orderNumber, 
                 ExistOrderNumber: selectedMaterialData.outBoundOrderNumber,
-                outBounddate: formData.outbounddate? new Date(formData.outbounddate).toISOString(): null,
+                outBounddate: formData.outbounddate? new Date(formData.outbounddate).toLocaleDateString('en-CA'): null,
                 targetLocation: formData.targetLocation || "",
                 receiverName: formData.receiverName || "",
                 sentBy: formData.sentBy || "",

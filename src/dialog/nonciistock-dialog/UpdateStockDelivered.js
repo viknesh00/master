@@ -58,7 +58,7 @@ const UpdateStockDelivered = (props) => {
                     deliveryNumber:formData.deliveryNumber,
                     orderNumber:formData.orderNumber,
                     existOrderNumber:selectedMaterialData.orderNumber,
-                    outboundDate: formData.outboundDate? new Date(formData.outboundDate).toISOString() : null,
+                    outboundDate: formData.outboundDate? new Date(formData.outboundDate).toLocaleDateString('en-CA') : null,
                     receiverName:formData.receiverName || "",
                     targetLocation:formData.targetLocation || "",
                     deliveredQuantity:formData.deliveredQuantity,

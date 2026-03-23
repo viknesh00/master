@@ -63,10 +63,10 @@ const UpdateProductDetails = (props) => {
             rackLocation: serialData.rackLocation,
             deliveryNumber: formData.deliveryNumber,
             orderNumber: formData.orderNumber,
-            inwardDate: formData.inwardDate ? new Date(formData.inwardDate).toISOString() : null,
+            inwardDate: formData.inwardDate ? new Date(formData.inwardDate).toLocaleDateString('en-CA') : null,
             inwardFrom: formData.inwardFrom? formData.inwardFrom: serialData.sourceLocation? serialData.sourceLocation: "temp",
             receivedBy: formData.receivedBy,
-            qualityCheckDate: formData.qualityCheckDate? new Date(formData.qualityCheckDate).toISOString() : null,
+            qualityCheckDate: formData.qualityCheckDate? new Date(formData.qualityCheckDate).toLocaleDateString('en-CA') : null,
             qualityChecker: formData.qualityChecker,
             qualityCheckerStatus: formData.qualityCheckerStatus
         }

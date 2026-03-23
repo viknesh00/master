@@ -64,10 +64,10 @@ const UpdateCollectionDetails = (props) => {
             rackLocation: formData.rackLocation,
             deliveryNumber: formData.deliveryNumber,
             orderNumber: formData.orderNumber,
-            inwardDate: new Date(formData.inwardDate).toISOString(),
+            inwardDate: new Date(formData.inwardDate).toLocaleDateString('en-CA'),
             inwardFrom: formData.inwardFrom? formData.inwardFrom: serialData.sourceLocation? serialData.sourceLocation: "temp",
             receivedBy: formData.receivedBy,
-            collectionPointDate: formData.collectionPointDate? new Date(formData.collectionPointDate).toISOString() : null,
+            collectionPointDate: formData.collectionPointDate? new Date(formData.collectionPointDate).toLocaleDateString('en-CA') : null,
             collectionPointerName: formData.collectionPointer,
             CollectionPointStatus: formData.collectionPointStatus
         }

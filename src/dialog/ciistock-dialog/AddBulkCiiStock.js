@@ -67,7 +67,7 @@ const AddBulkCiiStock = (props) => {
             MaterialNumber: materialNumber,
             MaterialDescription: materialDescription,
             OrderNumber: formData.OrderNumber,
-            Inwarddate: formData.InwardDate ? new Date(formData.InwardDate).toISOString() : null,
+            Inwarddate: formData.InwardDate ? new Date(formData.InwardDate).toLocaleDateString('en-CA') : null,
             ReceivedBy: formData.ReceivedBy || "",
             RacKLocation: formData.RackLocation || "",
             InwardFrom: formData.InwardFrom || "",  

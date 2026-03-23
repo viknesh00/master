@@ -71,7 +71,7 @@ const UpdateReturnDetails = (props) => {
             orderNumber: formData.OrderNumber,
             existOrderNumber: selectedMaterialData.orderNumber,
             locationReturnedFrom: formData.ReturnLocation || "",
-            returneddate: formData.ReturnDate? new Date(formData.ReturnDate).toISOString(): null,
+            returneddate: formData.ReturnDate? new Date(formData.ReturnDate).toLocaleDateString('en-CA'): null,
             returnedBy: formData.ReceivedBy || "",
             rackLocation: formData.RackLocation || "",
             returnType: formData.ReturnType,
