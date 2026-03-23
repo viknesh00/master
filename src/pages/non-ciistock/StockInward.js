@@ -171,7 +171,7 @@ const StockInward = (props) => {
     );
 
     const handleDownload = () => {
-        const keysToKeep = ["deliveryNumber", "orderNumber", "inwardDate", "sourceLocation", "deliveredQuantity", "receivedBy","rackLocation"];
+        const keysToKeep = ["deliveryNumber", "orderNumber", "inwardDate", "sourceLocation","totalQuantity", "deliveredQuantity", "receivedBy","rackLocation"];
         const cleanedData = filteredData.map(item =>
             Object.fromEntries(
                 keysToKeep
