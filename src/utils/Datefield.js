@@ -1,25 +1,32 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { ReactComponent as Date } from "../assets/svg/date.svg";
+import { ReactComponent as DateIcon } from "../assets/svg/date.svg";
 
 const Datefield = (props) => {
   const { label, name, value, placeholder, onChange } = props;
 
-  // State to hold the selected date
-  const [selectedDate, setSelectedDate] = useState(null);
-
-  // Reference for the DatePicker
+  const [selectedDate, setSelectedDate] = useState(value || new Date());
   const datePickerRef = useRef(null);
 
-  // Handle date change
+  useEffect(() => {
+  if (!value && selectedDate) {
+    onChange(name, selectedDate);   // ✅ push default to parent
+  }
+}, []);
+
+  // ✅ Sync when parent value changes
+  useEffect(() => {
+    if (value) {
+      setSelectedDate(value);
+    }
+  }, [value]);
+
   const handleChange = (date) => {
     setSelectedDate(date);
-    // Pass the selected date back to the parent component
     onChange(name, date);
   };
 
-  // Handle opening the date picker when the box is clicked
   const handleClick = () => {
     datePickerRef.current.setFocus();
     datePickerRef.current.setOpen(true);
@@ -27,19 +34,18 @@ const Datefield = (props) => {
 
   return (
     <div className="textfield-container">
-      <div className="textfield-label">
-        {label}
-      </div>
+      <div className="textfield-label">{label}</div>
+
       <div className="search-box" onClick={handleClick}>
         <DatePicker
           ref={datePickerRef}
           className="cursor"
-          selected={value ? value : selectedDate}
+          selected={selectedDate}
           onChange={handleChange}
-          placeholderText={placeholder} // Display placeholder text
-          dateFormat="dd/MM/yyyy" // Optional: format for the displayed date
+          placeholderText={placeholder}
+          dateFormat="dd/MM/yyyy"
         />
-        <Date className="cursor"/>
+        <DateIcon className="cursor" />
       </div>
     </div>
   );

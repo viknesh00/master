@@ -17,7 +17,7 @@ import { getRequest, postRequest } from "../../services/ApiService";
 import AddCompany from '../../dialog/usermanagement-dialog/AddCompany';
 import EditCompany from "../../dialog/usermanagement-dialog/EditCompany";
 import { getCookie } from "../../services/Cookies";
-import { isLimitedUser } from '../../services/Cookies';
+import { isLimitedForUserManagement } from '../../services/Cookies';
 import { useUser } from "../../UserContext";
 
 const CompanyManagement = () => {
@@ -242,7 +242,7 @@ const CompanyManagement = () => {
                         <button className="outer-firstsection-download" onClick={handleDownload}>
                             <Download /> Download
                         </button>
-                        <button className="outer-firstsection-add" onClick={handleOpenAddCompany} disabled={isLimitedUser()}>
+                        <button className="outer-firstsection-add" onClick={handleOpenAddCompany} disabled={isLimitedForUserManagement()}>
                             <Plus /> Add Company
                         </button>
                     </div>
@@ -319,11 +319,11 @@ const CompanyManagement = () => {
                             <div className="table-data text-center w-[5%]">
                                 <VerticalDot
                                     onClick={(event) => {
-                                        if (!isLimitedUser()) {
+                                        if (!isLimitedForUserManagement()) {
                                             handleVerticalDotClick(event, item);
                                         }
                                     }}
-                                    className={isLimitedUser() ? "cursor-not-allowed" : "cursor-pointer"}
+                                    className={isLimitedForUserManagement() ? "cursor-not-allowed" : "cursor-pointer"}
                                 />
                             </div>
                         </div>

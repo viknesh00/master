@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 import AddUser from '../../dialog/usermanagement-dialog/AddUser';
 import EditUser from "../../dialog/usermanagement-dialog/EditUser";
 import { getCookie } from "../../services/Cookies";
-import { isLimitedUser } from '../../services/Cookies';
+import { isLimitedForUserManagement } from '../../services/Cookies';
 
 const UserManagement = () => {
     const navigate = useNavigate();
@@ -248,7 +248,7 @@ const UserManagement = () => {
                         <button className="outer-firstsection-download" onClick={handleDownload}>
                             <Download /> Download
                         </button>
-                        <button className="outer-firstsection-add" onClick={handleOpenAddUser} disabled={isLimitedUser()}>
+                        <button className="outer-firstsection-add" onClick={handleOpenAddUser} disabled={isLimitedForUserManagement()}>
                             <Plus /> Add User
                         </button>
                     </div>
@@ -335,11 +335,11 @@ const UserManagement = () => {
                             <div className="table-data text-center w-[5%]">
                                 <VerticalDot
                                     onClick={(event) => {
-                                        if (!isLimitedUser()) {
+                                        if (!isLimitedForUserManagement()) {
                                             handleVerticalDotClick(event, item);
                                         }
                                     }}
-                                    className={isLimitedUser() ? "cursor-not-allowed" : "cursor-pointer"}
+                                    className={isLimitedForUserManagement() ? "cursor-not-allowed" : "cursor-pointer"}
                                 />
                             </div>
                         </div>

@@ -20,6 +20,7 @@ const EditUser = (props) => {
   const {selectedrow,selectedUserData} = props;
   const [showAlert, setShowAlert] = useState(false);
   const [formData, setFormData] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
 
   useEffect(() => {
@@ -49,10 +50,13 @@ const EditUser = (props) => {
 
   const handleUpdate = () => {
     debugger
+      if (isSubmitting) return; // prevent double click
+
     if (!formData.userId || !formData.userName || !formData.email || !formData.userType) {
       ToastError("Please enter User Id,User Name, Email and UserType");
       return; // Stop further execution if validation fails
     }
+          setIsSubmitting(true);
     let Data = {};
      Data = {...Data,
         UserCode: formData.userId,
@@ -71,6 +75,7 @@ const EditUser = (props) => {
       })
       .catch((error) => {
         console.error(error.response.data);
+        setIsSubmitting(false);
       });
   }
 
@@ -166,7 +171,9 @@ const EditUser = (props) => {
         </DialogContent>
         <DialogActions sx={{ padding: '0px 32px 32px 32px' }}>
           <button className="cancel-btn" onClick={handleAlert}>Cancel</button>
-          <button className="submit-btn" onClick={handleUpdate}>Submit</button>
+          <button className="submit-btn" onClick={handleUpdate} disabled={isSubmitting}>
+            Submit
+          </button>
         </DialogActions>
       </Dialog>
     </div>

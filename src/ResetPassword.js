@@ -47,7 +47,7 @@ export default function ResetPassword(props){
                           if (res.status === 200) {
                             ToastSuccess("Password Updated Successfully");
                               handleClose();
-                              navigate("/dashboard");
+                              navigate("/login");
                           }
                       })
                       .catch((error) => {

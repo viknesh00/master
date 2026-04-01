@@ -111,7 +111,7 @@ const fetchciistockdata = () => {
         });
 };
 
-const Delete = () => {
+const handleClearFilter = () => {
     setFilterType(""); // or null
     fetchciistockdata(); // re-fetch full data without filter
 };
@@ -351,7 +351,7 @@ const Delete = () => {
                         {/* <span className="outer-firstsection-subtitle"> */}
                         {filterType?
                             <Chip  label = {filterLabels[filterType] ||filterType}
-                            onDelete={Delete}
+                            onDelete={handleClearFilter}
                             sx={{ margin: "3px", fontSize: "12px" }}
                             />
                           : ""            

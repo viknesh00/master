@@ -19,14 +19,18 @@ const AddCompany = ({ value: open, handleOpenAddCompany }) => {
   //const [open] = useState(props.value);
   const [showAlert, setShowAlert] = useState(false);
   const [formData, setFormData] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
 
   const handleAddcompany = () => {
     debugger
+    if (isSubmitting) return; // prevent double click
+
     if (!formData.companyId || !formData.companyName || !formData.domainName) {
       ToastError("Please enter Company Id,Company Name and Domain Name");
       return; // Stop further execution if validation fails
     }
+        setIsSubmitting(true);
           let Data = {};
           Data = { ...Data,
             CompanyId :formData.companyId,
@@ -44,7 +48,7 @@ const AddCompany = ({ value: open, handleOpenAddCompany }) => {
               })
               .catch((error) => {
                 ToastError(error.response.data);
-                  
+                setIsSubmitting(false);
               });
       }
 
@@ -106,7 +110,9 @@ const AddCompany = ({ value: open, handleOpenAddCompany }) => {
         </DialogContent>
         <DialogActions sx={{ padding: '0px 32px 32px 32px' }}>
           <button className="cancel-btn" onClick={handleAlert}>Cancel</button>
-          <button className="submit-btn" onClick={handleAddcompany}>Submit</button>
+          <button className="submit-btn" onClick={handleAddcompany} disabled={isSubmitting}>
+            Submit
+          </button>
         </DialogActions>
       </Dialog>
     </div>

@@ -20,12 +20,17 @@ const UpdateStockInwardDetails = (props) => {
     const [open] = useState(props.value);
     const [showAlert, setShowAlert] = useState(false);
     const [formData, setFormData] = useState({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
-        if (serialData) {
-            setFormData(serialData);
-        }
-    }, [serialData]);
+    if (serialData) {
+        setFormData((prev) => ({
+            ...prev,
+            ...serialData,
+            receivedBy: fullName   
+        }));
+    }
+}, [serialData, fullName]);
 
     const handleClose = () => {
         props.handleInwardDetails();
@@ -34,6 +39,8 @@ const UpdateStockInwardDetails = (props) => {
 
     const handleUpdate = () => {
         debugger
+        if (isSubmitting) return; // prevent double click
+        setIsSubmitting(true);
         let data = {};
         data = {
             ...data,
@@ -155,7 +162,7 @@ const UpdateStockInwardDetails = (props) => {
                     <button className="cancel-btn" onClick={handleAlert}>
                         Cancel
                     </button>
-                    <button className="submit-btn" onClick={handleUpdate}>
+                    <button className="submit-btn" onClick={handleUpdate} disabled={isSubmitting}>
                         Update
                     </button>
 

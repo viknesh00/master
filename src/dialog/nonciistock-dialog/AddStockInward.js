@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Dialog,
     DialogActions,
@@ -17,12 +17,19 @@ import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 const AddStockInward = (props) => {
     const location = useLocation();
-    const { name } = useUser();
+    const { name, fullName } = useUser();
     const {materialDescription } = props;
     const materialNumber = location.pathname.split('/').pop();
     const [open] = useState(props.value);
     const [showAlert, setShowAlert] = useState(false);
     const [formData, setFormData] = useState({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+            setFormData({
+            receivedBy: fullName,
+            })
+        }, [fullName]);
 
     const handleClose = () => {
         props.handleOpenAddStock();
@@ -30,10 +37,14 @@ const AddStockInward = (props) => {
     };
 
     const handleAddInwardciistock = () => {
+        if (isSubmitting) return; // prevent double click
+
+
         if(!formData.deliveryNumber || !formData.enterQuantity){
             ToastError("Please enter Delivery Number and Quantity Received");
             return;
         }
+                setIsSubmitting(true);
         let Data = {};
         Data = {
             ...Data,
@@ -59,6 +70,7 @@ const AddStockInward = (props) => {
             })
             .catch((error) => {
                 ToastError(error.response.data);
+                setIsSubmitting(false);
             });
     }
 
@@ -157,7 +169,7 @@ const AddStockInward = (props) => {
                     <button className="cancel-btn" onClick={handleAlert}>
                         Cancel
                     </button>
-                    <button className="submit-btn" onClick={handleAddInwardciistock}>
+                    <button className="submit-btn" disabled={isSubmitting} onClick={handleAddInwardciistock}>
                         Submit
                     </button>
                 </DialogActions>

@@ -24,6 +24,7 @@ const UpdateStockInward = (props) => {
     const [open] = useState(props.value);
     const [showAlert, setShowAlert] = useState(false);
     const [formData, setFormData] = useState({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         if (selectedMaterialData) {
@@ -44,10 +45,13 @@ const UpdateStockInward = (props) => {
     };
 
     const handleUpdateInwardciistock = () => {
+            if (isSubmitting) return; // prevent double click  
+
                 if(!formData.deliveryNumber || !formData.enterQuantity){
                     ToastError("Please enter Delivery Number and Quantity Received");
                     return;
                 }
+               setIsSubmitting(true);
         let Data = {};
         Data = {
             ...Data,
@@ -75,6 +79,7 @@ const UpdateStockInward = (props) => {
             })
             .catch((error) => {
                 ToastError(error.response.data);
+                setIsSubmitting(false);
             });
     }
 
@@ -173,7 +178,7 @@ const UpdateStockInward = (props) => {
                     <button className="cancel-btn" onClick={handleAlert}>
                         Cancel
                     </button>
-                    <button className="submit-btn" onClick={handleUpdateInwardciistock}>
+                    <button className="submit-btn" onClick={handleUpdateInwardciistock} disabled={isSubmitting}>
                         Update
                     </button>
                 </DialogActions>

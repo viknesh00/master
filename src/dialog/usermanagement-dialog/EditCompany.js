@@ -19,7 +19,7 @@ const EditCompany = (props) => {
   const {selectedrow,selectedcompanyData} = props;
   const [showAlert, setShowAlert] = useState(false);
   const [formData, setFormData] = useState({});
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     debugger
@@ -44,10 +44,13 @@ const EditCompany = (props) => {
 
   const handleUpdate = () => {
     debugger
+    if (isSubmitting) return; // prevent double click
+
         if (!formData.companyId || !formData.companyName || !formData.domainName) {
           ToastError("Please enter Company Id,Company Name and Domain Name");
           return; // Stop further execution if validation fails
         }
+            setIsSubmitting(true);
     let Data = {};
      Data = {...Data,
         ExistCompanyId: selectedcompanyData.pk_CompanyCode,
@@ -65,6 +68,7 @@ const EditCompany = (props) => {
       })
       .catch((error) => {
         console.error(error.response.data);
+        setIsSubmitting(false);
       });
   }
 
@@ -120,7 +124,9 @@ const EditCompany = (props) => {
         </DialogContent>
         <DialogActions sx={{ padding: '0px 32px 32px 32px' }}>
           <button className="cancel-btn" onClick={handleAlert}>Cancel</button>
-          <button className="submit-btn" onClick={handleUpdate}>Submit</button>
+          <button className="submit-btn" onClick={handleUpdate} disabled={isSubmitting}>
+            Submit
+          </button>
         </DialogActions>
       </Dialog>
     </div>

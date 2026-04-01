@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Dialog,
     DialogActions,
@@ -17,12 +17,19 @@ import { useUser } from "../../UserContext";
 
 const AddStockDelivered = (props) => {
     const location = useLocation();
-    const { name } = useUser();
+    const { name, fullName } = useUser();
     const {materialDescription } = props;
     const materialNumber = location.pathname.split('/').pop();
     const [open] = useState(props.value);
     const [showAlert, setShowAlert] = useState(false);
     const [formData, setFormData] = useState({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+        setFormData({
+            receiverName: fullName,
+        })
+    }, [fullName]);
 
     const handleClose = () => {
         props.handleOpenAddDelivery();
@@ -31,10 +38,13 @@ const AddStockDelivered = (props) => {
 
     const handleAddDeliveredciistock = () => {
         debugger
+        if (isSubmitting) return; // prevent double click
+
         if (!formData.deliveryNumber || !formData.quantityDelivered) {
             ToastError("Please enter Delivery Number and Quantity Received");
             return; // Stop further execution if validation fails
         }
+                setIsSubmitting(true);
         let Data = {};
         Data = {
             ...Data,
@@ -61,6 +71,7 @@ const AddStockDelivered = (props) => {
             })  
             .catch((error) => {
                 ToastError(error.response.data);
+                setIsSubmitting(false);
             });
     }
 
@@ -159,7 +170,7 @@ const AddStockDelivered = (props) => {
                     <button className="cancel-btn" onClick={handleAlert}>
                         Cancel
                     </button>
-                    <button className="submit-btn" onClick={handleAddDeliveredciistock}>
+                    <button className="submit-btn" disabled={isSubmitting} onClick={handleAddDeliveredciistock}>
                         Submit
                     </button>
                 </DialogActions>

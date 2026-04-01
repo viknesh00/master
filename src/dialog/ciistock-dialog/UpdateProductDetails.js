@@ -21,6 +21,7 @@ const UpdateProductDetails = (props) => {
     const [showAlert, setShowAlert] = useState(false);
     const [formData, setFormData] = useState({});
     const { fullName, name } = useUser();
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         if (serialData) {
@@ -49,10 +50,13 @@ const UpdateProductDetails = (props) => {
 
     const handleUpdate = () => {
         debugger
+        if (isSubmitting) return; // prevent double click
+
         if(!formData.qualityCheckDate){
             ToastError("Please select Quality checker date");
             return;
         }
+                setIsSubmitting(true);
         let data = {};
         data = {
             ...data,
@@ -81,6 +85,7 @@ const UpdateProductDetails = (props) => {
             })
             .catch((error) => {
                 console.error("API Error:", error);
+                setIsSubmitting(false);
             });
     }
 
@@ -164,7 +169,7 @@ const UpdateProductDetails = (props) => {
                     <button className="cancel-btn" onClick={handleAlert}>
                         Cancel
                     </button>
-                    <button className="submit-btn" onClick={handleUpdate}>
+                    <button className="submit-btn" onClick={handleUpdate} disabled={isSubmitting}>
                         Update
                     </button>
 

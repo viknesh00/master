@@ -21,6 +21,7 @@ const UpdateCollectionDetails = (props) => {
     const [showAlert, setShowAlert] = useState(false);
     const [formData, setFormData] = useState({});
     const { fullName, name } = useUser();
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         if (serialData) {
@@ -50,10 +51,13 @@ const UpdateCollectionDetails = (props) => {
 
     const handleUpdate = () => {
         debugger
+        if (isSubmitting) return; // prevent double click
+
         if(!formData.rackLocation || !formData.collectionPointDate){
             ToastError("Please enter Rack Location and Collection Point Date");
             return;
         }
+                setIsSubmitting(true);
         let data = {};
         data = {
             ...data,
@@ -82,6 +86,8 @@ const UpdateCollectionDetails = (props) => {
             })
             .catch((error) => {
                 console.error("API Error:", error);
+                ToastError(error.response.data);
+                setIsSubmitting(false);
             });
     }
 
@@ -173,7 +179,7 @@ const UpdateCollectionDetails = (props) => {
                     <button className="cancel-btn" onClick={handleAlert}>
                         Cancel
                     </button>
-                    <button className="submit-btn" onClick={handleUpdate}>
+                    <button className="submit-btn" onClick={handleUpdate} disabled={isSubmitting}>
                         Update
                     </button>
 

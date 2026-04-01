@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Dialog,
     DialogActions,
@@ -20,7 +20,7 @@ import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 const AddStock = (props) => {
     const [open] = useState(props.value);
-    const { name } = useUser();
+    const { name, fullName } = useUser();
     const { materialNumber, materialDescription } = props;
     const [showAlert, setShowAlert] = useState(false);
     const [formData, setFormData] = useState({uploadType: "Bulk Upload"});
@@ -28,6 +28,14 @@ const AddStock = (props) => {
     const [files, setFiles] = useState([]);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [uploadedFile, setUploadedFile] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+        setFormData({
+            ...formData,
+            ReceivedBy: fullName,
+        });
+    }, [fullName]);
 
     const { getRootProps, getInputProps } = useDropzone({
         accept: ".xls,.xlsx,.csv",
@@ -56,10 +64,14 @@ const AddStock = (props) => {
     };
 
     const handleSingleAddStock = () => {
+
+            if (isSubmitting) return; // prevent double click
+
         if (!formData.serialNumber || !formData.quantity || !formData.status) {
             ToastError("Please enter Serial Number, Quantity, and Status");
             return;
         }
+         setIsSubmitting(true);
         let Data = {};
         Data = {
             ...Data,
@@ -88,12 +100,16 @@ const AddStock = (props) => {
             })
             .catch((error) => {
                 ToastError(error.response.data);
-
+                setIsSubmitting(false);
             });
     }
 
     const handleBulkAddStock = () => {
         debugger
+        
+        if (isSubmitting) return; // prevent double click
+        setIsSubmitting(true);
+
         if(!files[0]){
             ToastError("Please Upload Excel File");
         }
@@ -120,7 +136,7 @@ const AddStock = (props) => {
             })
             .catch((error) => {
                 ToastError(error.response.data);
-
+                setIsSubmitting(false);
             });
     }
 
@@ -307,7 +323,7 @@ const AddStock = (props) => {
                                 Cancel
                             </button>
                             {formData.uploadType === "Single Upload" ? (
-                                <button className="submit-btn" onClick={handleSingleAddStock}>
+                                <button className="submit-btn"  onClick={handleSingleAddStock} disabled={isSubmitting}>
                                     Submit
                                 </button>
                             ) : formData.uploadType === "Bulk Upload" ? (
@@ -323,7 +339,7 @@ const AddStock = (props) => {
                             </button>
                                 <button
                                     className={`submit-btn ${files.length === 0 || uploadProgress !== 100 ? "disabled-btn" : ""}`}
-                                    onClick={handleBulkAddStock}
+                                    disabled={isSubmitting} onClick={handleBulkAddStock}
                                 >
                                     Submit
                                 </button>

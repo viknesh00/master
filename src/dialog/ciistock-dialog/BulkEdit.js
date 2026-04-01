@@ -27,6 +27,7 @@ const BulkEdit = (props) => {
         RackLocation: "",
         statusChange: "",
     });
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleClose = () => {
         props.handleOpenBulkEditStock();
@@ -45,10 +46,13 @@ const BulkEdit = (props) => {
     };
 
     const handleBulkEditStock = () => {
+        if (isSubmitting) return; // prevent double click
+
         if (!formData.RackLocation && !formData.statusChange) {
         ToastError("Please enter at least one field (Rack Location or Status)");
         return;
     }
+            setIsSubmitting(true);
         let Data = {};
         Data = {
             ...Data,
@@ -71,7 +75,7 @@ const BulkEdit = (props) => {
             })
             .catch((error) => {
                 ToastError(error.response.data);
-
+                setIsSubmitting(false);
             });
     }
 
@@ -125,7 +129,7 @@ const BulkEdit = (props) => {
                     <button className="cancel-btn" onClick={handleAlert}>
                         Cancel
                     </button>
-                    <button className="submit-btn" onClick={handleBulkEditStock}>
+                    <button className="submit-btn" onClick={handleBulkEditStock} disabled={isSubmitting}>
                         Submit
                     </button>
 

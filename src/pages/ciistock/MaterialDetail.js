@@ -135,6 +135,7 @@ const MaterialDetail = () => {
                 if (res.status === 200) {
                     ToastSuccess("Serial Number Deleted Successfully");
                     fetchMaterialDetails();
+                    fetchMaterialAnalysiticsCiiData();
                     setAlertBox({ visible: false, x: 0, y: 0, data: null });
                 }
             })

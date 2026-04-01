@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Dialog,
     DialogActions,
@@ -21,6 +21,13 @@ const AddDeliveryStock = (props) => {
     const { fullName, name } = useUser();
     const [showAlert, setShowAlert] = useState(false);
     const [formData, setFormData] = useState({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+            setFormData({   
+                ReceiverName: fullName,
+            })
+    }, [serialData,fullName]);
 
     const handleClose = () => {
         props.handleAddDelivery();
@@ -28,10 +35,13 @@ const AddDeliveryStock = (props) => {
     };
 
     const handleSave = () => {
+        if (isSubmitting) return; // prevent double click
+
         if(!formData.OrderNumber){
             ToastError("Please enter Order Number");
             return;
         }
+                setIsSubmitting(true);
         let Data = {};
         Data = {
             ...Data,
@@ -61,6 +71,7 @@ const AddDeliveryStock = (props) => {
             })
             .catch((error) => {
                 ToastError(error.response.data);
+                setIsSubmitting(false);
             });
     };
 
@@ -125,6 +136,7 @@ const AddDeliveryStock = (props) => {
                         <Textfield
                             label="Receiver Name"
                             name="ReceiverName"
+                            value={formData.ReceiverName || ""} 
                             placeholder="Enter receiver name"
                             onChange={handleInputChange}
                         />
@@ -148,7 +160,7 @@ const AddDeliveryStock = (props) => {
                     <button className="cancel-btn" onClick={handleAlert}>
                         Cancel
                     </button>
-                    <button className="submit-btn" onClick={handleSave}>
+                    <button className="submit-btn" disabled={isSubmitting} onClick={handleSave}>
                         Submit
                     </button>
 

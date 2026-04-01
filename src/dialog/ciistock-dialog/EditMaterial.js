@@ -20,6 +20,7 @@ const EditMaterial = (props) => {
   const [showAlert, setShowAlert] = useState(false);
   const [formData, setFormData] = useState({});
   const { name  } = useUser();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (selectedrow) {
@@ -41,10 +42,13 @@ const EditMaterial = (props) => {
   }
 
   const handleUpdate = () => {
+    if (isSubmitting) return; // prevent double click
+
     if (!formData.MaterialNumber || !formData.MaterialDescription) {
       ToastError("Please enter the Material Number and Material Description");
       return;
     };
+        setIsSubmitting(true);
     let data = {
       userName: name,
       existMaterialNumber: formData.ExistingNumber,
@@ -62,6 +66,7 @@ const EditMaterial = (props) => {
       .catch((error) => {
         console.error("API Error:", error);
         //ToastError(error.response.data);
+        setIsSubmitting(false);
       });
   }
 
@@ -114,7 +119,9 @@ const EditMaterial = (props) => {
         </DialogContent>
         <DialogActions sx={{ padding: '0px 32px 32px 32px' }}>
           <button className="cancel-btn" onClick={handleAlert}>Cancel</button>
-          <button className="submit-btn" onClick={handleUpdate}>Submit</button>
+          <button className="submit-btn" onClick={handleUpdate} disabled={isSubmitting}>
+            Submit
+          </button>
         </DialogActions>
       </Dialog>
     </div>

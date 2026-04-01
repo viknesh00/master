@@ -20,14 +20,18 @@ const Addnonciistock = (props) => {
   const [showAlert, setShowAlert] = useState(false);
   const [formData, setFormData] = useState({});
   const { name  } = useUser();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
 
   const handleAddnonciistock = () => {
     debugger
+    if (isSubmitting) return; // prevent double click
+
     if (!formData.MaterialNumber || !formData.MaterialDescription) {
         ToastError("Please enter the Material Number and Material Description");
         return; // Stop execution if validation fails
     }
+        setIsSubmitting(true);
         let data = {
       userName: name,
       materialNumber: formData.MaterialNumber,
@@ -44,7 +48,7 @@ const Addnonciistock = (props) => {
               })
               .catch((error) => {
                 ToastError(error.response.data);
-                  
+                setIsSubmitting(false);
               });
       }
 
@@ -100,7 +104,7 @@ const Addnonciistock = (props) => {
         </DialogContent>
         <DialogActions sx={{ padding: '0px 32px 32px 32px' }}>
           <button className="cancel-btn" onClick={handleAlert}>Cancel</button>
-          <button className="submit-btn" onClick={handleAddnonciistock}>Submit</button>
+          <button className="submit-btn" disabled={isSubmitting} onClick={handleAddnonciistock}>Submit</button>
         </DialogActions>
       </Dialog>
     </div>

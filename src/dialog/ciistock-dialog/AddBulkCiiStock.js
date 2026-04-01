@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Dialog,
     DialogActions,
@@ -20,14 +20,23 @@ import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 const AddBulkCiiStock = (props) => {
     const [open] = useState(props.value);
-    const { name } = useUser();
+    const { name, fullName } = useUser();
     const { materialNumber, materialDescription } = props;
     const [showAlert, setShowAlert] = useState(false);
-    const [formData, setFormData] = useState({uploadType: "Bulk Upload"});
+    const [formData, setFormData] = useState({uploadType: "Bulk Upload" });
     const [view, setView] = useState("form");
     const [files, setFiles] = useState([]);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [uploadedFile, setUploadedFile] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+        setFormData({
+            ...formData,
+            ReceivedBy: fullName,
+        });
+    }, [fullName]);
+
 
     const { getRootProps, getInputProps } = useDropzone({
         accept: ".xls,.xlsx,.csv",
@@ -94,9 +103,12 @@ const AddBulkCiiStock = (props) => {
 
     const handleBulkAddStock = () => {
         debugger
+        if (isSubmitting) return; // prevent double click
+
         if(!files[0]){
             ToastError("Please Upload Excel File");
         }
+               setIsSubmitting(true);
         const data = new FormData();
         data.append("file", files[0]); // Add the uploaded file
         data.append("DeliveryNumber", formData.DeliveryNumber || "");
@@ -120,7 +132,7 @@ const AddBulkCiiStock = (props) => {
             })
             .catch((error) => {
                 ToastError(error.response.data);
-
+                setIsSubmitting(false);
             });
     }
 
@@ -317,7 +329,9 @@ const AddBulkCiiStock = (props) => {
                             </button>
                                 <button
                                     className={`submit-btn ${files.length === 0 || uploadProgress !== 100 ? "disabled-btn" : ""}`}
-                                    onClick={handleBulkAddStock}
+                                    onClick={handleBulkAddStock} 
+                                    disabled={isSubmitting}
+
                                 >
                                     Submit
                                 </button>

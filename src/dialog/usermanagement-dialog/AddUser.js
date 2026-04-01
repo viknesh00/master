@@ -27,14 +27,18 @@ const AddUser = (props) => {
     accessLevel: "",
     password: "Natoasset@123"
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
 
   const handleAddUser = () => {
     debugger
+      if (isSubmitting) return; // prevent double click
+
         if (!formData.userId || !formData.userName || !formData.email || !formData.userType) {
           ToastError("Please enter User Id,User Name, Email and UserType");
           return; // Stop further execution if validation fails
         }
+              setIsSubmitting(true);
           let Data = {};
           Data = { ...Data,
             UserCode :formData.userId,
@@ -56,7 +60,7 @@ const AddUser = (props) => {
               })
               .catch((error) => {
                 ToastError(error.response.data);
-                  
+                setIsSubmitting(false); 
               });
       }
 
@@ -155,7 +159,9 @@ const AddUser = (props) => {
         </DialogContent>
         <DialogActions sx={{ padding: '0px 32px 32px 32px' }}>
           <button className="cancel-btn" onClick={handleAlert}>Cancel</button>
-          <button className="submit-btn" onClick={handleAddUser}>Submit</button>
+          <button className="submit-btn" onClick={handleAddUser} disabled={isSubmitting}>
+            Submit
+          </button>
         </DialogActions>
       </Dialog>
     </div>

@@ -21,13 +21,17 @@ const AddWarehouse = (props) => {
   const [open] = useState(props.value);
   const [showAlert, setShowAlert] = useState(false);
   const [formData, setFormData] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
 
   const handleAddwarehouse = () => {
+    if (isSubmitting) return; // prevent double click
+
         if (!formData.warehouseId || !formData.warehouseName || !formData.location) {
           ToastError("Please enter Warehouse Id,Warehouse Name and Location");
           return; // Stop further execution if validation fails
         }
+            setIsSubmitting(true);
           let Data = {};
           Data = { ...Data,
             CompanyCode : companyId,
@@ -46,7 +50,7 @@ const AddWarehouse = (props) => {
               })
               .catch((error) => {
                 ToastError(error.response.data);
-                  
+                setIsSubmitting(false);
               });
       }
 
@@ -109,7 +113,9 @@ const AddWarehouse = (props) => {
         </DialogContent>
         <DialogActions sx={{ padding: '0px 32px 32px 32px' }}>
           <button className="cancel-btn" onClick={handleAlert}>Cancel</button>
-          <button className="submit-btn" onClick={handleAddwarehouse}>Submit</button>
+          <button className="submit-btn" onClick={handleAddwarehouse} disabled={isSubmitting}>
+            Submit
+          </button>
         </DialogActions>
       </Dialog>
     </div>

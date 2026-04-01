@@ -22,6 +22,7 @@ const UpdateReturnDetails = (props) => {
     const [showAlert, setShowAlert] = useState(false);
     const [formData, setFormData] = useState({});
     const { name } = useUser();
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         if (selectedRow && serialData) {
@@ -57,10 +58,13 @@ const UpdateReturnDetails = (props) => {
     };
 
     const handleSave = () => {
+        if (isSubmitting) return; // prevent double click
+
                 if(!formData.OrderNumber || !formData.ReturnType){
                     ToastError("Please enter Order Number and Return Type");
                     return;
                 };
+                        setIsSubmitting(true);
         let Data = {};
         Data = {
             ...Data,
@@ -89,6 +93,7 @@ const UpdateReturnDetails = (props) => {
             })
             .catch((error) => {
                 ToastError(error.response.data);
+                setIsSubmitting(false);
             });
     };
 
@@ -195,7 +200,7 @@ const UpdateReturnDetails = (props) => {
                     <button className="cancel-btn" onClick={handleAlert}>
                         Cancel
                     </button>
-                    <button className="submit-btn" onClick={handleSave}>
+                    <button className="submit-btn" onClick={handleSave} disabled={isSubmitting}>
                         Submit
                     </button>
 

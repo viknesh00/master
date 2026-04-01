@@ -18,7 +18,7 @@ import { getRequest, postRequest } from "../../services/ApiService";
 import AddWarehouse from '../../dialog/usermanagement-dialog/AddWarehouse';
 import EditWarehouse from "../../dialog/usermanagement-dialog/EditWarehouse";
 import { getCookie } from "../../services/Cookies";
-import { isLimitedUser } from '../../services/Cookies';
+import { isLimitedForUserManagement } from '../../services/Cookies';
 
 const WarehouseManagement = () => {
     const navigate = useNavigate();
@@ -244,7 +244,7 @@ const WarehouseManagement = () => {
                         <button className="outer-firstsection-download" onClick={handleDownload}>
                             <Download /> Download
                         </button>
-                        <button className="outer-firstsection-add" onClick={handleOpenAddWarehouse} disabled={isLimitedUser()}>
+                        <button className="outer-firstsection-add" onClick={handleOpenAddWarehouse} disabled={isLimitedForUserManagement()}>
                             <Plus /> Add Warehouse
                         </button>
                     </div>
@@ -316,11 +316,11 @@ const WarehouseManagement = () => {
                             <div className="table-data text-center w-[5%]">
                                 <VerticalDot
                                     onClick={(event) => {
-                                        if (!isLimitedUser()) {
+                                        if (!isLimitedForUserManagement()) {
                                             handleVerticalDotClick(event, item);
                                         }
                                     }}
-                                    className={isLimitedUser() ? "cursor-not-allowed" : "cursor-pointer"}
+                                    className={isLimitedForUserManagement() ? "cursor-not-allowed" : "cursor-pointer"}
                                 />
                             </div>
                         </div>

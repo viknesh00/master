@@ -48,4 +48,9 @@ export const getCookie = (cname) => {
     const userType = getCookie("userType");
     return ["Viewer", "QualityChecker", "CollectionPointer"].includes(userType);
   };
+
+  export const isLimitedForUserManagement = () => {
+    const userType = getCookie("userType");
+    return ["Contributor","Viewer", "QualityChecker", "CollectionPointer"].includes(userType);
+  };
   
