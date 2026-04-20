@@ -27,7 +27,7 @@ const AddStockDelivered = (props) => {
 
     useEffect(() => {
         setFormData({
-            receiverName: fullName,
+            sentBy: fullName,
         })
     }, [fullName]);
 

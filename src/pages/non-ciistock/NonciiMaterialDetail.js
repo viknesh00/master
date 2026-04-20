@@ -86,13 +86,13 @@ const NonciiMaterialDetail = () => {
                     </div>
 
                     {isPanelVisible && (
-                        <div className="grid-container">
+                        <div className="grid-container1">
                             <StockCard title="Total Stock" value={analyticsData[0]?.totalstock || 0} bgColor="#000000" />
                             <StockCard title="New Stock" value={analyticsData[0]?.newstock || 0} bgColor="#039855" onClick={() => setActiveTab("Stock Inward")} />
-                            <StockCard title="Used Stock" value={analyticsData[0]?.usedstock || 0} bgColor="#FF6600" onClick={() => setActiveTab("Used Stock")} />
+                            {/* <StockCard title="Used Stock" value={analyticsData[0]?.usedstock || 0} bgColor="#FF6600" onClick={() => setActiveTab("Used Stock")} /> */}
                             <StockCard title="Outward Stock" value={analyticsData[0]?.deliverycount || 0} bgColor="#046C7A" onClick={() => setActiveTab("Stock Outward")} />
-                            <StockCard title="BreakFix Stock" value={analyticsData[0]?.breakfixstock || 0} bgColor="#5D36FF" onClick={() => setActiveTab("Stock Returned")} />
-                            <StockCard title="Damaged Stock" value={analyticsData[0]?.damagedstock || 0} bgColor="#DD0000" />
+                            {/* <StockCard title="BreakFix Stock" value={analyticsData[0]?.breakfixstock || 0} bgColor="#5D36FF" onClick={() => setActiveTab("Stock Returned")} />
+                            <StockCard title="Damaged Stock" value={analyticsData[0]?.damagedstock || 0} bgColor="#DD0000" /> */}
                         </div>
                     )}
                 </div>

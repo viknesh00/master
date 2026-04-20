@@ -25,7 +25,7 @@ const AddDeliveryStock = (props) => {
 
     useEffect(() => {
             setFormData({   
-                ReceiverName: fullName,
+                SentBy: fullName,
             })
     }, [serialData,fullName]);
 
@@ -48,7 +48,7 @@ const AddDeliveryStock = (props) => {
             username: name,
             deliveryNumber:  Math.floor((Math.abs(Math.sin(new Date().getTime())) * 100) % 100).toString().padStart(2, '0'),
             materialNumber: serialData.materialNumber,
-            serialNumber: serialData.serialNumber,
+            serialNumber: [serialData.serialNumber],
             materialDescription: serialData.materialDescription,
             orderNumber: formData.OrderNumber,
             outBounddate: formData.OutBoundDate
@@ -57,7 +57,7 @@ const AddDeliveryStock = (props) => {
             targetLocation: formData.TargetLocation || "",
             receiverName: formData.ReceiverName || "",
             sentBy: formData.SentBy || "",
-            fk_Inbound_StockCII_DeliveryNumber: serialData.deliveryNumber
+            fk_Inbound_StockCII_DeliveryNumber: [serialData.deliveryNumber]
         }
 
         const url = `SmOutboundStockCiis/AddOutboundData`;
@@ -136,7 +136,6 @@ const AddDeliveryStock = (props) => {
                         <Textfield
                             label="Receiver Name"
                             name="ReceiverName"
-                            value={formData.ReceiverName || ""} 
                             placeholder="Enter receiver name"
                             onChange={handleInputChange}
                         />
@@ -149,6 +148,7 @@ const AddDeliveryStock = (props) => {
                         <Textfield
                             label="Sent By"
                             name="SentBy"
+                            value={formData.SentBy || ""} 
                             placeholder="Enter sender name"
                             onChange={handleInputChange}
                         />

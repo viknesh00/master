@@ -255,23 +255,42 @@ const MaterialDetail = () => {
 
     const handleSelectAllChange = (event) => {
         if (event.target.checked) {
-            setSelectedRows(paginatedData.map((item) => item["serialNumber"]));
+            const allRows = paginatedData.map((item) => ({
+                serialNumber: item.serialNumber,
+                deliveryNumber: item.deliveryNumber
+            }));
+            setSelectedRows(allRows);
         } else {
             setSelectedRows([]);
         }
     };
 
-    const handleCheckboxChange = (serialNumber) => {
-        setSelectedRows((prevSelectedRows) =>
-            prevSelectedRows.includes(serialNumber)
-                ? prevSelectedRows.filter((item) => item !== serialNumber)
-                : [...prevSelectedRows, serialNumber]
-        );
+    const handleCheckboxChange = (serialNumber, deliveryNumber) => {
+        setSelectedRows((prev) => {
+            const exists = prev.some(
+                (row) => row.serialNumber === serialNumber
+            );
+
+            if (exists) {
+                return prev.filter(
+                    (row) => row.serialNumber !== serialNumber
+                );
+            } else {
+                return [
+                    ...prev,
+                    { serialNumber, deliveryNumber } // ✅ object
+                ];
+            }
+        });
     };
 
-    const isAllSelected = selectedRows.length > 0 && paginatedData.every((item) =>
-        selectedRows.includes(item["serialNumber"])
-    );
+    const isAllSelected =
+        selectedRows.length > 0 &&
+        paginatedData.every((item) =>
+            selectedRows.some(
+                (row) => row.serialNumber === item.serialNumber
+            )
+        );
 
     const handleDownload = () => {
         const keysToKeep = ["serialNumber","materialNumber", "inwardDate", "sourceLocation", "receivedBy", "rackLocation","status"];
@@ -357,7 +376,7 @@ const MaterialDetail = () => {
                 </div>
             )}
             {showStock && <AddStock value={showStock} materialDescription={materialDescription} materialNumber={materialNumber} handleOpenAddStock={handleOpenAddStock} />}
-            {showBulkEditStock && <BulkEdit value={showBulkEditStock} materialDescription={materialDescription} materialNumber={materialNumber} selectedSerialNumbers={selectedRows} handleOpenBulkEditStock={handleOpenBulkEditStock} />}
+            {showBulkEditStock && <BulkEdit value={showBulkEditStock} materialDescription={materialDescription} materialNumber={materialNumber} selectedData={selectedRows} materialData={materialData} handleOpenBulkEditStock={handleOpenBulkEditStock} />}
             {showMovetoused && <MovedAlert value={showMovetoused} materialNumber={materialNumber} serialNumber={selectedSerialNumber} handlemovedtoused={handlemovedtoused} />}
             <Navbar breadcrumbs={breadcrumbData} />
             <div className="outersection-container">
@@ -539,8 +558,12 @@ const MaterialDetail = () => {
                                     <input
                                         type="checkbox"
                                         className="table-checkbox"
-                                        checked={selectedRows.includes(item["serialNumber"])}
-                                        onChange={() => handleCheckboxChange(item["serialNumber"])}
+                                        checked={selectedRows.some(
+                                            (row) => row.serialNumber === item["serialNumber"]
+                                        )}
+                                        onChange={() =>
+                                            handleCheckboxChange(item["serialNumber"], item["deliveryNumber"])
+                                        }
                                     />
                                 </div>
                                 <div className="table-data text-hyper text-left w-[15%]" onClick={() => handleMaterialClick(item["serialNumber"], item, item["orderNumber"])}>{item["serialNumber"]}</div>

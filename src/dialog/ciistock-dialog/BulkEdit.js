@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Dialog,
     DialogActions,
@@ -20,14 +20,28 @@ import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 const BulkEdit = (props) => {
     const [open] = useState(props.value);
-    const { name } = useUser();
-    const { materialNumber, materialDescription, selectedSerialNumbers } = props;
+    const { name, fullName } = useUser();
+    const { materialNumber, materialDescription, selectedData, materialData } = props;
     const [showAlert, setShowAlert] = useState(false);
+    const [view, setView] = useState("form");
     const [formData, setFormData] = useState({
         RackLocation: "",
         statusChange: "",
+        editType: "Bulk Edit Rack Location & Status",
+        OrderNumber: "",
+        OutBoundDate: "",
+        ReceiverName: "",
+        TargetLocation: "",
+        SentBy: ""
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+            setFormData({
+                ...formData,
+                SentBy: fullName,
+            });
+        }, [fullName]);
 
     const handleClose = () => {
         props.handleOpenBulkEditStock();
@@ -58,7 +72,7 @@ const BulkEdit = (props) => {
             ...Data,
             MaterialNumber: materialNumber,
             MaterialDescription: materialDescription,
-            SerialNumbers: selectedSerialNumbers,
+            SerialNumbers: selectedData.map((row) => row.serialNumber),
             RackLocation: formData.RackLocation || "",
             status: formData.statusChange || "",
         }
@@ -79,12 +93,77 @@ const BulkEdit = (props) => {
             });
     }
 
+    const handleBulkOutward = async () => {
+        debugger
+        if (isSubmitting) return;
+
+        if (!formData.OrderNumber) {
+            ToastError("Please enter Order Number");
+            return;
+        }
+
+        if (!formData.OutBoundDate) {
+            ToastError("Please select OutBound Date");
+            return;
+        }
+
+        if (!selectedData || selectedData.length === 0) {
+            ToastError("Please select at least one Serial Number");
+            return;
+        }
+
+        setIsSubmitting(true);
+
+        const url = `SmOutboundStockCiis/AddOutboundData`;
+
+        const Data = {
+            username: name,
+            deliveryNumber: Math.floor(
+                (Math.abs(Math.sin(new Date().getTime())) * 100) % 100
+            ).toString().padStart(2, '0'),
+
+            materialNumber: materialNumber,
+            materialDescription: materialDescription,
+
+            SerialNumber: selectedData.map((row) => row.serialNumber), // ✅ ARRAY
+
+            orderNumber: formData.OrderNumber,
+            outBounddate: new Date(formData.OutBoundDate).toLocaleDateString('en-CA'),
+
+            targetLocation: formData.TargetLocation || "",
+            receiverName: formData.ReceiverName || "",
+            sentBy: formData.SentBy || "",
+            fk_Inbound_StockCII_DeliveryNumber: selectedData.map((row) => row.deliveryNumber) // ✅ ARRAY
+        };
+
+        try {
+            const res = await postRequest(url, Data);
+
+            if (res.status === 200) {
+                ToastSuccess("All Materials Delivered Successfully");
+                props.handleOpenBulkEditStock();
+            }
+        } catch (error) {
+            ToastError(error.response?.data || "Error while processing");
+            setIsSubmitting(false);
+        }
+    };
+
     return (
         <div>
             {showAlert && <SaveAlert value={showAlert} handleAlert={handleAlert} handleClose={handleClose} />}
             <Dialog open={open} onClose={handleClose} maxWidth={"xl"}>
                 <DialogTitle sx={{ padding: "32px 32px 32px 32px" }}>
                     <div className="dialog-title">Bulk Edit Stock</div>
+                    {view === "form" ? (
+                        <DropdownField
+                            label="Bulk Edit Type"
+                            name="editType"
+                            value={formData.editType || "Bulk Edit Rack Location & Status"}
+                            placeholder="Select Bulk Edit Type"
+                            onChange={handleInputChange}
+                            options={["Bulk Edit Rack Location & Status", "Bulk Outward"]}
+                        />) : ""}
                 </DialogTitle>
                 <DialogContent sx={{ padding: "0px 32px 40px 32px" }}>
                     <div className="addstock-details">
@@ -101,35 +180,76 @@ const BulkEdit = (props) => {
                         </div>
                     </div>
                     <div className="grid-column">
-                        <Textfield
-                            label="Rack Location"
-                            name="RackLocation"
-                            value={formData.RackLocation}
-                            placeholder="Enter rack location"
-                            onChange={handleInputChange}
-                        />
-                        <DropdownField
-                            label="Status Change"
-                            name="statusChange"
-                            value={formData.statusChange}
-                            placeholder="Select Device status"
-                            onChange={handleInputChange}
-                            options={["Used", "Damaged", "BreakFix"]}
-                        />
-                        {/* <Textfield
-                        label={<span>Status<span className="error">*</span></span>}
-                        name="status"
-                        value={formData.status}
-                        placeholder="Enter Status"
-                        onChange={handleInputChange}
-                    /> */}
+                        {formData.editType === "Bulk Edit Rack Location & Status" && (
+                            <>
+                                <Textfield
+                                    label="Rack Location"
+                                    name="RackLocation"
+                                    value={formData.RackLocation}
+                                    placeholder="Enter rack location"
+                                    onChange={handleInputChange}
+                                />
+                                <DropdownField
+                                    label="Status Change"
+                                    name="statusChange"
+                                    value={formData.statusChange}
+                                    placeholder="Select Device status"
+                                    onChange={handleInputChange}
+                                    options={["Used", "Damaged", "BreakFix"]}
+                                />
+                            </>
+                        )}
+
+                        {formData.editType === "Bulk Outward" && (
+                            <>
+                                <Textfield
+                                    label={<span>Order Number<span className="error">*</span></span>}
+                                    name="OrderNumber"
+                                    placeholder="Enter order number"
+                                    onChange={handleInputChange}
+                                />
+                                <Datefield
+                                    label="OutBound Date"
+                                    name="OutBoundDate"
+                                    placeholder="Select Date"
+                                    onChange={handleInputChange}
+                                />
+                                <Textfield
+                                    label="Receiver Name"
+                                    name="ReceiverName"
+                                    placeholder="Enter receiver name"
+                                    onChange={handleInputChange}
+                                />
+                                <Textfield
+                                    label="Target Location"
+                                    name="TargetLocation"
+                                    placeholder="Enter target location"
+                                    onChange={handleInputChange}
+                                />
+                                <Textfield
+                                    label="Sent By"
+                                    name="SentBy"
+                                    value={formData.SentBy || ""}
+                                    placeholder="Enter sender name"
+                                    onChange={handleInputChange}
+                                />
+                            </>
+                        )}
                     </div>
                 </DialogContent>
                 <DialogActions sx={{ padding: "0px 32px 32px 32px" }}>
                     <button className="cancel-btn" onClick={handleAlert}>
                         Cancel
                     </button>
-                    <button className="submit-btn" onClick={handleBulkEditStock} disabled={isSubmitting}>
+                    <button
+                        className="submit-btn"
+                        onClick={
+                            formData.editType === "Bulk Outward"
+                                ? handleBulkOutward   // your outward API
+                                : handleBulkEditStock
+                        }
+                        disabled={isSubmitting}
+                    >
                         Submit
                     </button>
 

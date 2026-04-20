@@ -1298,6 +1298,13 @@ span:disabled {
   row-gap: 6px; /* Sets the gap between rows */
 }
 
+.grid-container1 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 40px; /* Sets the gap between columns */
+  row-gap: 6px; /* Sets the gap between rows */
+}
+
 /* Card colors */
 .card1 {
   background-color: #000000;
