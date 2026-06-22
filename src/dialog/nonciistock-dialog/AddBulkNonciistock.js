@@ -8,6 +8,9 @@ import {
 import { useDropzone } from "react-dropzone";
 import { ReactComponent as Packageplus } from "../../assets/svg/packageplus.svg";
 import { ReactComponent as Closebutton } from "../../assets/svg/closebutton.svg";
+import DropdownField from "../../utils/DropDown";
+import Textfield from "../../utils/Textfield";
+import Datefield from "../../utils/Datefield";
 import SaveAlert from "../SaveAlert";
 import Progressbar from "../../utils/Progressbar";
 import { postRequest } from "../../services/ApiService";
@@ -17,8 +20,10 @@ import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
 const AddBulkNonciistock = (props) => {
     const [open] = useState(props.value);
-    const { name } = useUser();
+    const { name, fullName } = useUser();
     const [showAlert, setShowAlert] = useState(false);
+    const [formData, setFormData] = useState({ uploadType: "Bulk Upload" });
+    const [view, setView] = useState("form");
     const [files, setFiles] = useState([]);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [uploadedFile, setUploadedFile] = useState(null);
@@ -43,6 +48,13 @@ const AddBulkNonciistock = (props) => {
         setShowAlert((prevState) => !prevState);
     };
 
+    const handleInputChange = (name, value) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+
     const handleFileUpload = (file) => {
         let progress = 0;
         const interval = setInterval(() => {
@@ -53,7 +65,7 @@ const AddBulkNonciistock = (props) => {
                 setUploadedFile(file);
                 setUploadProgress(100);
             }
-        }, 200);
+        }, 300);
     };
 
     const handleViewFile = () => {
@@ -75,14 +87,20 @@ const AddBulkNonciistock = (props) => {
 
         const data = new FormData();
         data.append("file", files[0]);
-        data.append("username", name);
+        data.append("DeliveryNumber", formData.DeliveryNumber || "");
+        data.append("OrderNumber", formData.OrderNumber || "");
+        data.append("Inwarddate", formData.InwardDate ? new Date(formData.InwardDate).toISOString() : "");
+        data.append("InwardFrom", formData.InwardFrom || "");
+        data.append("ReceivedBy", formData.ReceivedBy || fullName || "");
+        data.append("RackLocation", formData.RackLocation || "");
+        data.append("Username", name);
 
         const url = `SmInboundStockNonCiis/import`;
 
         postRequest(url, data)
             .then((res) => {
                 if (res.status === 200) {
-                    ToastSuccess("Bulk material upload completed successfully.");
+                    ToastSuccess("Stock Added Successfully");
                     props.handleOpenAddBulkMaterial();
                 }
             })
@@ -90,6 +108,10 @@ const AddBulkNonciistock = (props) => {
                 ToastError(error.response?.data || "Bulk upload failed. Please try again.");
                 setIsSubmitting(false);
             });
+    };
+
+    const handleUploadClick = () => {
+        setView("upload");
     };
 
     return (
@@ -103,51 +125,106 @@ const AddBulkNonciistock = (props) => {
                         </div>
                         <Closebutton className="cursor" onClick={handleClose} />
                     </div>
-                    <div className="dialog-title">Bulk Upload Non-CII Materials</div>
+                    <div className="dialog-title">Add Material Bulk Stock</div>
+                    {view === "form" ? (
+                        <DropdownField
+                            label="Upload Type"
+                            name="uploadType"
+                            value={formData.uploadType || "Bulk Upload"}
+                            placeholder="Select Upload Type"
+                            onChange={handleInputChange}
+                            options={["Bulk Upload"]}
+                        />
+                    ) : null}
                 </DialogTitle>
 
                 <DialogContent sx={{ padding: "0px 32px 40px 32px" }}>
-                    <div {...getRootProps()} className="fileupload-outer">
-                        <input {...getInputProps()} />
-                        <div className="product-title">
-                            <img className="w-10 h-10" src="/assets/images/upload.png" alt="Upload" />
+                    {view === "form" ? (
+                        <div className="grid-column">
+                            <Textfield
+                                label="Delivery Number"
+                                name="DeliveryNumber"
+                                value={formData.DeliveryNumber}
+                                placeholder="Enter Delivery Number"
+                                onChange={handleInputChange}
+                            />
+                            <Textfield
+                                label="Order Number"
+                                name="OrderNumber"
+                                value={formData.OrderNumber}
+                                placeholder="Enter order number"
+                                onChange={handleInputChange}
+                            />
+                            <Datefield
+                                label="Inward Date"
+                                name="InwardDate"
+                                value={formData.InwardDate}
+                                placeholder="Select Date"
+                                onChange={handleInputChange}
+                            />
+                            <Textfield
+                                label="Inward From"
+                                name="InwardFrom"
+                                value={formData.InwardFrom}
+                                placeholder="Enter source location"
+                                onChange={handleInputChange}
+                            />
+                            <Textfield
+                                label="Received By"
+                                name="ReceivedBy"
+                                value={formData.ReceivedBy || fullName}
+                                placeholder="Enter receiver name"
+                                onChange={handleInputChange}
+                            />
+                            <Textfield
+                                label="Rack Location"
+                                name="RackLocation"
+                                value={formData.RackLocation}
+                                placeholder="Enter rack location"
+                                onChange={handleInputChange}
+                            />
                         </div>
-                        <span className="fileupload-label">
-                            Drag and drop your file here or <span className="fileupload-choosefile">Choose file</span>
-                            <span className="error">*</span>
-                        </span>
-                    </div>
-
-                    <div className="fileupload-description">
-                        <span>Support formats: XLS, XLSX, CSV</span>
-                        <span>Maximum size: 25MB</span>
-                    </div>
-
-                    {files.length > 0 && (
-                        <div className="fileupload-details-container">
-                            <div className="fileupload-excel-section">
-                                <div className="file-info">
-                                    <img className="w-8 h-8" src="/assets/images/excel.png" alt="Excel file" />
-                                    <span className="file-name">{files[0].name}</span>
-                                    <span className="file-size">{(files[0].size / (1024 * 1024)).toFixed(2)} MB</span>
+                    ) : (
+                        <div>
+                            <div {...getRootProps()} className="fileupload-outer">
+                                <input {...getInputProps()} />
+                                <div className="product-title">
+                                    <img className="w-10 h-10" src="/assets/images/upload.png" alt="Upload" />
                                 </div>
-                                <Delete className="cursor" onClick={() => {
-                                    setFiles([]);
-                                    setUploadProgress(0);
-                                    setUploadedFile(null);
-                                }} />
+                                <span className="fileupload-label">
+                                    Drag and drop file here or <span className="fileupload-choosefile">Choose file</span>
+                                    <span className="error">*</span>
+                                </span>
                             </div>
-                            {uploadProgress > 0 && uploadProgress < 100 && (
-                                <div className="progress-bar-container">
-                                    <Progressbar value={uploadProgress} />
-                                </div>
-                            )}
-                            {uploadProgress === 100 && (
-                                <div className="fileupload-complete">
-                                    <div className="fileupload-title">Upload ready. Submit to complete the bulk import.</div>
-                                    <button className="viewfile-btn" onClick={handleViewFile}>
-                                        View File
-                                    </button>
+                            <div className="fileupload-description">
+                                <span>Support formats: XLS, XLSX, CSV</span>
+                                <span>Maximum size: 25MB</span>
+                            </div>
+                            {files.length > 0 && (
+                                <div className="fileupload-details-container">
+                                    <div className="fileupload-excel-section">
+                                        <div className="file-info">
+                                            <img className="w-8 h-8" src="/assets/images/excel.png" alt="Excel file" />
+                                            <span className="file-name">{files[0].name}</span>
+                                            <span className="file-size">{(files[0].size / (1024 * 1024)).toFixed(2)} MB</span>
+                                        </div>
+                                        <Delete className="cursor" onClick={() => {
+                                            setFiles([]);
+                                            setUploadProgress(0);
+                                            setUploadedFile(null);
+                                        }} />
+                                    </div>
+                                    {uploadProgress > 0 && uploadProgress < 100 && (
+                                        <div className="progress-bar-container">
+                                            <Progressbar value={uploadProgress} />
+                                        </div>
+                                    )}
+                                    {uploadProgress === 100 && (
+                                        <div className="fileupload-complete">
+                                            <div className="fileupload-title">Upload ready. Submit to complete the bulk import.</div>
+                                            <button className="viewfile-btn" onClick={handleViewFile}>View File</button>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
@@ -155,16 +232,23 @@ const AddBulkNonciistock = (props) => {
                 </DialogContent>
 
                 <DialogActions sx={{ padding: "0px 32px 32px 32px" }}>
-                    <button className="cancel-btn" onClick={handleAlert}>
-                        Cancel
-                    </button>
-                    <button
-                        className={`submit-btn ${!files[0] || uploadProgress !== 100 ? "disabled-btn" : ""}`}
-                        disabled={isSubmitting || !files[0] || uploadProgress !== 100}
-                        onClick={handleBulkUpload}
-                    >
-                        Submit
-                    </button>
+                    {view === "form" ? (
+                        <>
+                            <button className="cancel-btn" onClick={handleAlert}>Cancel</button>
+                            <button className="submit-btn" onClick={handleUploadClick}>Upload File</button>
+                        </>
+                    ) : (
+                        <>
+                            <button className="cancel-btn" onClick={() => setView("form")}>Back</button>
+                            <button
+                                className={`submit-btn ${files.length === 0 || uploadProgress !== 100 ? "disabled-btn" : ""}`}
+                                disabled={isSubmitting || files.length === 0 || uploadProgress !== 100}
+                                onClick={handleBulkUpload}
+                            >
+                                Submit
+                            </button>
+                        </>
+                    )}
                 </DialogActions>
             </Dialog>
         </div>

@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Navbar from "../../components/Navbar";
 import { ReactComponent as Download } from "../../assets/svg/download.svg";
 import { ReactComponent as Plus } from "../../assets/svg/plus.svg";
 import Search from "../../utils/Search";
 import Pagination from "@mui/material/Pagination";
 import TablePagination from "@mui/material/TablePagination";
-import Ciistock_data from "../../data/ciistock_data.json";
 import * as XLSX from "xlsx";
 import { ReactComponent as UpArrow } from "../../assets/svg/up-arrow.svg";
 import { ReactComponent as DownArrow } from "../../assets/svg/down-arrow.svg";
@@ -17,10 +16,9 @@ import Addnonciistock from '../../dialog/ciistock-dialog/Addnonciistock'
 import AddBulkNonciistock from '../../dialog/nonciistock-dialog/AddBulkNonciistock';
 import EditMaterial from "../../dialog/ciistock-dialog/EditMaterial";
 import { getRequest, postRequest } from "../../services/ApiService";
-import { getCookie } from "../../services/Cookies";
 import { isLimitedUser } from '../../services/Cookies';
 import { useUser } from "../../UserContext";
-import { ToastError, ToastSuccess } from "../../services/ToastMsg";
+import { ToastSuccess } from "../../services/ToastMsg";
 
 const Nonciistock = () => {
     const { name } = useUser();
@@ -44,20 +42,7 @@ const Nonciistock = () => {
     const [showEditMaterial, setShowEditMaterial] = useState(false);
     const [activeTab, setActiveTab] = useState("View all");
 
-    useEffect(() => {
-        fetchnonciistockdata();
-        const handleClickOutside = (event) => {
-            if (!event.target.closest(".alert-box")) {
-                handleCloseAlert();
-            }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, []);
-
-    const fetchnonciistockdata = () => {
+    const fetchnonciistockdata = useCallback(() => {
         setLoading(true);
         const url = `SmInboundStockNonCiis/GetSmInboundNonStockCiis/${name}`;
 
@@ -72,13 +57,26 @@ const Nonciistock = () => {
                         const status = stockinHand > 0 ? 'Available' : 'Not Available';
                         return { ...item, stockinHand, status };
                     });
-                    setNonCiiStockData(updatedData)
+                    setNonCiiStockData(updatedData);
                 }
             })
             .catch((error) => {
                 console.error("API Error:", error);
             });
-    };
+    }, [name]);
+
+    useEffect(() => {
+        fetchnonciistockdata();
+        const handleClickOutside = (event) => {
+            if (!event.target.closest(".alert-box")) {
+                handleCloseAlert();
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [fetchnonciistockdata]);
 
 
     const handleOpenAddMaterial = () => {
@@ -271,7 +269,7 @@ const Nonciistock = () => {
                             <Download /> Download
                         </button>
                         <button className="outer-firstsection-add" onClick={handleOpenAddBulkMaterial} disabled={isLimitedUser()}>
-                            <Plus /> Bulk Upload
+                            <Plus /> Add Bulk Material
                         </button>
                         <button className="outer-firstsection-add" onClick={handleOpenAddMaterial} disabled={isLimitedUser()}>
                             <Plus /> Add Material
