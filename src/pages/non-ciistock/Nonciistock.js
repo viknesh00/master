@@ -14,6 +14,7 @@ import { ReactComponent as Edit } from "../../assets/svg/edit.svg";
 import { ReactComponent as Delete } from "../../assets/svg/delete.svg";
 import { useNavigate } from "react-router-dom";
 import Addnonciistock from '../../dialog/ciistock-dialog/Addnonciistock'
+import AddBulkNonciistock from '../../dialog/nonciistock-dialog/AddBulkNonciistock';
 import EditMaterial from "../../dialog/ciistock-dialog/EditMaterial";
 import { getRequest, postRequest } from "../../services/ApiService";
 import { getCookie } from "../../services/Cookies";
@@ -32,6 +33,7 @@ const Nonciistock = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [showAddMaterial, setShowAddMaterial] = useState(false);
+    const [showAddBulkMaterial, setShowAddBulkMaterial] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedRows, setSelectedRows] = useState([]);
     const [sortConfig, setSortConfig] = useState({
@@ -40,7 +42,7 @@ const Nonciistock = () => {
     });
     const [alertBox, setAlertBox] = useState({ visible: false, x: 0, y: 0, data: null });
     const [showEditMaterial, setShowEditMaterial] = useState(false);
-     const [activeTab, setActiveTab] = useState("View all");
+    const [activeTab, setActiveTab] = useState("View all");
 
     useEffect(() => {
         fetchnonciistockdata();
@@ -55,13 +57,13 @@ const Nonciistock = () => {
         };
     }, []);
 
-        const fetchnonciistockdata = () => {
-            setLoading(true);
-            const url = `SmInboundStockNonCiis/GetSmInboundNonStockCiis/${name}`;
-            
-            getRequest(url)
-              .then((res) => {
-                  if (res.status === 200) {
+    const fetchnonciistockdata = () => {
+        setLoading(true);
+        const url = `SmInboundStockNonCiis/GetSmInboundNonStockCiis/${name}`;
+
+        getRequest(url)
+            .then((res) => {
+                if (res.status === 200) {
                     setLoading(false);
                     const updatedData = res.data.map(item => {
                         const newStock = item.newstock || 0;
@@ -69,25 +71,32 @@ const Nonciistock = () => {
                         const stockinHand = newStock + usedStock;
                         const status = stockinHand > 0 ? 'Available' : 'Not Available';
                         return { ...item, stockinHand, status };
-                      });
-                      setNonCiiStockData(updatedData)
-                  }
-              })
-              .catch((error) => {
-                  console.error("API Error:", error);
-              });
-        };
+                    });
+                    setNonCiiStockData(updatedData)
+                }
+            })
+            .catch((error) => {
+                console.error("API Error:", error);
+            });
+    };
 
 
     const handleOpenAddMaterial = () => {
-        if(showAddMaterial){
+        if (showAddMaterial) {
             fetchnonciistockdata();
         }
         setShowAddMaterial(prevState => !prevState);
     };
 
+    const handleOpenAddBulkMaterial = () => {
+        if (showAddBulkMaterial) {
+            fetchnonciistockdata();
+        }
+        setShowAddBulkMaterial(prevState => !prevState);
+    };
+
     const handleOpenEditMaterial = () => {
-        if(showEditMaterial){
+        if (showEditMaterial) {
             fetchnonciistockdata();
         }
         setShowEditMaterial(prevState => !prevState);
@@ -207,17 +216,17 @@ const Nonciistock = () => {
     };
 
     const handleRemoveMaterial = (value) => {
-            const url = `SmInboundStockCiis/${value}/${false}/${name}`
-            postRequest(url)
-              .then((res) => {
-                  if (res.status === 200) {
+        const url = `SmInboundStockCiis/${value}/${false}/${name}`
+        postRequest(url)
+            .then((res) => {
+                if (res.status === 200) {
                     ToastSuccess("Deleted Successfuly");
                     fetchnonciistockdata();
-                  }
-              })
-              .catch((error) => {
-                  console.error("API Error:", error);
-              });
+                }
+            })
+            .catch((error) => {
+                console.error("API Error:", error);
+            });
     }
 
     const handleVerticalDotClick = (event, item) => {
@@ -244,6 +253,7 @@ const Nonciistock = () => {
                 </div>
             )}
             {showAddMaterial && <Addnonciistock value={showAddMaterial} handleOpenAddMaterial={handleOpenAddMaterial} />}
+            {showAddBulkMaterial && <AddBulkNonciistock value={showAddBulkMaterial} handleOpenAddBulkMaterial={handleOpenAddBulkMaterial} />}
             {showEditMaterial && <EditMaterial value={showEditMaterial} selectedrow={alertBox.data} handleOpenEditMaterial={handleOpenEditMaterial} />}
             <Navbar breadcrumbs={breadcrumbData} />
             <div className="outersection-container">
@@ -260,13 +270,16 @@ const Nonciistock = () => {
                         <button className="outer-firstsection-download" onClick={handleDownload}>
                             <Download /> Download
                         </button>
+                        <button className="outer-firstsection-add" onClick={handleOpenAddBulkMaterial} disabled={isLimitedUser()}>
+                            <Plus /> Bulk Upload
+                        </button>
                         <button className="outer-firstsection-add" onClick={handleOpenAddMaterial} disabled={isLimitedUser()}>
                             <Plus /> Add Material
                         </button>
                     </div>
                 </div>
                 <div className="outer-secondsection">
-                <div className="tabs">
+                    <div className="tabs">
                         <button
                             className={`tab-button ${activeTab === "View all" ? "active" : ""}`}
                             onClick={() => setActiveTab("View all")}
