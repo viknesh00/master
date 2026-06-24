@@ -268,9 +268,9 @@ const Nonciistock = () => {
                         <button className="outer-firstsection-download" onClick={handleDownload}>
                             <Download /> Download
                         </button>
-                        <button className="outer-firstsection-add" onClick={handleOpenAddBulkMaterial} disabled={isLimitedUser()}>
+                        {/* <button className="outer-firstsection-add" onClick={handleOpenAddBulkMaterial} disabled={isLimitedUser()}>
                             <Plus /> Add Bulk Material
-                        </button>
+                        </button> */}
                         <button className="outer-firstsection-add" onClick={handleOpenAddMaterial} disabled={isLimitedUser()}>
                             <Plus /> Add Material
                         </button>
