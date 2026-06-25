@@ -21,6 +21,7 @@ import UpdateStockInwardDetails from "../../dialog/ciistock-dialog/UpdateStockIn
 import UpdateDeliveryDetails from "../../dialog/ciistock-dialog/UpdateDeliveryDetails";
 import UpdateReturnDetails from "../../dialog/ciistock-dialog/UpdateReturnDetails";
 import UpdateCollectionDetails from "../../dialog/ciistock-dialog/UpdateCollectionDetails";
+import UpdateStagingDetails from "../../dialog/ciistock-dialog/UpdateStagingDetails";
 import { postRequest } from "../../services/ApiService";
 import { getCookie } from "../../services/Cookies";
 import { isLimitedUser } from '../../services/Cookies';
@@ -39,6 +40,7 @@ const MaterialDescription = () => {
     const [deliveryData, setDeliveryData] = useState([]);
     const [selectedMaterialData, setSelectedMaterialData] = useState("");
     const [returnData, setReturnData] = useState([]);
+    const [stagingData, setStagingData] = useState({});
     const [ciidata, setCiiData] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedRows, setSelectedRows] = useState([]);
@@ -49,6 +51,7 @@ const MaterialDescription = () => {
     const [showDeliveryDetails, setShowDeliveryDetails] = useState(false)
     const [showReturnDetails, setShowReturnDetails] = useState(false)
     const [showInwardDetails, setShowInwardDetails] = useState(false)
+    const [showStagingDetails, setShowStagingDetails] = useState(false)
     const [alertBox, setAlertBox] = useState({ visible: false, x: 0, y: 0, data: null, table: null });
     const [sortConfig, setSortConfig] = useState({
         key: "",
@@ -114,6 +117,7 @@ const MaterialDescription = () => {
                    setDeliveryData(res.data.deliveryData)
                    setReturnData(res.data.inboundData)
                    setCiiData(res.data.ciiData);
+                   setStagingData(res.data.stagingData[0] || {});
                   }
               })
               .catch((error) => {
@@ -321,6 +325,13 @@ const MaterialDescription = () => {
         setShowInwardDetails(prevState => !prevState)
     }
 
+    const handleStagingDetails = () => {
+        if(showStagingDetails){
+            FetchSerialData();
+        }
+        setShowStagingDetails(prevState => !prevState)
+    }
+
     const handleDeliveryDetails = () => {
         if(showDeliveryDetails){
             FetchSerialData();
@@ -407,6 +418,7 @@ const MaterialDescription = () => {
             {showInwardDetails && <UpdateStockInwardDetails value={showInwardDetails} serialData={serialData} handleInwardDetails={handleInwardDetails} updateSerialData={handleUpdateSerialData} />}
             {showDeliveryDetails && <UpdateDeliveryDetails value={showDeliveryDetails} selectedRow={alertBox.data} serialData={serialData}  handleDeliveryDetails={handleDeliveryDetails} selectedMaterialData={selectedMaterialData} deliveryData={deliveryData} />}
             {showReturnDetails && <UpdateReturnDetails value={showReturnDetails} selectedRow={alertBox.data} serialData={serialData}selectedMaterialData={selectedMaterialData} handleReturnDetails={handleReturnDetails} />}
+            {showStagingDetails && <UpdateStagingDetails value={showStagingDetails} serialData={serialData} stagingData={stagingData} handleStagingDetails={handleStagingDetails} updateSerialData={handleUpdateSerialData}/>}
             <Navbar breadcrumbs={breadcrumbData} />
             <div className="outersection-container">
                 <div className="header-wrapper">
@@ -525,6 +537,51 @@ const MaterialDescription = () => {
                         </div>
                     </div>
 
+                </div>
+
+                <div className="delivery-details-card">
+                    {/* <span className="product-details-title">Outward Details</span> */}
+
+                </div>
+                    <div className="outer-secondsection">
+                        <span className="product-details-title">Staging Section Details</span>
+                    <Edit
+                        className={isLimitedUser() ? "cursor-not-allowed" : "cursor-pointer"}
+                        onClick={(event) => {
+                            if (!isLimitedUser()) {
+                                handleStagingDetails();
+                            }
+                        }}
+                    />
+
+                    </div>
+                    <div className="product-details-card">
+                    <div class="product-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Date</span>
+                            <span class="detail-value">{formatDate(stagingData.date)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Order Number</span>
+                            <span class="detail-value">{stagingData.orderNumber}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Type</span>
+                            <span class="detail-value">{stagingData.type}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Device Status</span>
+                            <span class="detail-value">{stagingData.deviceStatus}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Qc Date</span>
+                            <span class="detail-value">{formatDate(stagingData.qcDate)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Qc By</span>
+                            <span class="detail-value">{stagingData.qcBy}</span>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="delivery-details-card">

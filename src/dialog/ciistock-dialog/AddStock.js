@@ -67,8 +67,8 @@ const AddStock = (props) => {
 
             if (isSubmitting) return; // prevent double click
 
-        if (!formData.serialNumber || !formData.quantity || !formData.status) {
-            ToastError("Please enter Serial Number, Quantity, and Status");
+        if (!formData.serialNumber || !formData.quantity || !formData.status || !formData.Location) {
+            ToastError("Please enter Serial Number, Quantity, Status, and Location");
             return;
         }
          setIsSubmitting(true);
@@ -79,8 +79,10 @@ const AddStock = (props) => {
             MaterialNumber: materialNumber,
             MaterialDescription: materialDescription,
             OrderNumber: formData.OrderNumber,
+            PoNumber: formData.PoNumber || "",
             Inwarddate: formData.InwardDate ? new Date(formData.InwardDate).toISOString() : null,
             ReceivedBy: formData.ReceivedBy || "",
+            Location: formData.Location || "",
             RacKLocation: formData.RackLocation || "",
             InwardFrom: formData.InwardFrom || "",  
             Username: name,
@@ -110,6 +112,11 @@ const AddStock = (props) => {
         if (isSubmitting) return; // prevent double click
         setIsSubmitting(true);
 
+        if (!formData.Location) {
+            ToastError("Please enter Location");
+            return;
+        }
+
         if(!files[0]){
             ToastError("Please Upload Excel File");
         }
@@ -119,6 +126,8 @@ const AddStock = (props) => {
         data.append("MaterialNumber", materialNumber);
         data.append("MaterialDescription", materialDescription);
         data.append("OrderNumber", formData.OrderNumber || "");
+        data.append("PoNumber", formData.PoNumber || "");
+        data.append("Location", formData.Location || "");
         data.append("Inwarddate", formData.InwardDate ? new Date(formData.InwardDate).toLocaleDateString('en-CA') : "");
         data.append("ReceivedBy", formData.ReceivedBy || "");
         data.append("RacKLocation", formData.RackLocation || "");
@@ -215,6 +224,13 @@ const AddStock = (props) => {
                                 placeholder="Enter order number"
                                 onChange={handleInputChange}
                             />
+                            <Textfield
+                                label="Po Number"
+                                name="PoNumber"
+                                value={formData.PoNumber}
+                                placeholder="Enter po number"
+                                onChange={handleInputChange}
+                            />
                             <Datefield
                                 label="Inward Date"
                                 name="InwardDate"
@@ -235,6 +251,14 @@ const AddStock = (props) => {
                                 value={formData.ReceivedBy}
                                 placeholder="Enter receiver name"
                                 onChange={handleInputChange}
+                            />
+                            <DropdownField
+                                label={<span>Location<span className="error">*</span></span>}
+                                name="Location"
+                                value={formData.Location}
+                                placeholder="Select Location"
+                                onChange={handleInputChange}
+                                options={["SIFI-Warehouse", "SIFI-Poststelle", "UT-CollectionPoint","UT-ITPunktNeckartal","SIFI-S2D","Deizisau","Transport"]}
                             />
                             <Textfield
                                 label="Rack Location"
@@ -259,12 +283,28 @@ const AddStock = (props) => {
                                         placeholder="Enter Quantity"
                                         onChange={handleInputChange}
                                     />
-                                    <Textfield
-                                        label={<span>Status<span className="error">*</span></span>}
+                                    <DropdownField
+                                        label={
+                                            <span>
+                                                Status<span className="error">*</span>
+                                            </span>
+                                        }
                                         name="status"
                                         value={formData.status}
-                                        placeholder="Enter Status"
+                                        placeholder="Select Status"
                                         onChange={handleInputChange}
+                                        options={[
+                                            "New",
+                                            "Used",
+                                            "Return",
+                                            "Repair",
+                                            "For Data Wipe",
+                                            "For Lease Return",
+                                            "Damaged",
+                                            "Retired",
+                                            "Clearing",
+                                            "Transport"
+                                        ]}
                                     />
                                 </>
                             )}

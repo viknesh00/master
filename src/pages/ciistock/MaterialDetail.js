@@ -29,10 +29,12 @@ import { getCookie } from "../../services/Cookies";
 import { isLimitedUser } from '../../services/Cookies';
 import { ToastSuccess} from "../../services/ToastMsg";
 import { ToastError} from "../../services/ToastMsg";
+import { useUser } from "../../UserContext";
 
 const MaterialDetail = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { name, fullName } = useUser();
     const materialNumber = location.pathname.split('/').pop();
     const { materialDescription, serialNumber } = location.state || {};
     const [isPanelVisible, setPanelVisible] = useState(true);
@@ -110,7 +112,7 @@ const MaterialDetail = () => {
     const fetchMaterialDetails = () => {
         setLoading(true);
 
-        const url = `SmInboundStockCiis/${materialNumber}/${serialNumber}`
+        const url = `SmInboundStockCiis/${materialNumber}/${serialNumber}/${name}`
         getRequest(url)
             .then((res) => {
                 if (res.status === 200) {
@@ -526,6 +528,12 @@ const MaterialDetail = () => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
+                        <div className="table-header text-left w-[20%]" onClick={() => handleSort("location")}>
+                            Location
+                            {sortConfig.key === "location" && (
+                                sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
+                            )}
+                        </div>
                         <div className="table-header text-left w-[15%]" onClick={() => handleSort("rackLocation")}>
                             Racks Location
                             {sortConfig.key === "rackLocation" && (
@@ -571,6 +579,7 @@ const MaterialDetail = () => {
                                 <div className="table-data text-left w-[15%]">{formatDate(item["inwardDate"])}</div>
                                 <div className="table-data text-left w-[15%]">{item["sourceLocation"]}</div>
                                 <div className="table-data text-left w-[15%]">{item["receivedBy"]}</div>
+                                <div className="table-data text-left w-[20%]">{item["location"]}</div>
                                 <div className="table-data text-left w-[15%]">{item["rackLocation"]}</div>
                                 <div className="table-data text-left w-[15%]">
                                     <span className={`${item["status"] === "New" ? "status-available" : item["status"] === "Damaged" ? "status-not-available" : "status-unknown"}`}>{item["status"]}</span>
