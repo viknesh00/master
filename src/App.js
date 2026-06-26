@@ -11,7 +11,7 @@ const AppRoutes = () => {
     const routing = useRoutes(routes);
     return routing;
 };
-debugger
+
 function App() {
   return (
     <ErrorBoundary>
@@ -28,4 +28,3 @@ function App() {
 }
 
 export default App;
-
