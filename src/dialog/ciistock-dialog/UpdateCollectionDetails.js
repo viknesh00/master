@@ -50,7 +50,7 @@ const UpdateCollectionDetails = (props) => {
     };
 
     const handleUpdate = () => {
-        debugger
+        //debugger
         if (isSubmitting) return; // prevent double click
 
         if(!formData.rackLocation || !formData.collectionPointDate){

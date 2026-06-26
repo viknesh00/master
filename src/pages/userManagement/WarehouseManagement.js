@@ -203,7 +203,7 @@ const WarehouseManagement = () => {
     };
 
     const handleVerticalDotClick = (event, item) => {
-        debugger
+        //debugger
         event.stopPropagation();
         const rect = event.target.getBoundingClientRect();
         setSelectedWarehouseData(item);

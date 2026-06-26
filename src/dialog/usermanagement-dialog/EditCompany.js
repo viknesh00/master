@@ -22,7 +22,7 @@ const EditCompany = (props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    debugger
+    //debugger
     if (selectedrow) {
       setFormData({
         "ExistCompanyId": selectedrow.pk_CompanyCode || "",
@@ -43,7 +43,7 @@ const EditCompany = (props) => {
   }
 
   const handleUpdate = () => {
-    debugger
+    //debugger
     if (isSubmitting) return; // prevent double click
 
         if (!formData.companyId || !formData.companyName || !formData.domainName) {

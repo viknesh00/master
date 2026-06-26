@@ -28,7 +28,7 @@ import DropdownField from "../utils/DropDown";
 import UploadCsvFile from '../dialog/poolstockcheck-dialog/UploadCsvFile';
 
 const PoolStockCheck = (props) => {
-    debugger
+    //debugger
     const { name } = useUser();
     const navigate = useNavigate();
     const breadcrumbData = [
@@ -72,13 +72,13 @@ const PoolStockCheck = (props) => {
     }, [recordMatched]);
 
     const fetchstockdata = () => {
-        debugger
+        //debugger
         const url = `SmInboundStockCiis/GetSmInboundStockCiis/${name}`;
 
         getRequest(url)
             .then((res) => {
                 if (res.status === 200) {
-                    debugger
+                    //debugger
                     const updatedData = res.data.map(item => {
                         const newStock = item.newstock || 0;
                         const used = item.usedstock || 0;
@@ -223,7 +223,7 @@ const PoolStockCheck = (props) => {
     );
 
     const handleDownload = () => {
-        debugger
+        //debugger
         const keysToKeep = ["excelMaterialNumber", "poolName", "newstock", "usedstock", "damaged", "breakFix", "excelstatus"];
         const cleanedData = filteredData.map(item =>
             Object.fromEntries(

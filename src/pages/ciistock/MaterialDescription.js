@@ -99,7 +99,7 @@ const MaterialDescription = () => {
     };
 
      const FetchSerialData = () => {
-        debugger
+         //debugger
         setLoading(true);
             const url = `SmOutboundStockCiis/${materialNumber}/${serialNumber}/${serialData.orderNumber}`;
             
@@ -299,7 +299,7 @@ const MaterialDescription = () => {
     }
 
     const handleProductDetails = () => {
-        debugger
+        //debugger
         if(showProductDetails){
             FetchSerialData();
         }
@@ -307,7 +307,7 @@ const MaterialDescription = () => {
     }
 
     const handleCollectionDetails = () => {
-        debugger
+        //debugger
         if(showCollectionDetails){
             FetchSerialData();
         }

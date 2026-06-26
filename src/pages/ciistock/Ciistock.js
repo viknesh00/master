@@ -74,14 +74,14 @@ const Ciistock = (props) => {
     };
 
 const fetchciistockdata = () => {
-    debugger
+    //debugger
     setLoading(true); 
     const url = `SmInboundStockCiis/GetSmInboundStockCiis/${name}`;
 
     getRequest(url)
         .then((res) => {
             if (res.status === 200) {
-                debugger
+                //debugger
                 setLoading(false); 
                 const updatedData = res.data.map(item => {
                     const newStock = item.newstock || 0;
@@ -205,7 +205,7 @@ const handleClearFilter = () => {
     );
 
     const handleInputChange = (value) => {
-        debugger
+        //debugger
         setSearchQuery(value);
         setCurrentPage(0);
         setSelectedRows([]);

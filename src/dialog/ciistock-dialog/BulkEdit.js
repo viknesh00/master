@@ -94,7 +94,7 @@ const BulkEdit = (props) => {
     }
 
     const handleBulkOutward = async () => {
-        debugger
+        //debugger
         if (isSubmitting) return;
 
         if (!formData.OrderNumber) {
