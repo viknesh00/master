@@ -70,36 +70,32 @@ const NonCiiBulkOutwardDialog = (props) => {
 
         setIsSubmitting(true);
 
-        const url = `SmInboundStockNonCiis/AddNonStockOutbounddata`;
+        const url = `SmInboundStockNonCiis/BulkAddNonStockOutbound`;
 
         try {
-            const promises = selectedData.map((row) => {
-                const data = {
-                    username: name,
-                    materialNumber: row.materialNumber,
-                    materialDescription: row.materialDescription || "",
-                    deliveryNumber: row.deliveryNumber,
-                    orderNumber: formData.OrderNumber,
-                    outboundDate: formData.OutBoundDate ? new Date(formData.OutBoundDate).toLocaleDateString('en-CA') : null,
-                    receiverName: formData.ReceiverName || "",
-                    deliveredQuantity: row.deliveredQuantity, // Deliver full current stock of this batch
-                    targetLocation: formData.Location || "",
-                    sentBy: formData.SentBy || "",
-                    deliveryNumber_inbound: row.deliveryNumber,
-                    inboundStockNonCIIKey: row.inboundStockNonCIIKey,
-                    inboundStockNonCiiKey: row.inboundStockNonCIIKey
-                };
-                return postRequest(url, data);
-            });
+            const dataList = selectedData.map((row) => ({
+                username: name,
+                materialNumber: row.materialNumber,
+                materialDescription: row.materialDescription || "",
+                deliveryNumber: row.deliveryNumber,
+                orderNumber: formData.OrderNumber,
+                outboundDate: formData.OutBoundDate ? new Date(formData.OutBoundDate).toLocaleDateString('en-CA') : null,
+                receiverName: formData.ReceiverName || "",
+                deliveredQuantity: row.deliveredQuantity, // Deliver full current stock of this batch
+                targetLocation: formData.Location || "",
+                sentBy: formData.SentBy || "",
+                deliveryNumber_inbound: row.deliveryNumber,
+                inboundStockNonCIIKey: row.inboundStockNonCIIKey,
+                inboundStockNonCiiKey: row.inboundStockNonCIIKey
+            }));
 
-            const results = await Promise.all(promises);
-            const allSuccess = results.every(res => res.status === 200);
+            const res = await postRequest(url, dataList);
 
-            if (allSuccess) {
+            if (res.status === 200) {
                 ToastSuccess("All Selected Stocks Outwarded Successfully");
                 handleOpenBulkOutward();
             } else {
-                ToastError("Some stocks failed to deliver. Please check and retry.");
+                ToastError("Bulk outward failed. Please check and retry.");
                 setIsSubmitting(false);
             }
         } catch (error) {
