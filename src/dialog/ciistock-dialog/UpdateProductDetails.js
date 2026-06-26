@@ -15,7 +15,7 @@ import Datefield from "../../utils/Datefield";
 import { useUser } from "../../UserContext";
 
 const UpdateProductDetails = (props) => {
-    //debugger
+    // 
     const [open] = useState(props.value);
     const { serialData } = props;
     const [showAlert, setShowAlert] = useState(false);
@@ -49,7 +49,7 @@ const UpdateProductDetails = (props) => {
     };
 
     const handleUpdate = () => {
-        //debugger
+        // 
         if (isSubmitting) return; // prevent double click
 
         if(!formData.qualityCheckDate){

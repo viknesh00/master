@@ -83,7 +83,7 @@ const CompanyManagement = () => {
     }
 
     const handleOpenAddCompany = () => {
-        //debugger
+        // 
         if(showAddMaterial){
         fetchCompanyDetails();
         }
@@ -201,7 +201,7 @@ const CompanyManagement = () => {
     };
 
     const handleVerticalDotClick = (event, item) => {
-        //debugger
+        // 
         event.stopPropagation();
         const rect = event.target.getBoundingClientRect();
         setSelectedCompanyData(item);

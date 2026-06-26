@@ -94,7 +94,7 @@ const CiiBulkOutwardDialog = (props) => {
     }
 
     const handleBulkOutward = async () => {
-        debugger
+
         if (isSubmitting) return;
 
         if (!formData.OrderNumber) {

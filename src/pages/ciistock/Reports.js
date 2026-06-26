@@ -120,7 +120,7 @@ const Reports = (props) => {
     };
 
     const filteredData = ciiStockData.filter((item) => {
-        //debugger
+        // 
         const query = searchQuery.toLowerCase();
     
         const materialMatch = item["materialNumber"]?.toString().toLowerCase().includes(query);

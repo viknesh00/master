@@ -28,7 +28,7 @@ export default function ResetPassword(props){
       }
 
       const handleResetPassword =()=>{
-        //debugger
+        // 
         if (formData.newPassword !== formData.confirmPassword) {
           ToastError("New Password and Confirm Password do not match!");
             return;

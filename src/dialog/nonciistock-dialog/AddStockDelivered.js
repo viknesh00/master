@@ -37,7 +37,7 @@ const AddStockDelivered = (props) => {
     };
 
     const handleAddDeliveredciistock = () => {
-        //debugger
+        // 
         if (isSubmitting) return; // prevent double click
 
         if (!formData.deliveryNumber || !formData.quantityDelivered) {

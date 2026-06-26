@@ -33,6 +33,7 @@ const NonCiiBulkOutward = (props) => {
     const { name } = useUser();
     const location = useLocation();
     const materialNumber = location.pathname.split('/').pop();
+    console.log("materialNumber", materialNumber)
     const { materialDescription } = location.state || {};
     const [loading, setLoading] = useState(true);
     const [showUpdateStockInward, setshowUpdateStockInward] = useState(false);
@@ -125,9 +126,10 @@ const NonCiiBulkOutward = (props) => {
     };
 
     const fetchMaterialDetails = () => {
-        debugger
+        // 
         setLoading(true);
-        const url = `SmInboundStockNonCiis/GetInwardNonStockCiis/${materialNumber}/${name}`;
+        const url = `SmInboundStockNonCiis/GetInwardNonStockCiis/all/${name}`;
+        console.log(url, "URL")
         getRequest(url)
             .then((res) => {
                 if (res.status === 200) {
@@ -139,11 +141,12 @@ const NonCiiBulkOutward = (props) => {
                     //     if (item.updatedDate) item.updatedDate = formatDate(item.updatedDate);
                     //   });
                     setMaterilaData(res.data);
+                    console.log(res.data)
                 }
             })
             .catch((error) => {
                 console.error("API Error:", error);
-            });
+            }).finally(() => setLoading(false));
     }
 
     const handlePageChange = (event, value) => {
@@ -202,7 +205,7 @@ const NonCiiBulkOutward = (props) => {
     };
 
     const handleOpenAddStock = () => {
-        debugger
+        // 
         if (showStock) {
             fetchMaterialDetails();
             props.fetchMaterialAnalysiticsNonCiiData();
@@ -211,7 +214,7 @@ const NonCiiBulkOutward = (props) => {
     }
 
     const handleRemoveMaterial = (deliveryNumber, inboundStockNonCIIKey) => {
-        debugger
+        // 
         const url = `SmInboundStockNonCiis/DeleteNonStockInbounddata/${materialNumber}/${deliveryNumber}/${inboundStockNonCIIKey}/${name}`
         postRequest(url)
             .then((res) => {
@@ -227,7 +230,7 @@ const NonCiiBulkOutward = (props) => {
     }
 
     const handleVerticalDotClick = (event, item) => {
-        debugger
+        // 
         event.stopPropagation();
         const rect = event.target.getBoundingClientRect();
         setSelectedMaterialData(item);

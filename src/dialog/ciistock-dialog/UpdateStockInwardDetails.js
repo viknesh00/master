@@ -38,7 +38,7 @@ const UpdateStockInwardDetails = (props) => {
     };
 
     const handleUpdate = () => {
-        //debugger
+        // 
         if (isSubmitting) return; // prevent double click
         setIsSubmitting(true);
         let data = {};

@@ -209,7 +209,7 @@ const Nonciistock = () => {
     };
 
     const handleMaterialClick = (materialNumber, materialDescription) => {
-        //debugger
+        // 
         navigate(`/non-cii-stock/${materialNumber}`, { state: { materialDescription } });
     };
 

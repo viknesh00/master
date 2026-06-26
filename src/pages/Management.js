@@ -260,7 +260,7 @@ const LogManagement = (props) => {
     );
 
     const handleDownload = () => {
-        //debugger
+        // 
         const keysToKeep = ["user_Id", "marterialNumber", "serialNumber", "modified_date", "activities", "exist_record", "new_record"];
         const cleanedData = filteredData.map(item =>
             Object.fromEntries(
