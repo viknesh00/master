@@ -39,6 +39,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:coverage:color": "react-scripts test --coverage --watchAll=false --colors",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

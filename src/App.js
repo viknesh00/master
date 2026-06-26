@@ -4,25 +4,28 @@ import { BrowserRouter, useRoutes } from 'react-router-dom';
 import routes from "./routes";
 import { UserProvider } from "./UserContext";
 import { ToastContainer, Zoom } from "react-toastify";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 
 const AppRoutes = () => {
     const routing = useRoutes(routes);
     return routing;
 };
-
+debugger
 function App() {
   return (
-    <UserProvider>
-    <React.Fragment>
-      <BrowserRouter>
-            <AppRoutes />
-        </BrowserRouter>
-        <ToastContainer transition={Zoom} />
-    </React.Fragment>
-    </UserProvider>
-
+    <ErrorBoundary>
+      <UserProvider>
+        <React.Fragment>
+          <BrowserRouter>
+                <AppRoutes />
+            </BrowserRouter>
+            <ToastContainer transition={Zoom} />
+        </React.Fragment>
+      </UserProvider>
+    </ErrorBoundary>
   );
 }
 
 export default App;
+
