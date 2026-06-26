@@ -85,7 +85,9 @@ const NonCiiBulkOutwardDialog = (props) => {
                     deliveredQuantity: row.deliveredQuantity, // Deliver full current stock of this batch
                     targetLocation: formData.Location || "",
                     sentBy: formData.SentBy || "",
-                    deliveryNumber_inbound: row.deliveryNumber
+                    deliveryNumber_inbound: row.deliveryNumber,
+                    inboundStockNonCIIKey: row.inboundStockNonCIIKey,
+                    inboundStockNonCiiKey: row.inboundStockNonCIIKey
                 };
                 return postRequest(url, data);
             });

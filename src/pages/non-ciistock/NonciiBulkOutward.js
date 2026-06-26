@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ReactComponent as TickButton } from "../../assets/svg/tickbutton.svg";
 import { ReactComponent as CloseButton } from "../../assets/svg/closebutton.svg";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import Search from "../../utils/Search";
 import Pagination from "@mui/material/Pagination";
@@ -26,6 +26,7 @@ import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 import { useUser } from "../../UserContext";
 
 const NonCiiBulkOutward = (props) => {
+    const navigate = useNavigate();
     const breadcrumbData = [
         { label: "Non-CII Bulk Outward", path: "" },
     ];
@@ -33,6 +34,10 @@ const NonCiiBulkOutward = (props) => {
     const location = useLocation();
     const materialNumber = location.pathname.split('/').pop();
     const { materialDescription } = location.state || {};
+
+    const handleMaterialClick = (matNumber, matDescription) => {
+        navigate(`/non-cii-stock/${matNumber}`, { state: { materialDescription: matDescription } });
+    };
     const [loading, setLoading] = useState(true);
     const [showUpdateStockInward, setshowUpdateStockInward] = useState(false);
     const [selectedMaterialData, setSelectedMaterialData] = useState("");
@@ -131,12 +136,12 @@ const NonCiiBulkOutward = (props) => {
 
     // Pinned selected rows from all data
     const pinnedSelectedRows = materialData.filter((item) =>
-        selectedRows.some((row) => row.deliveryNumber === item["deliveryNumber"])
+        selectedRows.some((row) => row.inboundStockNonCIIKey === item["inboundStockNonCIIKey"])
     );
 
     // Only unselected rows from current page
     const unselectedPageRows = paginatedData.filter(
-        (item) => !selectedRows.some((row) => row.deliveryNumber === item["deliveryNumber"])
+        (item) => !selectedRows.some((row) => row.inboundStockNonCIIKey === item["inboundStockNonCIIKey"])
     );
 
     const handleInputChange = (value) => {
@@ -171,6 +176,7 @@ const NonCiiBulkOutward = (props) => {
     const handleSelectAllChange = (event) => {
         if (event.target.checked) {
             const allRows = paginatedData.map((item) => ({
+                inboundStockNonCIIKey: item.inboundStockNonCIIKey,
                 deliveryNumber: item.deliveryNumber,
                 orderNumber: item.orderNumber,
                 materialNumber: item.materialNumber,
@@ -180,29 +186,29 @@ const NonCiiBulkOutward = (props) => {
             setSelectedRows((prev) => {
                 const merged = [...prev];
                 allRows.forEach((newRow) => {
-                    if (!merged.some((r) => r.deliveryNumber === newRow.deliveryNumber)) {
+                    if (!merged.some((r) => r.inboundStockNonCIIKey === newRow.inboundStockNonCIIKey)) {
                         merged.push(newRow);
                     }
                 });
                 return merged;
             });
         } else {
-            const currentPageDeliveries = paginatedData.map((item) => item.deliveryNumber);
+            const currentPageKeys = paginatedData.map((item) => item.inboundStockNonCIIKey);
             setSelectedRows((prev) =>
-                prev.filter((row) => !currentPageDeliveries.includes(row.deliveryNumber))
+                prev.filter((row) => !currentPageKeys.includes(row.inboundStockNonCIIKey))
             );
         }
     };
 
-    const handleCheckboxChange = (deliveryNumber, orderNumber, materialNumber, materialDescription, deliveredQuantity) => {
+    const handleCheckboxChange = (inboundStockNonCIIKey, deliveryNumber, orderNumber, materialNumber, materialDescription, deliveredQuantity) => {
         setSelectedRows((prev) => {
-            const exists = prev.some((row) => row.deliveryNumber === deliveryNumber);
+            const exists = prev.some((row) => row.inboundStockNonCIIKey === inboundStockNonCIIKey);
             if (exists) {
-                return prev.filter((row) => row.deliveryNumber !== deliveryNumber);
+                return prev.filter((row) => row.inboundStockNonCIIKey !== inboundStockNonCIIKey);
             } else {
                 return [
                     ...prev,
-                    { deliveryNumber, orderNumber, materialNumber, materialDescription, deliveredQuantity }
+                    { inboundStockNonCIIKey, deliveryNumber, orderNumber, materialNumber, materialDescription, deliveredQuantity }
                 ];
             }
         });
@@ -211,22 +217,24 @@ const NonCiiBulkOutward = (props) => {
     const isAllSelected =
         selectedRows.length > 0 &&
         paginatedData.every((item) =>
-            selectedRows.some((row) => row.deliveryNumber === item.deliveryNumber)
+            selectedRows.some((row) => row.inboundStockNonCIIKey === item.inboundStockNonCIIKey)
         );
 
     const handleDownload = () => {
         const keysToKeep = ["deliveryNumber", "orderNumber", "inwardDate", "sourceLocation", "totalQuantity", "deliveredQuantity", "receivedBy", "rackLocation", "status"];
-        const cleanedData = filteredData.map(item =>
+        
+        const dataToExport = selectedRows.length
+            ? filteredData.filter((item) => selectedRows.some((row) => row.inboundStockNonCIIKey === item["inboundStockNonCIIKey"]))
+            : filteredData;
+
+        const cleanedData = dataToExport.map(item =>
             Object.fromEntries(
                 keysToKeep
                     .filter(key => key in item)
                     .map(key => [key, item[key]])
             )
         );
-        const dataToExport = selectedRows.length
-            ? cleanedData.filter((item) => selectedRows.some((row) => row.deliveryNumber === item["deliveryNumber"]))
-            : cleanedData;
-        const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+        const worksheet = XLSX.utils.json_to_sheet(cleanedData);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "Non CII Bulk Outward Details");
         XLSX.writeFile(workbook, "Non_CII_Bulk_Outward_Details.xlsx");
@@ -295,16 +303,17 @@ const NonCiiBulkOutward = (props) => {
 
     const renderRow = (item, index, isPinned = false) => (
         <div
-            key={`${isPinned ? "pinned" : "row"}-${item["deliveryNumber"]}-${index}`}
+            key={`${isPinned ? "pinned" : "row"}-${item["inboundStockNonCIIKey"] || item["deliveryNumber"]}-${index}`}
             className={`div-data ${isPinned ? "bg-blue-50 border-l-2 border-blue-400" : ""}`}
         >
             <div className="text-center w-[5%]">
                 <input
                     type="checkbox"
                     className="table-checkbox"
-                    checked={selectedRows.some((row) => row.deliveryNumber === item["deliveryNumber"])}
+                    checked={selectedRows.some((row) => row.inboundStockNonCIIKey === item["inboundStockNonCIIKey"])}
                     onChange={() =>
                         handleCheckboxChange(
+                            item["inboundStockNonCIIKey"],
                             item["deliveryNumber"],
                             item["orderNumber"],
                             item["materialNumber"],
@@ -314,7 +323,12 @@ const NonCiiBulkOutward = (props) => {
                     }
                 />
             </div>
-            <div className="table-data text-left w-[15%]">{item["deliveryNumber"]}</div>
+            <div 
+                className="table-data text-hyper text-left w-[15%] cursor-pointer" 
+                onClick={() => handleMaterialClick(item["materialNumber"], item["materialDescription"])}
+            >
+                {item["deliveryNumber"]}
+            </div>
             <div className="table-data text-left w-[15%]">{item["orderNumber"]}</div>
             <div className="table-data text-left w-[12%]">{formatDate(item["inwardDate"])}</div>
             <div className="table-data text-left w-[13%]">{item["sourceLocation"]}</div>

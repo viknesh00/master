@@ -152,40 +152,42 @@ const StockInward = (props) => {
 
     const handleSelectAllChange = (event) => {
         if (event.target.checked) {
-            setSelectedRows(paginatedData.map((item) => item["deliveryNumber"]));
+            setSelectedRows(paginatedData.map((item) => item["inboundStockNonCIIKey"]));
         } else {
             setSelectedRows([]);
         }
     };
 
-    const handleCheckboxChange = (materialNumber) => {
+    const handleCheckboxChange = (inboundStockNonCIIKey) => {
         setSelectedRows((prevSelectedRows) =>
-            prevSelectedRows.includes(materialNumber)
-                ? prevSelectedRows.filter((item) => item !== materialNumber)
-                : [...prevSelectedRows, materialNumber]
+            prevSelectedRows.includes(inboundStockNonCIIKey)
+                ? prevSelectedRows.filter((item) => item !== inboundStockNonCIIKey)
+                : [...prevSelectedRows, inboundStockNonCIIKey]
         );
     };
 
     const isAllSelected = selectedRows.length > 0 && paginatedData.every((item) =>
-        selectedRows.includes(item["deliveryNumber"])
+        selectedRows.includes(item["inboundStockNonCIIKey"])
     );
 
     const handleDownload = () => {
         const keysToKeep = ["deliveryNumber", "orderNumber", "inwardDate", "sourceLocation","totalQuantity", "deliveredQuantity", "receivedBy","rackLocation"];
-        const cleanedData = filteredData.map(item =>
+        
+        const dataToExport = selectedRows.length
+            ? filteredData.filter((item) => selectedRows.includes(item["inboundStockNonCIIKey"]))
+            : filteredData;
+
+        const cleanedData = dataToExport.map(item =>
             Object.fromEntries(
                 keysToKeep
                     .filter(key => key in item) // Ensure the key exists in the object
                     .map(key => [key, item[key]]) // Reconstruct the object with keys in order
             )
         );
-        const dataToExport = selectedRows.length
-            ? cleanedData.filter((item) => selectedRows.includes(item["deliveryNumber"]))
-            : cleanedData;
-        const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+        const worksheet = XLSX.utils.json_to_sheet(cleanedData);
         const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Stock Inward");
-        XLSX.writeFile(workbook, "Stock_Inward.xlsx");
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Stock Inward Details");
+        XLSX.writeFile(workbook, "Stock_Inward_Details.xlsx");
     };
 
     const handleSort = (key) => {
@@ -369,8 +371,8 @@ const StockInward = (props) => {
                                 <input
                                     type="checkbox"
                                     className="table-checkbox"
-                                    checked={selectedRows.includes(item["deliveryNumber"])}
-                                    onChange={() => handleCheckboxChange(item["deliveryNumber"])}
+                                    checked={selectedRows.includes(item["inboundStockNonCIIKey"])}
+                                    onChange={() => handleCheckboxChange(item["inboundStockNonCIIKey"])}
                                 />
                             </div>
                             <div className="table-data text-left w-[15%]">{item["deliveryNumber"]}</div>
