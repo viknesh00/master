@@ -14,11 +14,11 @@ import { ReactComponent as Download } from "../../assets/svg/download.svg";
 import { ReactComponent as Plus } from "../../assets/svg/plus.svg";
 import { ReactComponent as Edit } from "../../assets/svg/edit.svg";
 import { ReactComponent as Delete } from "../../assets/svg/delete.svg";
-import StockInward_Data from "../../data/stock_inward.json";
 import FilterDateField from "../../utils/FilterDateField";
 import CustomSelect from "../../utils/CustomSelect";
 import AddStockInward from "../../dialog/nonciistock-dialog/AddStockInward";
 import UpdateStockInward from "../../dialog/nonciistock-dialog/UpdateStockInward";
+import NonCiiBulkOutwardDialog from "../../dialog/nonciistock-dialog/NonCiiBulkOutwardDialog";
 import { getRequest, postRequest } from "../../services/ApiService";
 import { getCookie } from "../../services/Cookies";
 import { isLimitedUser } from '../../services/Cookies';
@@ -26,14 +26,12 @@ import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 import { useUser } from "../../UserContext";
 
 const NonCiiBulkOutward = (props) => {
-
     const breadcrumbData = [
         { label: "Non-CII Bulk Outward", path: "" },
     ];
     const { name } = useUser();
     const location = useLocation();
     const materialNumber = location.pathname.split('/').pop();
-    console.log("materialNumber", materialNumber)
     const { materialDescription } = location.state || {};
     const [loading, setLoading] = useState(true);
     const [showUpdateStockInward, setshowUpdateStockInward] = useState(false);
@@ -44,19 +42,13 @@ const NonCiiBulkOutward = (props) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedRows, setSelectedRows] = useState([]);
     const [showStock, setShowStock] = useState(false);
+    const [showBulkOutwardStock, setShowBulkOutwardStock] = useState(false);
+    const [activeTab, setActiveTab] = useState("View all");
     const [alertBox, setAlertBox] = useState({ visible: false, x: 0, y: 0, data: null });
     const [sortConfig, setSortConfig] = useState({
         key: "",
         direction: "asc",
     });
-
-    const options = [
-        { id: 1, name: "Option 1" },
-        { id: 2, name: "Option 2" },
-        { id: 3, name: "Option 3" },
-        { id: 4, name: "Option 4" },
-        { id: 5, name: "Option 5" },
-    ];
 
     useEffect(() => {
         fetchMaterialDetails();
@@ -71,10 +63,31 @@ const NonCiiBulkOutward = (props) => {
         };
     }, []);
 
+    const filteredData = materialData.filter((item) => {
+        const query = searchQuery.toLowerCase();
+        const matchesSearch =
+            (item["deliveryNumber"] || "").toLowerCase().includes(query) ||
+            (item["orderNumber"] || "").toLowerCase().includes(query) ||
+            (item["sourceLocation"] || "").toLowerCase().includes(query) ||
+            (item["receivedBy"] || "").toLowerCase().includes(query) ||
+            (item["rackLocation"] || "").toLowerCase().includes(query);
 
-    const filteredData = materialData.filter((item) =>
-        item["deliveryNumber"].toLowerCase().includes(searchQuery.toLowerCase())
-    );
+        if (activeTab === "New") {
+            return matchesSearch && (item["status"] === "New" || !item["status"]);
+        } else if (activeTab === "Used") {
+            return matchesSearch && item["status"] === "Used";
+        } else if (activeTab === "Transport") {
+            return matchesSearch && item["status"] === "Transport";
+        } else if (activeTab === "Damaged") {
+            return matchesSearch && item["status"] === "Damaged";
+        } else if (activeTab === "BreakFix") {
+            return matchesSearch && item["status"] === "BreakFix";
+        } else if (activeTab === "Outward") {
+            return matchesSearch && item["status"] === "Outward";
+        }
+
+        return matchesSearch;
+    });
 
     const isValidDate = (value) => {
         const date = new Date(value);
@@ -82,15 +95,12 @@ const NonCiiBulkOutward = (props) => {
     };
 
     const formatDate = (dateString) => {
-        if (!dateString) return ""; // Return empty string if dateString is null or undefined
-
+        if (!dateString) return "";
         const date = new Date(dateString);
-        if (isNaN(date.getTime())) return ""; // Return empty string if the date is invalid
-
+        if (isNaN(date.getTime())) return "";
         const day = String(date.getDate()).padStart(2, "0");
         const month = String(date.getMonth() + 1).padStart(2, "0");
         const year = date.getFullYear();
-
         return `${day}/${month}/${year}`;
     };
 
@@ -119,35 +129,35 @@ const NonCiiBulkOutward = (props) => {
         currentPage * rowsPerPage + rowsPerPage
     );
 
+    // Pinned selected rows from all data
+    const pinnedSelectedRows = materialData.filter((item) =>
+        selectedRows.some((row) => row.deliveryNumber === item["deliveryNumber"])
+    );
+
+    // Only unselected rows from current page
+    const unselectedPageRows = paginatedData.filter(
+        (item) => !selectedRows.some((row) => row.deliveryNumber === item["deliveryNumber"])
+    );
+
     const handleInputChange = (value) => {
         setSearchQuery(value);
         setCurrentPage(0);
-        setSelectedRows([]);
     };
 
     const fetchMaterialDetails = () => {
-        // 
         setLoading(true);
         const url = `SmInboundStockNonCiis/GetInwardNonStockCiis/all/${name}`;
-        console.log(url, "URL")
         getRequest(url)
             .then((res) => {
                 if (res.status === 200) {
-                    setLoading(false);
-
-                    // res.data.forEach((item) => {
-                    //     if (item.inwardDate) item.inwardDate = item.inwardDate;
-                    //     if (item.createdDate) item.createdDate = formatDate(item.createdDate);
-                    //     if (item.updatedDate) item.updatedDate = formatDate(item.updatedDate);
-                    //   });
                     setMaterilaData(res.data);
-                    console.log(res.data)
                 }
             })
             .catch((error) => {
                 console.error("API Error:", error);
-            }).finally(() => setLoading(false));
-    }
+            })
+            .finally(() => setLoading(false));
+    };
 
     const handlePageChange = (event, value) => {
         setCurrentPage(value);
@@ -160,40 +170,66 @@ const NonCiiBulkOutward = (props) => {
 
     const handleSelectAllChange = (event) => {
         if (event.target.checked) {
-            setSelectedRows(paginatedData.map((item) => item["deliveryNumber"]));
+            const allRows = paginatedData.map((item) => ({
+                deliveryNumber: item.deliveryNumber,
+                orderNumber: item.orderNumber,
+                materialNumber: item.materialNumber,
+                materialDescription: item.materialDescription,
+                deliveredQuantity: item.deliveredQuantity
+            }));
+            setSelectedRows((prev) => {
+                const merged = [...prev];
+                allRows.forEach((newRow) => {
+                    if (!merged.some((r) => r.deliveryNumber === newRow.deliveryNumber)) {
+                        merged.push(newRow);
+                    }
+                });
+                return merged;
+            });
         } else {
-            setSelectedRows([]);
+            const currentPageDeliveries = paginatedData.map((item) => item.deliveryNumber);
+            setSelectedRows((prev) =>
+                prev.filter((row) => !currentPageDeliveries.includes(row.deliveryNumber))
+            );
         }
     };
 
-    const handleCheckboxChange = (materialNumber) => {
-        setSelectedRows((prevSelectedRows) =>
-            prevSelectedRows.includes(materialNumber)
-                ? prevSelectedRows.filter((item) => item !== materialNumber)
-                : [...prevSelectedRows, materialNumber]
-        );
+    const handleCheckboxChange = (deliveryNumber, orderNumber, materialNumber, materialDescription, deliveredQuantity) => {
+        setSelectedRows((prev) => {
+            const exists = prev.some((row) => row.deliveryNumber === deliveryNumber);
+            if (exists) {
+                return prev.filter((row) => row.deliveryNumber !== deliveryNumber);
+            } else {
+                return [
+                    ...prev,
+                    { deliveryNumber, orderNumber, materialNumber, materialDescription, deliveredQuantity }
+                ];
+            }
+        });
     };
 
-    const isAllSelected = selectedRows.length > 0 && paginatedData.every((item) =>
-        selectedRows.includes(item["deliveryNumber"])
-    );
+    const isAllSelected =
+        selectedRows.length > 0 &&
+        paginatedData.every((item) =>
+            selectedRows.some((row) => row.deliveryNumber === item.deliveryNumber)
+        );
 
     const handleDownload = () => {
-        const keysToKeep = ["deliveryNumber", "orderNumber", "inwardDate", "sourceLocation", "totalQuantity", "deliveredQuantity", "receivedBy", "rackLocation"];
+        const keysToKeep = ["deliveryNumber", "orderNumber", "inwardDate", "sourceLocation", "totalQuantity", "deliveredQuantity", "receivedBy", "rackLocation", "status"];
         const cleanedData = filteredData.map(item =>
             Object.fromEntries(
                 keysToKeep
-                    .filter(key => key in item) // Ensure the key exists in the object
-                    .map(key => [key, item[key]]) // Reconstruct the object with keys in order
+                    .filter(key => key in item)
+                    .map(key => [key, item[key]])
             )
         );
         const dataToExport = selectedRows.length
-            ? cleanedData.filter((item) => selectedRows.includes(item["deliveryNumber"]))
+            ? cleanedData.filter((item) => selectedRows.some((row) => row.deliveryNumber === item["deliveryNumber"]))
             : cleanedData;
         const worksheet = XLSX.utils.json_to_sheet(dataToExport);
         const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Stock Inward");
-        XLSX.writeFile(workbook, "Stock_Inward.xlsx");
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Non CII Bulk Outward Details");
+        XLSX.writeFile(workbook, "Non_CII_Bulk_Outward_Details.xlsx");
     };
 
     const handleSort = (key) => {
@@ -205,32 +241,35 @@ const NonCiiBulkOutward = (props) => {
     };
 
     const handleOpenAddStock = () => {
-        // 
         if (showStock) {
             fetchMaterialDetails();
-            props.fetchMaterialAnalysiticsNonCiiData();
         }
         setShowStock(prevState => !prevState);
-    }
+    };
+
+    const handleOpenBulkOutward = () => {
+        if (showBulkOutwardStock) {
+            fetchMaterialDetails();
+            setSelectedRows([]);
+        }
+        setShowBulkOutwardStock(prevState => !prevState);
+    };
 
     const handleRemoveMaterial = (deliveryNumber, inboundStockNonCIIKey) => {
-        // 
         const url = `SmInboundStockNonCiis/DeleteNonStockInbounddata/${materialNumber}/${deliveryNumber}/${inboundStockNonCIIKey}/${name}`
         postRequest(url)
             .then((res) => {
                 if (res.status === 200) {
-                    ToastSuccess("Deleted Successfuly");
+                    ToastSuccess("Deleted Successfully");
                     fetchMaterialDetails();
-                    props.fetchMaterialAnalysiticsNonCiiData();
                 }
             })
             .catch((error) => {
                 ToastError(error.response.data);
             });
-    }
+    };
 
     const handleVerticalDotClick = (event, item) => {
-        // 
         event.stopPropagation();
         const rect = event.target.getBoundingClientRect();
         setSelectedMaterialData(item);
@@ -249,11 +288,56 @@ const NonCiiBulkOutward = (props) => {
     const handleUpdateStockInward = () => {
         if (showUpdateStockInward) {
             fetchMaterialDetails();
-            props.fetchMaterialAnalysiticsNonCiiData();
         }
         setshowUpdateStockInward(prevState => !prevState);
         setAlertBox({ visible: false, x: 0, y: 0, data: null });
-    }
+    };
+
+    const renderRow = (item, index, isPinned = false) => (
+        <div
+            key={`${isPinned ? "pinned" : "row"}-${item["deliveryNumber"]}-${index}`}
+            className={`div-data ${isPinned ? "bg-blue-50 border-l-2 border-blue-400" : ""}`}
+        >
+            <div className="text-center w-[5%]">
+                <input
+                    type="checkbox"
+                    className="table-checkbox"
+                    checked={selectedRows.some((row) => row.deliveryNumber === item["deliveryNumber"])}
+                    onChange={() =>
+                        handleCheckboxChange(
+                            item["deliveryNumber"],
+                            item["orderNumber"],
+                            item["materialNumber"],
+                            item["materialDescription"],
+                            item["deliveredQuantity"]
+                        )
+                    }
+                />
+            </div>
+            <div className="table-data text-left w-[15%]">{item["deliveryNumber"]}</div>
+            <div className="table-data text-left w-[15%]">{item["orderNumber"]}</div>
+            <div className="table-data text-left w-[12%]">{formatDate(item["inwardDate"])}</div>
+            <div className="table-data text-left w-[13%]">{item["sourceLocation"]}</div>
+            <div className="table-data text-left w-[10%]">{item["totalQuantity"]}</div>
+            <div className="table-data text-left w-[10%]">{item["deliveredQuantity"]}</div>
+            <div className="table-data text-left w-[10%]">{item["receivedBy"]}</div>
+            <div className="table-data text-left w-[13%]">{item["rackLocation"]}</div>
+            <div className="table-data text-left w-[10%]">
+                <span className={`${item["status"] === "New" ? "status-available" : item["status"] === "Damaged" ? "status-not-available" : "status-unknown"}`}>{item["status"] || "New"}</span>
+            </div>
+            <div className="table-data text-center w-[10%]">
+                <VerticalDot
+                    onClick={(event) => {
+                        if (!isLimitedUser()) {
+                            handleVerticalDotClick(event, item);
+                        }
+                    }}
+                    className={isLimitedUser() ? "cursor-not-allowed" : "cursor-pointer"}
+                />
+            </div>
+        </div>
+    );
+
     return (
         <div>
             {loading && (
@@ -263,54 +347,56 @@ const NonCiiBulkOutward = (props) => {
             )}
             {showStock && <AddStockInward value={showStock} materialNumber={materialNumber} materialDescription={materialDescription} handleOpenAddStock={handleOpenAddStock} />}
             {showUpdateStockInward && <UpdateStockInward value={showUpdateStockInward} materialNumber={materialNumber} materialDescription={materialDescription} selectedMaterialData={selectedMaterialData} selectedRow={alertBox.data} handleUpdateStockInward={handleUpdateStockInward} />}
+            {showBulkOutwardStock && <NonCiiBulkOutwardDialog value={showBulkOutwardStock} selectedData={selectedRows} handleOpenBulkOutward={handleOpenBulkOutward} />}
             <Navbar breadcrumbs={breadcrumbData} />
-            {/* <div className="outer-firstsection">
-                <div className="outer-firstsection-header">
-                <span className="outer-firstsectioncii-title">{materialNumber}</span><span className="outer-firstsectioncii-title">-{materialDescription}</span>
-                </div>
-                <div className="outer-firstsection-actions">
-                <Search placeholder="Search" onChange={handleInputChange} />
-                    <button className="outer-firstsection-download" onClick={handleDownload}>
-                        <Download /> Download
-                    </button>
-                    <button className="outer-firstsection-add" onClick={handleOpenAddStock} disabled={isLimitedUser()}>
-                        <Plus /> Add Stock
-                    </button>
-                </div>
-            </div> */}
-
-            {/* <div className="outer-secondsection">
-                <div >
-                    {/* <button className="tab-button active">View all</button>
-                    <button className="tab-button">Working</button>
-                    <button className="tab-button">Text</button> 
-                </div>
-                <Search placeholder="Search" onChange={handleInputChange} />
-            </div> */}
-            {/* <div className="outer-secondsection">
-                <div className="outer-firstsection-header">
-                    <FilterDateField
-                        placeholder="From Date"
-                        onChange={handleInputChange}
-                    />
-                    <FilterDateField
-                        placeholder="To Date"
-                        onChange={handleInputChange}
-                    />
-                    <CustomSelect
-                        options={options}
-                        placeholder="Inward From"
-                        onSelectionChange={handleInputChange}
-                    />
-                </div>
-                <div className="outer-firstsection-actions">
-                    <div className="tick-btn"><TickButton /></div>
-                    <div className="reset-btn">
-                        <CloseButton />
-                    </div>
-                </div>
-            </div> */}
             <div className="outersection-container">
+                <div className="outer-secondsection">
+                    <div className="tabs">
+                        <button
+                            className={`tab-button ${activeTab === "View all" ? "active" : ""}`}
+                            onClick={() => setActiveTab("View all")}
+                        >
+                            View all
+                        </button>
+                        <button
+                            className={`tab-button ${activeTab === "New" ? "active" : ""}`}
+                            onClick={() => setActiveTab("New")}
+                        >
+                            New
+                        </button>
+                        <button
+                            className={`tab-button ${activeTab === "Used" ? "active" : ""}`}
+                            onClick={() => setActiveTab("Used")}
+                        >
+                            Used
+                        </button>
+                        <button
+                            className={`tab-button ${activeTab === "Transport" ? "active" : ""}`}
+                            onClick={() => setActiveTab("Transport")}
+                        >
+                            Transport
+                        </button>
+                        <button
+                            className={`tab-button ${activeTab === "Damaged" ? "active" : ""}`}
+                            onClick={() => setActiveTab("Damaged")}
+                        >
+                            Damaged
+                        </button>
+                        <button
+                            className={`tab-button ${activeTab === "BreakFix" ? "active" : ""}`}
+                            onClick={() => setActiveTab("BreakFix")}
+                        >
+                            BreakFix
+                        </button>
+                        <button
+                            className={`tab-button ${activeTab === "Outward" ? "active" : ""}`}
+                            onClick={() => setActiveTab("Outward")}
+                        >
+                            Outward
+                        </button>
+                    </div>
+                    <Search placeholder="Search" onChange={handleInputChange} />
+                </div>
                 <div className="div-table">
                     <div className="div-head">
                         <div className="text-center w-[5%]">
@@ -333,7 +419,7 @@ const NonCiiBulkOutward = (props) => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[10%]" onClick={() => handleSort("inwardDate")}>
+                        <div className="table-header text-left w-[12%]" onClick={() => handleSort("inwardDate")}>
                             Inward Date
                             {sortConfig.key === "inwardDate" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
@@ -345,13 +431,13 @@ const NonCiiBulkOutward = (props) => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[12%]" onClick={() => handleSort("totalQuantity")}>
+                        <div className="table-header text-left w-[10%]" onClick={() => handleSort("totalQuantity")}>
                             Quantity Received
                             {sortConfig.key === "totalQuantity" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[12%]" onClick={() => handleSort("deliveredQuantity")}>
+                        <div className="table-header text-left w-[10%]" onClick={() => handleSort("deliveredQuantity")}>
                             Current Stock
                             {sortConfig.key === "deliveredQuantity" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
@@ -363,45 +449,48 @@ const NonCiiBulkOutward = (props) => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("rackLocation")}>
+                        <div className="table-header text-left w-[13%]" onClick={() => handleSort("rackLocation")}>
                             Racks Location
                             {sortConfig.key === "rackLocation" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[5%]"></div>
+                        <div className="table-header text-left w-[10%]" onClick={() => handleSort("status")}>
+                            Status
+                            {sortConfig.key === "status" && (
+                                sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
+                            )}
+                        </div>
+                        <div className="table-header text-left w-[15%]">
+                            <button
+                                className={`outer-firstsection-add ${selectedRows.length === 0
+                                    ? "cursor-not-allowed opacity-40"
+                                    : "cursor-pointer"
+                                    }`}
+                                onClick={selectedRows.length > 0 ? handleOpenBulkOutward : undefined}
+                                disabled={selectedRows.length === 0 || isLimitedUser()}
+                            >
+                                Bulk Outward
+                            </button>
+                        </div>
                     </div>
                     <div className="max-h-[400px] overflow-y-auto">
-                        {paginatedData.map((item, index) => (
-                            <div key={index} className="div-data">
-                                <div className="text-center w-[5%]">
-                                    <input
-                                        type="checkbox"
-                                        className="table-checkbox"
-                                        checked={selectedRows.includes(item["deliveryNumber"])}
-                                        onChange={() => handleCheckboxChange(item["deliveryNumber"])}
-                                    />
-                                </div>
-                                <div className="table-data text-left w-[15%]">{item["deliveryNumber"]}</div>
-                                <div className="table-data text-left w-[15%]">{item["orderNumber"]}</div>
-                                <div className="table-data text-left w-[12%]">{formatDate(item["inwardDate"])}</div>
-                                <div className="table-data text-left w-[13%]">{item["sourceLocation"]}</div>
-                                <div className="table-data text-left w-[12%]">{item["totalQuantity"]}</div>
-                                <div className="table-data text-left w-[12%]">{item["deliveredQuantity"]}</div>
-                                <div className="table-data text-left w-[10%]">{item["receivedBy"]}</div>
-                                <div className="table-data text-left w-[15%]">{item["rackLocation"]}</div>
-                                <div className="table-data text-center w-[5%]">
-                                    <VerticalDot
-                                        onClick={(event) => {
-                                            if (!isLimitedUser()) {
-                                                handleVerticalDotClick(event, item);
-                                            }
-                                        }}
-                                        className={isLimitedUser() ? "cursor-not-allowed" : "cursor-pointer"}
-                                    />
-                                </div>
-                            </div>
-                        ))}
+                        {/* Pinned selected rows */}
+                        {pinnedSelectedRows.length > 0 && (
+                            <>
+                                {pinnedSelectedRows.map((item, index) =>
+                                    renderRow(item, index, true)
+                                )}
+                                {unselectedPageRows.length > 0 && (
+                                    <div className="border-t-2 border-blue-200 my-1" />
+                                )}
+                            </>
+                        )}
+
+                        {/* Unselected rows from current page */}
+                        {unselectedPageRows.map((item, index) =>
+                            renderRow(item, index, false)
+                        )}
                     </div>
                 </div>
 
