@@ -3,6 +3,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Notification from "./pages/Notification";
 import Ciistock from "./pages/ciistock/Ciistock";
+import CiiBulkOutward from "./pages/ciistock/CiiBulkOutward";
 import Reports from "./pages/ciistock/Reports";
 import Management from "./pages/Management";
 import Layout from "./components/Layout";
@@ -10,6 +11,7 @@ import ProtectedRoute from "./services/ProtectedRoute";
 import MaterialDetail from "./pages/ciistock/MaterialDetail";
 import MaterialDescription from "./pages/ciistock/MaterialDescription";
 import Nonciistock from "./pages/non-ciistock/Nonciistock";
+import NonCiiBulkOutward from "./pages/non-ciistock/NonciiBulkOutward";
 import NonciiMaterialDetail from "./pages/non-ciistock/NonciiMaterialDetail";
 import ListManagement from "./pages/listManagement/ListManagement";
 import CompanyManagement from "./pages/userManagement/CompanyManagement";
@@ -33,11 +35,13 @@ const routes = [
             { path: "dashboard", element: <Dashboard /> },
             { path: "notifications", element: <Notification /> },
             { path: "cii-stock", element: <Ciistock /> },
+            { path: "cii-bulk-outward", element: <CiiBulkOutward /> },
             { path: "cii-stock/:materialNumber", element: <MaterialDetail /> }, // Define route for Material Detail
             { path: "cii-stock/:materialNumber/:serialNumbar", element: <MaterialDescription /> },
             { path: "reports", element: <Reports /> },
             { path: "poolstockcheck", element: <PoolStockCheck /> },
             { path: "non-cii-stock", element: <Nonciistock /> },
+            { path: "non-cii-bulk-outward", element: <NonCiiBulkOutward /> },
             { path: "non-cii-stock/:materialNumber", element: <NonciiMaterialDetail /> },
             { path: "management", element: <Management /> },
             { path: "log-management",element: <Management/>},

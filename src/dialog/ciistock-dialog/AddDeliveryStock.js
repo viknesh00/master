@@ -13,6 +13,7 @@ import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
 import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 import { useUser } from "../../UserContext";
+import DropdownField from "../../utils/DropDown";
 
 
 const AddDeliveryStock = (props) => {
@@ -41,6 +42,10 @@ const AddDeliveryStock = (props) => {
             ToastError("Please enter Order Number");
             return;
         }
+        if(!formData.Location){
+            ToastError("Please select Location");
+            return;
+        }
                 setIsSubmitting(true);
         let Data = {};
         Data = {
@@ -54,7 +59,7 @@ const AddDeliveryStock = (props) => {
             outBounddate: formData.OutBoundDate
             ? new Date(formData.OutBoundDate).toLocaleDateString('en-CA')  // Convert to UTC Date format
             : null,
-            targetLocation: formData.TargetLocation || "",
+            targetLocation: formData.Location || "",
             receiverName: formData.ReceiverName || "",
             sentBy: formData.SentBy || "",
             fk_Inbound_StockCII_DeliveryNumber: [serialData.deliveryNumber]
@@ -139,11 +144,19 @@ const AddDeliveryStock = (props) => {
                             placeholder="Enter receiver name"
                             onChange={handleInputChange}
                         />
-                        <Textfield
+                        {/* <Textfield
                             label="Target Location"
                             name="TargetLocation"
                             placeholder="Enter target location"
                             onChange={handleInputChange}
+                        /> */}
+                        <DropdownField
+                            label={<span>Location<span className="error">*</span></span>}
+                            name="Location"
+                            value={formData.Location}
+                            placeholder="Select Location"
+                            onChange={handleInputChange}
+                            options={["SIFI-Warehouse", "SIFI-Poststelle", "UT-CollectionPoint", "UT-ITPunktNeckartal", "SIFI-S2D", "Deizisau", "Transport"]}
                         />
                         <Textfield
                             label="Sent By"

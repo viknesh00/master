@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ReactComponent as TickButton } from "../../assets/svg/tickbutton.svg";
 import { ReactComponent as CloseButton } from "../../assets/svg/closebutton.svg";
 import { useLocation } from "react-router-dom";
+import Navbar from "../../components/Navbar";
 import Search from "../../utils/Search";
 import Pagination from "@mui/material/Pagination";
 import TablePagination from "@mui/material/TablePagination";
@@ -24,7 +25,11 @@ import { isLimitedUser } from '../../services/Cookies';
 import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 import { useUser } from "../../UserContext";
 
-const StockInward = (props) => {
+const NonCiiBulkOutward = (props) => {
+
+    const breadcrumbData = [
+        { label: "Non-CII Bulk Outward", path: "" },
+    ];
     const { name } = useUser();
     const location = useLocation();
     const materialNumber = location.pathname.split('/').pop();
@@ -77,14 +82,14 @@ const StockInward = (props) => {
 
     const formatDate = (dateString) => {
         if (!dateString) return ""; // Return empty string if dateString is null or undefined
-    
+
         const date = new Date(dateString);
         if (isNaN(date.getTime())) return ""; // Return empty string if the date is invalid
-    
+
         const day = String(date.getDate()).padStart(2, "0");
         const month = String(date.getMonth() + 1).padStart(2, "0");
         const year = date.getFullYear();
-    
+
         return `${day}/${month}/${year}`;
     };
 
@@ -119,27 +124,27 @@ const StockInward = (props) => {
         setSelectedRows([]);
     };
 
-        const fetchMaterialDetails = () => {
-            debugger
-            setLoading(true);
-            const url = `SmInboundStockNonCiis/GetInwardNonStockCiis/${materialNumber}/${name}`;
-            getRequest(url)
-                .then((res) => {
-                    if (res.status === 200) {
-                        setLoading(false);
+    const fetchMaterialDetails = () => {
+        debugger
+        setLoading(true);
+        const url = `SmInboundStockNonCiis/GetInwardNonStockCiis/${materialNumber}/${name}`;
+        getRequest(url)
+            .then((res) => {
+                if (res.status === 200) {
+                    setLoading(false);
 
-                        // res.data.forEach((item) => {
-                        //     if (item.inwardDate) item.inwardDate = item.inwardDate;
-                        //     if (item.createdDate) item.createdDate = formatDate(item.createdDate);
-                        //     if (item.updatedDate) item.updatedDate = formatDate(item.updatedDate);
-                        //   });
-                        setMaterilaData(res.data);
-                    }
-                })
-                .catch((error) => {
-                    console.error("API Error:", error);
-                });
-        }
+                    // res.data.forEach((item) => {
+                    //     if (item.inwardDate) item.inwardDate = item.inwardDate;
+                    //     if (item.createdDate) item.createdDate = formatDate(item.createdDate);
+                    //     if (item.updatedDate) item.updatedDate = formatDate(item.updatedDate);
+                    //   });
+                    setMaterilaData(res.data);
+                }
+            })
+            .catch((error) => {
+                console.error("API Error:", error);
+            });
+    }
 
     const handlePageChange = (event, value) => {
         setCurrentPage(value);
@@ -171,7 +176,7 @@ const StockInward = (props) => {
     );
 
     const handleDownload = () => {
-        const keysToKeep = ["deliveryNumber", "orderNumber", "inwardDate", "sourceLocation","totalQuantity", "deliveredQuantity", "receivedBy","rackLocation"];
+        const keysToKeep = ["deliveryNumber", "orderNumber", "inwardDate", "sourceLocation", "totalQuantity", "deliveredQuantity", "receivedBy", "rackLocation"];
         const cleanedData = filteredData.map(item =>
             Object.fromEntries(
                 keysToKeep
@@ -198,27 +203,27 @@ const StockInward = (props) => {
 
     const handleOpenAddStock = () => {
         debugger
-        if(showStock){
+        if (showStock) {
             fetchMaterialDetails();
             props.fetchMaterialAnalysiticsNonCiiData();
         }
         setShowStock(prevState => !prevState);
     }
 
-    const handleRemoveMaterial = (deliveryNumber,inboundStockNonCIIKey) => {
+    const handleRemoveMaterial = (deliveryNumber, inboundStockNonCIIKey) => {
         debugger
-                const url = `SmInboundStockNonCiis/DeleteNonStockInbounddata/${materialNumber}/${deliveryNumber}/${inboundStockNonCIIKey}/${name}`
-                postRequest(url)
-                  .then((res) => {
-                      if (res.status === 200) {
-                        ToastSuccess("Deleted Successfuly");
-                        fetchMaterialDetails();
-                        props.fetchMaterialAnalysiticsNonCiiData();
-                      }
-                  })
-                  .catch((error) => {
-                      ToastError(error.response.data);
-                  });
+        const url = `SmInboundStockNonCiis/DeleteNonStockInbounddata/${materialNumber}/${deliveryNumber}/${inboundStockNonCIIKey}/${name}`
+        postRequest(url)
+            .then((res) => {
+                if (res.status === 200) {
+                    ToastSuccess("Deleted Successfuly");
+                    fetchMaterialDetails();
+                    props.fetchMaterialAnalysiticsNonCiiData();
+                }
+            })
+            .catch((error) => {
+                ToastError(error.response.data);
+            });
     }
 
     const handleVerticalDotClick = (event, item) => {
@@ -239,7 +244,7 @@ const StockInward = (props) => {
     };
 
     const handleUpdateStockInward = () => {
-        if(showUpdateStockInward){
+        if (showUpdateStockInward) {
             fetchMaterialDetails();
             props.fetchMaterialAnalysiticsNonCiiData();
         }
@@ -255,8 +260,8 @@ const StockInward = (props) => {
             )}
             {showStock && <AddStockInward value={showStock} materialNumber={materialNumber} materialDescription={materialDescription} handleOpenAddStock={handleOpenAddStock} />}
             {showUpdateStockInward && <UpdateStockInward value={showUpdateStockInward} materialNumber={materialNumber} materialDescription={materialDescription} selectedMaterialData={selectedMaterialData} selectedRow={alertBox.data} handleUpdateStockInward={handleUpdateStockInward} />}
-
-            <div className="outer-firstsection">
+            <Navbar breadcrumbs={breadcrumbData} />
+            {/* <div className="outer-firstsection">
                 <div className="outer-firstsection-header">
                 <span className="outer-firstsectioncii-title">{materialNumber}</span><span className="outer-firstsectioncii-title">-{materialDescription}</span>
                 </div>
@@ -269,7 +274,7 @@ const StockInward = (props) => {
                         <Plus /> Add Stock
                     </button>
                 </div>
-            </div>
+            </div> */}
 
             {/* <div className="outer-secondsection">
                 <div >
@@ -279,7 +284,7 @@ const StockInward = (props) => {
                 </div>
                 <Search placeholder="Search" onChange={handleInputChange} />
             </div> */}
-            <div className="outer-secondsection">
+            {/* <div className="outer-secondsection">
                 <div className="outer-firstsection-header">
                     <FilterDateField
                         placeholder="From Date"
@@ -301,147 +306,149 @@ const StockInward = (props) => {
                         <CloseButton />
                     </div>
                 </div>
-            </div>
-            <div className="div-table">
-                <div className="div-head">
-                    <div className="text-center w-[5%]">
-                        <input
-                            type="checkbox"
-                            className="table-checkbox"
-                            checked={isAllSelected}
-                            onChange={handleSelectAllChange}
+            </div> */}
+            <div className="outersection-container">
+                <div className="div-table">
+                    <div className="div-head">
+                        <div className="text-center w-[5%]">
+                            <input
+                                type="checkbox"
+                                className="table-checkbox"
+                                checked={isAllSelected}
+                                onChange={handleSelectAllChange}
+                            />
+                        </div>
+                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("deliveryNumber")}>
+                            Delivery Number
+                            {sortConfig.key === "deliveryNumber" && (
+                                sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
+                            )}
+                        </div>
+                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("orderNumber")}>
+                            Order Number
+                            {sortConfig.key === "orderNumber" && (
+                                sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
+                            )}
+                        </div>
+                        <div className="table-header text-left w-[10%]" onClick={() => handleSort("inwardDate")}>
+                            Inward Date
+                            {sortConfig.key === "inwardDate" && (
+                                sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
+                            )}
+                        </div>
+                        <div className="table-header text-left w-[13%]" onClick={() => handleSort("sourceLocation")}>
+                            Inward From
+                            {sortConfig.key === "sourceLocation" && (
+                                sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
+                            )}
+                        </div>
+                        <div className="table-header text-left w-[12%]" onClick={() => handleSort("totalQuantity")}>
+                            Quantity Received
+                            {sortConfig.key === "totalQuantity" && (
+                                sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
+                            )}
+                        </div>
+                        <div className="table-header text-left w-[12%]" onClick={() => handleSort("deliveredQuantity")}>
+                            Current Stock
+                            {sortConfig.key === "deliveredQuantity" && (
+                                sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
+                            )}
+                        </div>
+                        <div className="table-header text-left w-[10%]" onClick={() => handleSort("receivedBy")}>
+                            Received By
+                            {sortConfig.key === "receivedBy" && (
+                                sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
+                            )}
+                        </div>
+                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("rackLocation")}>
+                            Racks Location
+                            {sortConfig.key === "rackLocation" && (
+                                sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
+                            )}
+                        </div>
+                        <div className="table-header text-left w-[5%]"></div>
+                    </div>
+                    <div className="max-h-[400px] overflow-y-auto">
+                        {paginatedData.map((item, index) => (
+                            <div key={index} className="div-data">
+                                <div className="text-center w-[5%]">
+                                    <input
+                                        type="checkbox"
+                                        className="table-checkbox"
+                                        checked={selectedRows.includes(item["deliveryNumber"])}
+                                        onChange={() => handleCheckboxChange(item["deliveryNumber"])}
+                                    />
+                                </div>
+                                <div className="table-data text-left w-[15%]">{item["deliveryNumber"]}</div>
+                                <div className="table-data text-left w-[15%]">{item["orderNumber"]}</div>
+                                <div className="table-data text-left w-[12%]">{formatDate(item["inwardDate"])}</div>
+                                <div className="table-data text-left w-[13%]">{item["sourceLocation"]}</div>
+                                <div className="table-data text-left w-[12%]">{item["totalQuantity"]}</div>
+                                <div className="table-data text-left w-[12%]">{item["deliveredQuantity"]}</div>
+                                <div className="table-data text-left w-[10%]">{item["receivedBy"]}</div>
+                                <div className="table-data text-left w-[15%]">{item["rackLocation"]}</div>
+                                <div className="table-data text-center w-[5%]">
+                                    <VerticalDot
+                                        onClick={(event) => {
+                                            if (!isLimitedUser()) {
+                                                handleVerticalDotClick(event, item);
+                                            }
+                                        }}
+                                        className={isLimitedUser() ? "cursor-not-allowed" : "cursor-pointer"}
+                                    />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {alertBox.visible && (
+                    <div
+                        className="alert-box"
+                        style={{
+                            top: alertBox.y,
+                            left: alertBox.x,
+                        }}
+                    >
+                        <button
+                            className="dropdown-item"
+                            onClick={handleUpdateStockInward}
+                        >
+                            <span><Edit /></span> Edit
+                        </button>
+                        <button
+                            className="dropdown-item"
+                            onClick={() => handleRemoveMaterial(alertBox.data["deliveryNumber"], alertBox.data["inboundStockNonCIIKey"])}
+                        >
+                            <span><Delete /></span> Delete
+                        </button>
+                    </div>
+                )}
+
+                <div className="table-footer">
+                    <div className="table-pagination">
+                        <Pagination
+                            count={Math.ceil(sortedData.length / rowsPerPage)}
+                            page={currentPage + 1}
+                            onChange={(event, value) => handlePageChange(event, value - 1)}
+                            variant="outlined"
+                            shape="rounded"
                         />
                     </div>
-                    <div className="table-header text-left w-[15%]" onClick={() => handleSort("deliveryNumber")}>
-                        Delivery Number
-                        {sortConfig.key === "deliveryNumber" && (
-                            sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
-                        )}
-                    </div>
-                    <div className="table-header text-left w-[15%]" onClick={() => handleSort("orderNumber")}>
-                        Order Number
-                        {sortConfig.key === "orderNumber" && (
-                            sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
-                        )}
-                    </div>
-                    <div className="table-header text-left w-[10%]" onClick={() => handleSort("inwardDate")}>
-                        Inward Date
-                        {sortConfig.key === "inwardDate" && (
-                            sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
-                        )}
-                    </div>
-                    <div className="table-header text-left w-[13%]" onClick={() => handleSort("sourceLocation")}>
-                        Inward From
-                        {sortConfig.key === "sourceLocation" && (
-                            sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
-                        )}
-                    </div>
-                    <div className="table-header text-left w-[12%]" onClick={() => handleSort("totalQuantity")}>
-                        Quantity Received
-                        {sortConfig.key === "totalQuantity" && (
-                            sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
-                        )}
-                    </div>
-                    <div className="table-header text-left w-[12%]" onClick={() => handleSort("deliveredQuantity")}>
-                        Current Stock
-                        {sortConfig.key === "deliveredQuantity" && (
-                            sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
-                        )}
-                    </div>
-                    <div className="table-header text-left w-[10%]" onClick={() => handleSort("receivedBy")}>
-                        Received By
-                        {sortConfig.key === "receivedBy" && (
-                            sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
-                        )}
-                    </div>
-                    <div className="table-header text-left w-[15%]" onClick={() => handleSort("rackLocation")}>
-                        Racks Location
-                        {sortConfig.key === "rackLocation" && (
-                            sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
-                        )}
-                    </div>
-                    <div className="table-header text-left w-[5%]"></div>
-                </div>
-                <div className="max-h-[400px] overflow-y-auto">
-                    {paginatedData.map((item, index) => (
-                        <div key={index} className="div-data">
-                            <div className="text-center w-[5%]">
-                                <input
-                                    type="checkbox"
-                                    className="table-checkbox"
-                                    checked={selectedRows.includes(item["deliveryNumber"])}
-                                    onChange={() => handleCheckboxChange(item["deliveryNumber"])}
-                                />
-                            </div>
-                            <div className="table-data text-left w-[15%]">{item["deliveryNumber"]}</div>
-                            <div className="table-data text-left w-[15%]">{item["orderNumber"]}</div>
-                            <div className="table-data text-left w-[12%]">{formatDate(item["inwardDate"])}</div>
-                            <div className="table-data text-left w-[13%]">{item["sourceLocation"]}</div>
-                            <div className="table-data text-left w-[12%]">{item["totalQuantity"]}</div>
-                            <div className="table-data text-left w-[12%]">{item["deliveredQuantity"]}</div>
-                            <div className="table-data text-left w-[10%]">{item["receivedBy"]}</div>
-                            <div className="table-data text-left w-[15%]">{item["rackLocation"]}</div>
-                            <div className="table-data text-center w-[5%]">
-                                <VerticalDot
-                                    onClick={(event) => {
-                                        if (!isLimitedUser()) {
-                                            handleVerticalDotClick(event, item);
-                                        }
-                                    }}
-                                    className={isLimitedUser() ? "cursor-not-allowed" : "cursor-pointer"}
-                                />
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            {alertBox.visible && (
-                <div
-                    className="alert-box"
-                    style={{
-                        top: alertBox.y,
-                        left: alertBox.x,
-                    }}
-                >
-                    <button
-                        className="dropdown-item"
-                        onClick={handleUpdateStockInward}
-                    >
-                        <span><Edit /></span> Edit
-                    </button>
-                    <button
-                        className="dropdown-item"
-                        onClick={() => handleRemoveMaterial(alertBox.data["deliveryNumber"],alertBox.data["inboundStockNonCIIKey"])}
-                    >
-                        <span><Delete /></span> Delete
-                    </button>
-                </div>
-            )}
-
-            <div className="table-footer">
-                <div className="table-pagination">
-                    <Pagination
-                        count={Math.ceil(sortedData.length / rowsPerPage)}
-                        page={currentPage + 1}
-                        onChange={(event, value) => handlePageChange(event, value - 1)}
-                        variant="outlined"
-                        shape="rounded"
+                    <TablePagination
+                        component="div"
+                        count={sortedData.length}
+                        page={currentPage}
+                        onPageChange={handlePageChange}
+                        rowsPerPage={rowsPerPage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                        nextIconButtonProps={{ style: { display: 'none' } }}
+                        backIconButtonProps={{ style: { display: 'none' } }}
                     />
                 </div>
-                <TablePagination
-                    component="div"
-                    count={sortedData.length}
-                    page={currentPage}
-                    onPageChange={handlePageChange}
-                    rowsPerPage={rowsPerPage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                    nextIconButtonProps={{ style: { display: 'none' } }}
-                    backIconButtonProps={{ style: { display: 'none' } }}
-                />
             </div>
         </div>
     );
 };
 
-export default StockInward;
+export default NonCiiBulkOutward;

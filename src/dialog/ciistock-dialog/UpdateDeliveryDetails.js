@@ -13,6 +13,7 @@ import Datefield from "../../utils/Datefield";
 import { postRequest } from "../../services/ApiService";
 import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 import { useUser } from "../../UserContext";
+import DropdownField from "../../utils/DropDown";
 
 const UpdateDeliveryDetails = (props) => {
 
@@ -30,7 +31,7 @@ const UpdateDeliveryDetails = (props) => {
                 "serialNumber": serialData.serialNumber,
                 "orderNumber": selectedMaterialData.outBoundOrderNumber,
                 "outbounddate": selectedRow.outBoundDate? new Date(selectedRow.outBoundDate.split('/').reverse().join('-')) : "",
-                "targetLocation": selectedRow.targetLocation,
+                "Location": selectedRow.targetLocation,
                 "receiverName": selectedRow.receiverName,
                 "sentBy": selectedRow.sentby
             });
@@ -52,6 +53,10 @@ const UpdateDeliveryDetails = (props) => {
 
                 if(!formData.orderNumber){
                     ToastError("Please enter Order Number");
+                    return;
+                }
+                if(!formData.Location){
+                    ToastError("Please select Location");
                     return;
                 }
                             setIsSubmitting(true);
@@ -147,12 +152,20 @@ const UpdateDeliveryDetails = (props) => {
                             value={formData.receiverName}
                             onChange={handleInputChange}
                         />
-                        <Textfield
+                        {/* <Textfield
                             label="Target Location"
                             placeholder="Enter target location"
                             name="targetLocation"
                             value={formData.targetLocation}
                             onChange={handleInputChange}
+                        /> */}
+                        <DropdownField
+                            label={<span>Location<span className="error">*</span></span>}
+                            name="Location"
+                            value={formData.Location}
+                            placeholder="Select Location"
+                            onChange={handleInputChange}
+                            options={["SIFI-Warehouse", "SIFI-Poststelle", "UT-CollectionPoint", "UT-ITPunktNeckartal", "SIFI-S2D", "Deizisau", "Transport"]}
                         />
                         <Textfield
                             label="Sent By"
