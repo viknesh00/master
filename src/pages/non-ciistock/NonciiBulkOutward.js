@@ -35,8 +35,8 @@ const NonCiiBulkOutward = (props) => {
     const materialNumber = location.pathname.split('/').pop();
     const { materialDescription } = location.state || {};
 
-    const handleMaterialClick = (matNumber, matDescription) => {
-        navigate(`/non-cii-stock/${matNumber}`, { state: { materialDescription: matDescription } });
+    const handleMaterialClick = (deliveryNumber, matDescription, itemData) => {
+        navigate(`/non-cii-stock/${materialNumber}/${deliveryNumber}`, { state: { itemData, materialDescription: matDescription } });
     };
     const [loading, setLoading] = useState(true);
     const [showUpdateStockInward, setshowUpdateStockInward] = useState(false);
@@ -325,7 +325,7 @@ const NonCiiBulkOutward = (props) => {
             </div>
             <div 
                 className="table-data text-hyper text-left w-[15%] cursor-pointer" 
-                onClick={() => handleMaterialClick(item["materialNumber"], item["materialDescription"])}
+                onClick={() => handleMaterialClick(item["deliveryNumber"], item["materialDescription"], item)}
             >
                 {item["deliveryNumber"]}
             </div>

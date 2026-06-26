@@ -13,6 +13,7 @@ import MaterialDescription from "./pages/ciistock/MaterialDescription";
 import Nonciistock from "./pages/non-ciistock/Nonciistock";
 import NonCiiBulkOutward from "./pages/non-ciistock/NonciiBulkOutward";
 import NonciiMaterialDetail from "./pages/non-ciistock/NonciiMaterialDetail";
+import NonciiOutwardDetail from "./pages/non-ciistock/NonciiOutwardDetail";
 import ListManagement from "./pages/listManagement/ListManagement";
 import CompanyManagement from "./pages/userManagement/CompanyManagement";
 import WarehouseManagement from "./pages/userManagement/WarehouseManagement";
@@ -43,6 +44,7 @@ const routes = [
             { path: "non-cii-stock", element: <Nonciistock /> },
             { path: "non-cii-bulk-outward", element: <NonCiiBulkOutward /> },
             { path: "non-cii-stock/:materialNumber", element: <NonciiMaterialDetail /> },
+            { path: "non-cii-stock/:materialNumber/:deliveryNumber", element: <NonciiOutwardDetail /> },
             { path: "management", element: <Management /> },
             { path: "log-management",element: <Management/>},
             { path: "list-management", element: <ListManagement/>},
