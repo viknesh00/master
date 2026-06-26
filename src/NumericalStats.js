@@ -58,7 +58,7 @@
         
             
             useEffect(() => {
-                debugger
+              //debugger
                 fetchDashboarddata();
             },[]);
         
@@ -132,7 +132,7 @@
             };
 
             const ciiStockStatus = (filterType) => {
-              debugger
+              //debugger
               navigate("/cii-stock", { state: { filter: filterType } });
               //navigate("/reports");
             };

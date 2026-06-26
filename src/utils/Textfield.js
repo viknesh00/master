@@ -4,7 +4,7 @@ const Textfield = (props) => {
   const { label, value, name, placeholder, onChange, readOnly } = props;
 
   const handleChange = (event) => {
-    debugger
+    //debugger
     if (!readOnly) {
       onChange(name, event.target.value);
     }

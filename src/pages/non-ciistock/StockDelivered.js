@@ -67,7 +67,7 @@ const StockDelivered = (props) => {
     }, []);
 
     const fetchMaterialDetails = () => {
-                debugger
+        //debugger
                 setLoading(true);
                 const url = `SmInboundStockNonCiis/DeliveredDataList/${materialNumber}`
                 getRequest(url)

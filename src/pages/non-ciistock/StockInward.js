@@ -120,7 +120,7 @@ const StockInward = (props) => {
     };
 
         const fetchMaterialDetails = () => {
-            debugger
+            //debugger
             setLoading(true);
             const url = `SmInboundStockNonCiis/GetInwardNonStockCiis/${materialNumber}/${name}`;
             getRequest(url)
@@ -197,7 +197,7 @@ const StockInward = (props) => {
     };
 
     const handleOpenAddStock = () => {
-        debugger
+        //debugger
         if(showStock){
             fetchMaterialDetails();
             props.fetchMaterialAnalysiticsNonCiiData();
@@ -206,7 +206,7 @@ const StockInward = (props) => {
     }
 
     const handleRemoveMaterial = (deliveryNumber,inboundStockNonCIIKey) => {
-        debugger
+        //debugger
                 const url = `SmInboundStockNonCiis/DeleteNonStockInbounddata/${materialNumber}/${deliveryNumber}/${inboundStockNonCIIKey}/${name}`
                 postRequest(url)
                   .then((res) => {
@@ -222,7 +222,7 @@ const StockInward = (props) => {
     }
 
     const handleVerticalDotClick = (event, item) => {
-        debugger
+        //debugger
         event.stopPropagation();
         const rect = event.target.getBoundingClientRect();
         setSelectedMaterialData(item);

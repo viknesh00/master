@@ -107,7 +107,7 @@ const AddStock = (props) => {
     }
 
     const handleBulkAddStock = () => {
-        debugger
+        //debugger
         
         if (isSubmitting) return; // prevent double click
         setIsSubmitting(true);

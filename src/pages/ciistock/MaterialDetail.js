@@ -66,7 +66,7 @@ const MaterialDetail = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        debugger
+        //debugger
         fetchMaterialDetails();
         fetchMaterialAnalysiticsCiiData();
         
@@ -321,7 +321,7 @@ const MaterialDetail = () => {
     };
 
     const handleMaterialClick = (serialNumber, serialData) => {
-        debugger
+        //debugger
         navigate(`/cii-stock/${materialNumber}/${serialNumber}`, { state: { serialData, materialDescription } });
     };
 

@@ -16,7 +16,7 @@ import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 import { useUser } from "../../UserContext";
 
 const UpdateStagingDetails = (props) => {
-    debugger
+    //debugger
     const { serialData,stagingData } = props;
     const { fullName, name } = useUser();
     const [open] = useState(props.value);
@@ -40,7 +40,7 @@ const UpdateStagingDetails = (props) => {
     };
 
     const handleUpdate = () => {
-        debugger
+        //debugger
         if (isSubmitting) return; // prevent double click
         setIsSubmitting(true);
 

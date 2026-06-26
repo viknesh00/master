@@ -23,7 +23,7 @@ const AddCompany = ({ value: open, handleOpenAddCompany }) => {
 
 
   const handleAddcompany = () => {
-    debugger
+    //debugger
     if (isSubmitting) return; // prevent double click
 
     if (!formData.companyId || !formData.companyName || !formData.domainName) {

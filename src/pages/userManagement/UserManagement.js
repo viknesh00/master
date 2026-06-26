@@ -207,7 +207,7 @@ const UserManagement = () => {
     };
 
     const handleVerticalDotClick = (event, item) => {
-        debugger
+        //debugger
         event.stopPropagation();
         const rect = event.target.getBoundingClientRect();
         setSelectedUserData(item);

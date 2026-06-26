@@ -208,7 +208,7 @@ const StockReturned = () => {
     }
 
     const handleVerticalDotClick = (event, item) => {
-        debugger
+        //debugger
         event.stopPropagation();
         const rect = event.target.getBoundingClientRect();
         setSelectedMaterialData(item);
@@ -225,7 +225,7 @@ const StockReturned = () => {
     };
 
     const handlemovedtoused = (orderNumber) => {
-        debugger
+        //debugger
         const url = `SmInboundStockNonCiis/UpdateNonStockReturnType/${materialNumber}/${orderNumber}`
         postRequest(url)
             .then((res) => {

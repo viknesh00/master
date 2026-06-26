@@ -26,7 +26,7 @@ const EditWarehouse = (props) => {
 
 
   useEffect(() => {
-    debugger
+    //debugger
     if (selectedrow) {
       setFormData({
         "warehouseId" : selectedrow.tenentCode || "",

@@ -31,7 +31,7 @@ const AddUser = (props) => {
 
 
   const handleAddUser = () => {
-    debugger
+    //debugger
       if (isSubmitting) return; // prevent double click
 
         if (!formData.userId || !formData.userName || !formData.email || !formData.userType) {

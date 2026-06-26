@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Dialog,
     DialogActions,
@@ -18,6 +18,18 @@ import { useUser } from "../../UserContext";
 import { ReactComponent as Delete } from "../../assets/svg/delete.svg";
 import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
+const locationOptions = [
+    "SIFI-Warehouse",
+    "SIFI-Poststelle",
+    "UT-CollectionPoint",
+    "UT-ITPunktNeckartal",
+    "SIFI-S2D",
+    "Deizisau",
+    "Transport",
+];
+
+const statusOptions = ["New", "Used", "Transport"];
+
 const AddBulkNonciistock = (props) => {
     const [open] = useState(props.value);
     const { name, fullName } = useUser();
@@ -28,6 +40,13 @@ const AddBulkNonciistock = (props) => {
     const [uploadProgress, setUploadProgress] = useState(0);
     const [uploadedFile, setUploadedFile] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+        setFormData((prevData) => ({
+            ...prevData,
+            ReceivedBy: prevData.ReceivedBy || fullName || "",
+        }));
+    }, [fullName]);
 
     const { getRootProps, getInputProps } = useDropzone({
         accept: ".xls,.xlsx,.csv",
@@ -83,19 +102,38 @@ const AddBulkNonciistock = (props) => {
             return;
         }
 
+        // Validate mandatory fields
+        if (
+            !formData.DeliveryNumber ||
+            !formData.PoNumber ||
+            !formData.QuantityReceived ||
+            !formData.Status ||
+            !formData.Location ||
+            !formData.InwardDate ||
+            !(formData.ReceivedBy || fullName)
+        ) {
+            ToastError("Please enter all mandatory fields (PO Number, Delivery Number, Quantity, Location, Status, Inward Date, User)");
+            return;
+        }
+
         setIsSubmitting(true);
 
         const data = new FormData();
         data.append("file", files[0]);
         data.append("DeliveryNumber", formData.DeliveryNumber || "");
         data.append("OrderNumber", formData.OrderNumber || "");
-        data.append("Inwarddate", formData.InwardDate ? new Date(formData.InwardDate).toISOString() : "");
+        data.append("InwardDate", formData.InwardDate ? new Date(formData.InwardDate).toISOString() : "");
         data.append("InwardFrom", formData.InwardFrom || "");
         data.append("ReceivedBy", formData.ReceivedBy || fullName || "");
         data.append("RackLocation", formData.RackLocation || "");
-        data.append("Username", name);
+        data.append("UserName", name);
+        data.append("PoNumber", formData.PoNumber || "");
+        data.append("QuantityReceived", formData.QuantityReceived || "");
+        data.append("Status", formData.Status || "");
+        data.append("MaterialDescription", formData.MaterialDescription || "");
+        data.append("Location", formData.Location || "");
 
-        const url = `SmInboundStockNonCiis/import`;
+        const url = `SmInboundStockNonCiis/BulkImportNonCII`;
 
         postRequest(url, data)
             .then((res) => {
@@ -142,45 +180,82 @@ const AddBulkNonciistock = (props) => {
                     {view === "form" ? (
                         <div className="grid-column">
                             <Textfield
-                                label="Delivery Number"
+                                label={<span>PO Number<span className="error">*</span></span>}
+                                name="PoNumber"
+                                value={formData.PoNumber || ""}
+                                placeholder="Enter PO Number"
+                                onChange={handleInputChange}
+                            />
+                            <Textfield
+                                label={<span>Delivery Number<span className="error">*</span></span>}
                                 name="DeliveryNumber"
-                                value={formData.DeliveryNumber}
+                                value={formData.DeliveryNumber || ""}
                                 placeholder="Enter Delivery Number"
                                 onChange={handleInputChange}
                             />
                             <Textfield
                                 label="Order Number"
                                 name="OrderNumber"
-                                value={formData.OrderNumber}
+                                value={formData.OrderNumber || ""}
                                 placeholder="Enter order number"
                                 onChange={handleInputChange}
                             />
                             <Datefield
-                                label="Inward Date"
+                                label={<span>Inward Date<span className="error">*</span></span>}
                                 name="InwardDate"
-                                value={formData.InwardDate}
+                                value={formData.InwardDate || ""}
                                 placeholder="Select Date"
                                 onChange={handleInputChange}
                             />
                             <Textfield
                                 label="Inward From"
                                 name="InwardFrom"
-                                value={formData.InwardFrom}
+                                value={formData.InwardFrom || ""}
                                 placeholder="Enter source location"
                                 onChange={handleInputChange}
                             />
-                            <Textfield
-                                label="Received By"
-                                name="ReceivedBy"
-                                value={formData.ReceivedBy || fullName}
-                                placeholder="Enter receiver name"
+                            <DropdownField
+                                label={<span>Location<span className="error">*</span></span>}
+                                name="Location"
+                                value={formData.Location || ""}
+                                placeholder="Select Location"
                                 onChange={handleInputChange}
+                                options={locationOptions}
                             />
                             <Textfield
                                 label="Rack Location"
                                 name="RackLocation"
-                                value={formData.RackLocation}
+                                value={formData.RackLocation || ""}
                                 placeholder="Enter rack location"
+                                onChange={handleInputChange}
+                            />
+                            <Textfield
+                                label={<span>Quantity Received<span className="error">*</span></span>}
+                                name="QuantityReceived"
+                                value={formData.QuantityReceived || ""}
+                                placeholder="Enter quantity received"
+                                onChange={handleInputChange}
+                            />
+                            <DropdownField
+                                label={<span>Status<span className="error">*</span></span>}
+                                name="Status"
+                                value={formData.Status || ""}
+                                placeholder="Select Status"
+                                onChange={handleInputChange}
+                                options={statusOptions}
+                            />
+                            <Textfield
+                                label="Material Description"
+                                name="MaterialDescription"
+                                value={formData.MaterialDescription || ""}
+                                placeholder="Enter material description"
+                                onChange={handleInputChange}
+                            />
+                            <Textfield
+                                label={<span>Received By<span className="error">*</span></span>}
+                                name="ReceivedBy"
+                                value={formData.ReceivedBy || fullName || ""}
+                                placeholder="Enter receiver name"
                                 onChange={handleInputChange}
                             />
                         </div>

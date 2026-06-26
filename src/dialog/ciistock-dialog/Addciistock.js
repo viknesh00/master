@@ -24,7 +24,7 @@ const Addnonciistock = (props) => {
 
 
   const handleAddnonciistock = () => {
-    debugger
+    //debugger
     if (isSubmitting) return; // prevent double click
 
     if (!formData.MaterialNumber || !formData.MaterialDescription) {
