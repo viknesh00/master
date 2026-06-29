@@ -411,13 +411,13 @@ const PoolStockCheck = (props) => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[13%]" onClick={() => handleSort("newstock")}>
+                        <div className="table-header text-left w-[10%]" onClick={() => handleSort("newstock")}>
                             New Stock
                             {sortConfig.key === "newstock" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[13%]" onClick={() => handleSort("usedstock")}>
+                        <div className="table-header text-left w-[10%]" onClick={() => handleSort("usedstock")}>
                             Used Stock
                             {sortConfig.key === "usedstock" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
@@ -435,7 +435,7 @@ const PoolStockCheck = (props) => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("excelStatus")}>
+                        <div className="table-header text-left w-[10%]" onClick={() => handleSort("excelStatus")}>
                             Excel Status
                             {sortConfig.key === "excelStatus" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />

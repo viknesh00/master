@@ -339,7 +339,7 @@ const NonCiiBulkOutward = (props) => {
             <div className="table-data text-left w-[10%]">
                 <span className={`${item["status"] === "New" ? "status-available" : item["status"] === "Damaged" ? "status-not-available" : "status-unknown"}`}>{item["status"] || "New"}</span>
             </div>
-            <div className="table-data text-center w-[10%]">
+            <div className="table-data text-center w-[15%]">
                 <VerticalDot
                     onClick={(event) => {
                         if (!isLimitedUser()) {

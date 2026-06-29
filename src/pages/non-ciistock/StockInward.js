@@ -326,7 +326,7 @@ const StockInward = (props) => {
                             sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                         )}
                     </div>
-                    <div className="table-header text-left w-[10%]" onClick={() => handleSort("inwardDate")}>
+                    <div className="table-header text-left w-[12%]" onClick={() => handleSort("inwardDate")}>
                         Inward Date
                         {sortConfig.key === "inwardDate" && (
                             sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />

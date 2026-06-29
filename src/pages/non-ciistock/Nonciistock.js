@@ -352,7 +352,7 @@ const Nonciistock = () => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[10%]"></div>
+                        <div className="table-header text-left w-[5%]"></div>
                     </div>
                     <div className="max-h-[400px] overflow-y-auto">
                         {paginatedData.map((item, index) => (
