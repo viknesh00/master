@@ -106,13 +106,13 @@ const AddBulkNonciistock = (props) => {
         if (
             !formData.DeliveryNumber ||
             !formData.PoNumber ||
-            !formData.QuantityReceived ||
-            !formData.Status ||
+            // !formData.QuantityReceived ||
+            // !formData.Status ||
             !formData.Location ||
             !formData.InwardDate ||
             !(formData.ReceivedBy || fullName)
         ) {
-            ToastError("Please enter all mandatory fields (PO Number, Delivery Number, Quantity, Location, Status, Inward Date, User)");
+            ToastError("Please enter all mandatory fields (PO Number, Delivery Number, Location, Inward Date, User)");
             return;
         }
 
@@ -128,8 +128,8 @@ const AddBulkNonciistock = (props) => {
         data.append("RackLocation", formData.RackLocation || "");
         data.append("UserName", name);
         data.append("PoNumber", formData.PoNumber || "");
-        data.append("QuantityReceived", formData.QuantityReceived || "");
-        data.append("Status", formData.Status || "");
+        //data.append("QuantityReceived", formData.QuantityReceived || "");
+        //data.append("Status", formData.Status || "");
         data.append("MaterialDescription", formData.MaterialDescription || "");
         data.append("Location", formData.Location || "");
 
@@ -229,7 +229,7 @@ const AddBulkNonciistock = (props) => {
                                 placeholder="Enter rack location"
                                 onChange={handleInputChange}
                             />
-                            <Textfield
+                            {/* <Textfield
                                 label={<span>Quantity Received<span className="error">*</span></span>}
                                 name="QuantityReceived"
                                 value={formData.QuantityReceived || ""}
@@ -243,7 +243,7 @@ const AddBulkNonciistock = (props) => {
                                 placeholder="Select Status"
                                 onChange={handleInputChange}
                                 options={statusOptions}
-                            />
+                            /> */}
                             <Textfield
                                 label="Material Description"
                                 name="MaterialDescription"
