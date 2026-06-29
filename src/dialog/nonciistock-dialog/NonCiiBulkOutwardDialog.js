@@ -81,10 +81,10 @@ const NonCiiBulkOutwardDialog = (props) => {
                 orderNumber: formData.OrderNumber,
                 outboundDate: formData.OutBoundDate ? new Date(formData.OutBoundDate).toLocaleDateString('en-CA') : null,
                 receiverName: formData.ReceiverName || "",
-                deliveredQuantity: row.deliveredQuantity, // Deliver full current stock of this batch
+                deliveredQuantity: formData.deliveredQuantity,
                 targetLocation: formData.Location || "",
                 sentBy: formData.SentBy || "",
-                deliveryNumber_inbound: row.deliveryNumber,
+                deliveryNumber_inbound: formData.deliveredNumber,
                 inboundStockNonCIIKey: row.inboundStockNonCIIKey,
                 inboundStockNonCiiKey: row.inboundStockNonCIIKey
             }));
@@ -141,6 +141,23 @@ const NonCiiBulkOutwardDialog = (props) => {
                             placeholder="Select Location"
                             onChange={handleInputChange}
                             options={["SIFI-Warehouse", "SIFI-Poststelle", "UT-CollectionPoint", "UT-ITPunktNeckartal", "SIFI-S2D", "Deizisau", "Transport"]}
+                        />
+                        <Textfield
+                            label="Delivered Quantity"
+                            placeholder="Enter delivered quantity"
+                            name="deliveredQuantity"
+                            type="number"
+                            onChange={handleInputChange}
+                            required={true}
+                            value={formData.deliveredQuantity}
+                        />
+                        <Textfield
+                            label="Delivered Number"
+                            placeholder="Enter delivered number"
+                            name="deliveredNumber"
+                            onChange={handleInputChange}
+                            required={true}
+                            value={formData.deliveredNumber}
                         />
                         <Textfield
                             label="Sent By"

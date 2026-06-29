@@ -1,7 +1,7 @@
 import React from "react";
 
 const Textfield = (props) => {
-  const { label, value, name, placeholder, onChange, readOnly } = props;
+  const { label, value, name, placeholder, onChange, readOnly, type, required } = props;
 
   const handleChange = (event) => {
     // 
@@ -14,15 +14,17 @@ const Textfield = (props) => {
     <div className="textfield-container">
       <div className="textfield-label">
         {label}
+        {required && <span className="error">*</span>}
       </div>
       <div className="search-box">
         <input
-          type="text"
+          type={type || "text"}
           value={value}
           name={name}
           placeholder={placeholder}
           onChange={handleChange}
           readOnly={readOnly}
+          required={required || false}
         />
       </div>
     </div>
