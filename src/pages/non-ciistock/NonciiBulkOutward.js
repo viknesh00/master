@@ -71,6 +71,7 @@ const NonCiiBulkOutward = (props) => {
     const filteredData = materialData.filter((item) => {
         const query = searchQuery.toLowerCase();
         const matchesSearch =
+            (item["materialNumber"] || "").toLowerCase().includes(query) ||
             (item["deliveryNumber"] || "").toLowerCase().includes(query) ||
             (item["orderNumber"] || "").toLowerCase().includes(query) ||
             (item["sourceLocation"] || "").toLowerCase().includes(query) ||
@@ -324,8 +325,13 @@ const NonCiiBulkOutward = (props) => {
                 />
             </div>
             <div 
-                className="table-data text-hyper text-left w-[15%] cursor-pointer" 
-                onClick={() => handleMaterialClick(item["deliveryNumber"], item["materialDescription"], item)}
+                className="table-data text-left w-[15%]" 
+                // onClick={() => handleMaterialClick(item["deliveryNumber"], item["materialDescription"], item)}
+            >
+                {item["materialNumber"]}
+            </div>
+            <div 
+                className="table-data text-left w-[15%] cursor-pointer" 
             >
                 {item["deliveryNumber"]}
             </div>
@@ -336,9 +342,9 @@ const NonCiiBulkOutward = (props) => {
             <div className="table-data text-left w-[10%]">{item["deliveredQuantity"]}</div>
             <div className="table-data text-left w-[10%]">{item["receivedBy"]}</div>
             <div className="table-data text-left w-[13%]">{item["rackLocation"]}</div>
-            <div className="table-data text-left w-[10%]">
+            {/* <div className="table-data text-left w-[10%]">
                 <span className={`${item["status"] === "New" ? "status-available" : item["status"] === "Damaged" ? "status-not-available" : "status-unknown"}`}>{item["status"] || "New"}</span>
-            </div>
+            </div> */}
             <div className="table-data text-center w-[15%]">
                 <VerticalDot
                     onClick={(event) => {
@@ -421,6 +427,12 @@ const NonCiiBulkOutward = (props) => {
                                 onChange={handleSelectAllChange}
                             />
                         </div>
+                        <div className="table-header text-left w-[15%]" onClick={() => handleSort("materialNumber")}>
+                            Material Number
+                            {sortConfig.key === "materialNumber" && (
+                                sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
+                            )}
+                        </div>
                         <div className="table-header text-left w-[15%]" onClick={() => handleSort("deliveryNumber")}>
                             Delivery Number
                             {sortConfig.key === "deliveryNumber" && (
@@ -469,12 +481,12 @@ const NonCiiBulkOutward = (props) => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[10%]" onClick={() => handleSort("status")}>
+                        {/* <div className="table-header text-left w-[10%]" onClick={() => handleSort("status")}>
                             Status
                             {sortConfig.key === "status" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
-                        </div>
+                        </div> */}
                         <div className="table-header text-left w-[15%]">
                             <button
                                 className={`outer-firstsection-add ${selectedRows.length === 0

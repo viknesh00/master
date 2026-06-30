@@ -63,6 +63,15 @@ const NonCiiBulkOutwardDialog = (props) => {
             return;
         }
 
+        if (!formData.Location) {
+            ToastError("Please select Location");
+            return;
+        }
+        if (!formData.Status) {
+            ToastError("Please enter Status");
+            return;
+        }
+
         if (!selectedData || selectedData.length === 0) {
             ToastError("Please select at least one Inward Batch");
             return;
@@ -86,7 +95,8 @@ const NonCiiBulkOutwardDialog = (props) => {
                 sentBy: formData.SentBy || "",
                 deliveryNumber_inbound: formData.deliveredNumber,
                 inboundStockNonCIIKey: row.inboundStockNonCIIKey,
-                inboundStockNonCiiKey: row.inboundStockNonCIIKey
+                Status: formData.Status || "",
+                SubStatus: formData.SubStatus || "",
             }));
 
             const res = await postRequest(url, dataList);
@@ -120,6 +130,14 @@ const NonCiiBulkOutwardDialog = (props) => {
                             onChange={handleInputChange}
                             value={formData.OrderNumber}
                         />
+                        <Textfield
+                            label="Delivered Number"
+                            placeholder="Enter delivered number"
+                            name="deliveredNumber"
+                            onChange={handleInputChange}
+                            required={true}
+                            value={formData.deliveredNumber}
+                        />
                         <Datefield
                             label="Outbound Date"
                             name="OutBoundDate"
@@ -152,18 +170,22 @@ const NonCiiBulkOutwardDialog = (props) => {
                             value={formData.deliveredQuantity}
                         />
                         <Textfield
-                            label="Delivered Number"
-                            placeholder="Enter delivered number"
-                            name="deliveredNumber"
-                            onChange={handleInputChange}
-                            required={true}
-                            value={formData.deliveredNumber}
-                        />
-                        <Textfield
                             label="Sent By"
                             name="SentBy"
                             value={formData.SentBy || ""}
                             placeholder="Enter sender name"
+                            onChange={handleInputChange}
+                        />
+                        <Textfield
+                            label={<span>Status<span className="error">*</span></span>}
+                            name="Status"
+                            placeholder="Enter status"
+                            onChange={handleInputChange}
+                        />
+                        <Textfield
+                            label="Sub Status"
+                            name="SubStatus"
+                            placeholder="Enter sub status"
                             onChange={handleInputChange}
                         />
                     </div>
