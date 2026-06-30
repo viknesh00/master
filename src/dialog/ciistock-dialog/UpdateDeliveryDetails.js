@@ -69,7 +69,7 @@ const UpdateDeliveryDetails = (props) => {
                 orderNumber: formData.orderNumber, 
                 ExistOrderNumber: selectedMaterialData.outBoundOrderNumber,
                 outBounddate: formData.outbounddate? new Date(formData.outbounddate).toLocaleDateString('en-CA'): null,
-                targetLocation: formData.targetLocation || "",
+                targetLocation: formData.Location || "",
                 receiverName: formData.receiverName || "",
                 sentBy: formData.sentBy || "",
             }

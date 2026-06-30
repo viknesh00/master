@@ -115,19 +115,24 @@ code {
   background-color: #F6F6F6;
 }
 
+/* ==========================================
+   Sidebar layout (updated to support internal scrolling)
+   ========================================== */
+
 .sidebar-layout{
   width: 260px;
+  height: 100vh;
   display: flex;
+  flex-direction: column;
   background-color: #F6F6F6;
-
 }
 
 .sidebar-minimize{
   width: 76px;
+  height: 100vh;
   display: flex;
+  flex-direction: column;
   background-color: #F6F6F6;
-
-
 }
 
 .sidebar-title {
@@ -138,17 +143,29 @@ code {
   gap: 10px;
   min-height: 72px !important;
   display: flex;
+  flex-shrink: 0;
 }
 
+/* Scrollable wrapper around LeftSideMenu so Logout/footer never get pushed off-screen */
+.sidebar-scrollable {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+}
 
+.sidebar-scrollable::-webkit-scrollbar {
+  width: 4px;
+}
 
+.sidebar-scrollable::-webkit-scrollbar-thumb {
+  background-color: #B0B0B0;
+  border-radius: 10px;
+}
 
-
-
-
-
-
-
+.sidebar-scrollable::-webkit-scrollbar-track {
+  background-color: transparent;
+}
 
 .title-heading{
   color: #ffffff;
@@ -247,6 +264,7 @@ code {
 
 .footer-section{
   margin-top: auto;
+  flex-shrink: 0;
 }
 
 .footer-nato {
@@ -1654,7 +1672,3 @@ span:disabled {
   width: 14px;
   height: 14px;
 }
-
-
-
-

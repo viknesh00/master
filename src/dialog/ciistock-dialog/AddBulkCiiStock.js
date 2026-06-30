@@ -105,6 +105,11 @@ const AddBulkCiiStock = (props) => {
         // 
         if (isSubmitting) return; // prevent double click
 
+        if (!formData.Location) {
+            ToastError("Please enter Location");
+            return;
+        }
+
         if(!files[0]){
             ToastError("Please Upload Excel File");
         }
@@ -120,6 +125,8 @@ const AddBulkCiiStock = (props) => {
         data.append("RacKLocation", formData.RackLocation || "");
         data.append("InwardFrom", formData.InwardFrom || "");  
         data.append("Username", name); 
+        data.append("PoNumber", formData.PoNumber || "");
+        data.append("Location", formData.Location || "");
 
         const url = `SmInboundStockCiis/AddBulkMaterialStock`;
 
@@ -211,6 +218,13 @@ const AddBulkCiiStock = (props) => {
                                 placeholder="Enter order number"
                                 onChange={handleInputChange}
                             />
+                            <Textfield
+                                label="Po Number"
+                                name="PoNumber"
+                                value={formData.PoNumber}
+                                placeholder="Enter po number"
+                                onChange={handleInputChange}
+                            />
                             <Datefield
                                 label="Inward Date"
                                 name="InwardDate"
@@ -238,6 +252,14 @@ const AddBulkCiiStock = (props) => {
                                 value={formData.RackLocation}
                                 placeholder="Enter rack location"
                                 onChange={handleInputChange}
+                            />
+                            <DropdownField
+                                label={<span>Location<span className="error">*</span></span>}
+                                name="Location"
+                                value={formData.Location}
+                                placeholder="Select Location"
+                                onChange={handleInputChange}
+                                options={["SIFI-Warehouse", "SIFI-Poststelle", "UT-CollectionPoint", "UT-ITPunktNeckartal", "SIFI-S2D", "Deizisau", "Transport"]}
                             />
                             {formData.uploadType && formData.uploadType !== "Bulk Upload" && (
                                 <>

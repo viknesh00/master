@@ -6,7 +6,7 @@ const Sidebar = (props) => {
     const { handleToggleMenu, isCollapsed } = props;
 
     return (
-        <aside className={`h-screen flex-col transition-all duration-300 fixed top-0 left-0 ${isCollapsed ? "sidebar-minimize" : "sidebar-layout"
+        <aside className={`h-screen flex flex-col transition-all duration-300 fixed top-0 left-0 ${isCollapsed ? "sidebar-minimize" : "sidebar-layout"
             }`}>
             <div className="sidebar-title">
                 <img src="/assets/images/Logomark.png" alt="Logo" className="title-logo" />
@@ -21,7 +21,10 @@ const Sidebar = (props) => {
                     <img src="/assets/svg/burger.svg" alt="Logo" />
                 </div>
             }
-            <LeftSideMenu isCollapsed={isCollapsed} />
+
+            <div className="sidebar-scrollable">
+                <LeftSideMenu isCollapsed={isCollapsed} />
+            </div>
 
             <div className="footer-section">
                 <div className="menu">

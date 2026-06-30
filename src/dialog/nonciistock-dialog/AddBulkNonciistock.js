@@ -130,7 +130,7 @@ const AddBulkNonciistock = (props) => {
         data.append("PoNumber", formData.PoNumber || "");
         //data.append("QuantityReceived", formData.QuantityReceived || "");
         //data.append("Status", formData.Status || "");
-        data.append("MaterialDescription", formData.MaterialDescription || "");
+        //data.append("MaterialDescription", formData.MaterialDescription || "");
         data.append("Location", formData.Location || "");
 
         const url = `SmInboundStockNonCiis/BulkImportNonCII`;
@@ -244,13 +244,13 @@ const AddBulkNonciistock = (props) => {
                                 onChange={handleInputChange}
                                 options={statusOptions}
                             /> */}
-                            <Textfield
+                            {/* <Textfield
                                 label="Material Description"
                                 name="MaterialDescription"
                                 value={formData.MaterialDescription || ""}
                                 placeholder="Enter material description"
                                 onChange={handleInputChange}
-                            />
+                            /> */}
                             <Textfield
                                 label={<span>Received By<span className="error">*</span></span>}
                                 name="ReceivedBy"
