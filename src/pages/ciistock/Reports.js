@@ -275,7 +275,7 @@ const Reports = (props) => {
     );
 
     const handleDownload = () => {
-        const keysToKeep = ["materialNumber", "serialNumber","materialDescription","rackLocation", "inwardDate","outboundDate", "status"];
+        const keysToKeep = ["materialNumber", "serialNumber","materialDescription","rackLocation","location", "inwardDate","outboundDate", "status"];
         const cleanedData = filteredData.map(item =>
             Object.fromEntries(
                 keysToKeep
@@ -465,6 +465,12 @@ const Reports = (props) => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
+                        <div className="table-header text-left w-[18%]" onClick={() => handleSort("location")}>
+                            Location
+                            {sortConfig.key === "location" && (
+                                sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
+                            )}
+                        </div>
                         <div className="table-header text-left w-[15%]" onClick={() => handleSort("inwardDate")}>
                             Inward Date
                             {sortConfig.key === "inwardDate" && (
@@ -499,6 +505,7 @@ const Reports = (props) => {
                             <div className="table-data text-left w-[40%]">{item["materialDescription"]}</div>
                             <div className="table-data text-left w-[15%]">{item["serialNumber"]}</div>
                             <div className="table-data text-left w-[15%]">{item["rackLocation"]}</div>
+                            <div className="table-data text-left w-[18%]">{item["location"]}</div>
                             <div className="table-data text-left w-[15%]">{formatDate(item["inwardDate"])|| "N/A"}</div>
                             <div className="table-data text-left w-[15%]">{formatDate(item["outboundDate"])|| "N/A"}</div>
                             <div className="table-data text-left w-[15%]">{item["status"]}</div> 

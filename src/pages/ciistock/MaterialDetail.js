@@ -193,6 +193,14 @@ const MaterialDetail = () => {
     };
 
     const sortedData = [...filteredData].sort((a, b) => {
+        // Selected rows always float to the top, regardless of search/filter/sort
+        const aSelected = selectedRows.some((row) => row.serialNumber === a.serialNumber);
+        const bSelected = selectedRows.some((row) => row.serialNumber === b.serialNumber);
+
+        if (aSelected && !bSelected) return -1;
+        if (!aSelected && bSelected) return 1;
+
+        // Within each group (selected / not selected), apply the normal column sort
         if (sortConfig.key) {
             const aValue = a[sortConfig.key];
             const bValue = b[sortConfig.key];
@@ -217,10 +225,21 @@ const MaterialDetail = () => {
         currentPage * rowsPerPage + rowsPerPage
     );
 
+    // ✅ Pinned selected rows from ALL materialData — persists across search/page/tab changes
+    const pinnedSelectedRows = materialData.filter((item) =>
+        selectedRows.some((row) => row.serialNumber === item["serialNumber"])
+    );
+
+    // ✅ Only unselected rows from current page — avoids duplicates with pinned section
+    const unselectedPageRows = paginatedData.filter(
+        (item) =>
+            !selectedRows.some((row) => row.serialNumber === item["serialNumber"])
+    );
+
     const handleInputChange = (value) => {
         setSearchQuery(value);
         setCurrentPage(0);
-        setSelectedRows([]);
+        //setSelectedRows([]);
     };
 
     const onSelectionChange = (value, field) => {
@@ -261,9 +280,22 @@ const MaterialDetail = () => {
                 serialNumber: item.serialNumber,
                 deliveryNumber: item.deliveryNumber
             }));
-            setSelectedRows(allRows);
+            // ✅ Merge with existing selections instead of replacing them
+            setSelectedRows((prev) => {
+                const merged = [...prev];
+                allRows.forEach((newRow) => {
+                    if (!merged.some((r) => r.serialNumber === newRow.serialNumber)) {
+                        merged.push(newRow);
+                    }
+                });
+                return merged;
+            });
         } else {
-            setSelectedRows([]);
+            // ✅ Only deselect rows on the current page, keep others intact
+            const currentPageSerials = paginatedData.map((item) => item.serialNumber);
+            setSelectedRows((prev) =>
+                prev.filter((row) => !currentPageSerials.includes(row.serialNumber))
+            );
         }
     };
 
@@ -370,6 +402,48 @@ const MaterialDetail = () => {
         setShowMovedtoused(prevState => !prevState);
         setAlertBox({ visible: false, x: 0, y: 0, data: null });
     }
+
+    // ✅ Reusable row renderer — isPinned applies blue highlight styling
+    const renderRow = (item, index, isPinned = false) => (
+        <div
+            key={`${isPinned ? "pinned" : "row"}-${item["serialNumber"]}-${index}`}
+            className={`div-data ${isPinned ? "bg-blue-50 border-l-2 border-blue-400" : ""}`}
+        >
+            <div className="text-center w-[5%]">
+                <input
+                    type="checkbox"
+                    className="table-checkbox"
+                    checked={selectedRows.some(
+                        (row) => row.serialNumber === item["serialNumber"]
+                    )}
+                    onChange={() =>
+                        handleCheckboxChange(item["serialNumber"], item["deliveryNumber"])
+                    }
+                />
+            </div>
+            <div className="table-data text-hyper text-left w-[15%]" onClick={() => handleMaterialClick(item["serialNumber"], item, item["orderNumber"])}>{item["serialNumber"]}</div>
+            <div className="table-data text-left w-[15%]">{item["materialNumber"]}</div>
+            <div className="table-data text-left w-[15%]">{formatDate(item["inwardDate"])}</div>
+            <div className="table-data text-left w-[15%]">{item["sourceLocation"]}</div>
+            <div className="table-data text-left w-[15%]">{item["receivedBy"]}</div>
+            <div className="table-data text-left w-[20%]">{item["location"]}</div>
+            <div className="table-data text-left w-[15%]">{item["rackLocation"]}</div>
+            <div className="table-data text-left w-[15%]">
+                <span className={`${item["status"] === "New" ? "status-available" : item["status"] === "Damaged" ? "status-not-available" : "status-unknown"}`}>{item["status"]}</span>
+            </div>
+            <div className="table-data text-center w-[15%]">
+                <VerticalDot
+                    onClick={(event) => {
+                        if (!isLimitedUser()) {
+                            handleVerticalDotClick(event, item);
+                        }
+                    }}
+                    className={isLimitedUser() ? "cursor-not-allowed" : "cursor-pointer"}
+                />
+            </div>
+        </div>
+    );
+
     return (
         <div>
             {loading && (
@@ -560,42 +634,25 @@ const MaterialDetail = () => {
                         </div>
                     </div>
                     <div className="max-h-[400px] overflow-y-auto">
-                        {paginatedData.map((item, index) => (
-                            <div key={index} className="div-data">
-                                <div className="text-center w-[5%]">
-                                    <input
-                                        type="checkbox"
-                                        className="table-checkbox"
-                                        checked={selectedRows.some(
-                                            (row) => row.serialNumber === item["serialNumber"]
-                                        )}
-                                        onChange={() =>
-                                            handleCheckboxChange(item["serialNumber"], item["deliveryNumber"])
-                                        }
-                                    />
-                                </div>
-                                <div className="table-data text-hyper text-left w-[15%]" onClick={() => handleMaterialClick(item["serialNumber"], item, item["orderNumber"])}>{item["serialNumber"]}</div>
-                                <div className="table-data text-left w-[15%]">{item["materialNumber"]}</div>
-                                <div className="table-data text-left w-[15%]">{formatDate(item["inwardDate"])}</div>
-                                <div className="table-data text-left w-[15%]">{item["sourceLocation"]}</div>
-                                <div className="table-data text-left w-[15%]">{item["receivedBy"]}</div>
-                                <div className="table-data text-left w-[20%]">{item["location"]}</div>
-                                <div className="table-data text-left w-[15%]">{item["rackLocation"]}</div>
-                                <div className="table-data text-left w-[15%]">
-                                    <span className={`${item["status"] === "New" ? "status-available" : item["status"] === "Damaged" ? "status-not-available" : "status-unknown"}`}>{item["status"]}</span>
-                                </div>
-                                <div className="table-data text-center w-[15%]">
-                                    <VerticalDot
-                                        onClick={(event) => {
-                                            if (!isLimitedUser()) {
-                                                handleVerticalDotClick(event, item);
-                                            }
-                                        }}
-                                        className={isLimitedUser() ? "cursor-not-allowed" : "cursor-pointer"}
-                                    />
-                                </div>
-                            </div>
-                        ))}
+
+                        {/* ✅ Pinned selected rows — always visible at top regardless of search/page/tab */}
+                        {pinnedSelectedRows.length > 0 && (
+                            <>
+                                {pinnedSelectedRows.map((item, index) =>
+                                    renderRow(item, index, true)
+                                )}
+                                {/* Divider between pinned and normal rows */}
+                                {unselectedPageRows.length > 0 && (
+                                    <div className="border-t-2 border-blue-200 my-1" />
+                                )}
+                            </>
+                        )}
+
+                        {/* ✅ Unselected rows from current page only (no duplicates with pinned) */}
+                        {unselectedPageRows.map((item, index) =>
+                            renderRow(item, index, false)
+                        )}
+
                     </div>
                 </div>
 

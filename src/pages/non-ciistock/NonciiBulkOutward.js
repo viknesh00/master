@@ -336,11 +336,12 @@ const NonCiiBulkOutward = (props) => {
                 {item["deliveryNumber"]}
             </div>
             <div className="table-data text-left w-[15%]">{item["orderNumber"]}</div>
-            <div className="table-data text-left w-[12%]">{formatDate(item["inwardDate"])}</div>
+            <div className="table-data text-left w-[16%]">{formatDate(item["inwardDate"])}</div>
             <div className="table-data text-left w-[13%]">{item["sourceLocation"]}</div>
+            <div className="table-data text-left w-[18%]">{item["location"]}</div>
             <div className="table-data text-left w-[10%]">{item["totalQuantity"]}</div>
             <div className="table-data text-left w-[10%]">{item["deliveredQuantity"]}</div>
-            <div className="table-data text-left w-[10%]">{item["receivedBy"]}</div>
+            <div className="table-data text-left w-[13%]">{item["receivedBy"]}</div>
             <div className="table-data text-left w-[13%]">{item["rackLocation"]}</div>
             {/* <div className="table-data text-left w-[10%]">
                 <span className={`${item["status"] === "New" ? "status-available" : item["status"] === "Damaged" ? "status-not-available" : "status-unknown"}`}>{item["status"] || "New"}</span>
@@ -445,7 +446,7 @@ const NonCiiBulkOutward = (props) => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[12%]" onClick={() => handleSort("inwardDate")}>
+                        <div className="table-header text-left w-[16%]" onClick={() => handleSort("inwardDate")}>
                             Inward Date
                             {sortConfig.key === "inwardDate" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
@@ -454,6 +455,12 @@ const NonCiiBulkOutward = (props) => {
                         <div className="table-header text-left w-[13%]" onClick={() => handleSort("sourceLocation")}>
                             Inward From
                             {sortConfig.key === "sourceLocation" && (
+                                sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
+                            )}
+                        </div>
+                        <div className="table-header text-left w-[18%]" onClick={() => handleSort("location")}>
+                            Location
+                            {sortConfig.key === "location" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
@@ -469,7 +476,7 @@ const NonCiiBulkOutward = (props) => {
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                             )}
                         </div>
-                        <div className="table-header text-left w-[10%]" onClick={() => handleSort("receivedBy")}>
+                        <div className="table-header text-left w-[13%]" onClick={() => handleSort("receivedBy")}>
                             Received By
                             {sortConfig.key === "receivedBy" && (
                                 sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />

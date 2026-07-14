@@ -8,6 +8,7 @@ import {
 import { ReactComponent as Packageplus } from "../../assets/svg/packageplus.svg";
 import { ReactComponent as Closebutton } from "../../assets/svg/closebutton.svg";
 import { useLocation } from "react-router-dom";
+import DropdownField from "../../utils/DropDown";
 import Textfield from "../../utils/Textfield";
 import Datefield from "../../utils/Datefield";
 import SaveAlert from "../SaveAlert";
@@ -26,6 +27,18 @@ const UpdateStockInward = (props) => {
     const [formData, setFormData] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    const locationOptions = [
+        "SIFI-Warehouse",
+        "SIFI-Poststelle",
+        "UT-CollectionPoint",
+        "UT-ITPunktNeckartal",
+        "SIFI-S2D",
+        "Deizisau",
+        "Transport",
+    ];
+
+    const statusOptions = ["New", "Used", "Transport"];
+
     useEffect(() => {
         if (selectedMaterialData) {
           setFormData({
@@ -35,7 +48,10 @@ const UpdateStockInward = (props) => {
             "inwardFrom": selectedMaterialData.sourceLocation,
             "enterQuantity":selectedMaterialData.totalQuantity,
             "receivedBy":selectedMaterialData.receivedBy,
-            "rackLocation":selectedMaterialData.rackLocation
+            "rackLocation":selectedMaterialData.rackLocation,
+            "location":selectedMaterialData.location,
+            "status":selectedMaterialData.status,
+            "poNumber":selectedMaterialData.poNumber
           });
         }
     }, [selectedMaterialData]);
@@ -66,7 +82,10 @@ const UpdateStockInward = (props) => {
             quantityReceived: formData.enterQuantity,
             receivedBy: formData.receivedBy || "",
             rackLocation: formData.rackLocation || "",
-            InboundStockNonCIIKey: selectedMaterialData.inboundStockNonCIIKey
+            InboundStockNonCIIKey: selectedMaterialData.inboundStockNonCIIKey,
+            poNumber: formData.poNumber || "",
+            location: formData.location || "",
+            status: formData.status || "",
         }
         const url = `SmInboundStockNonCiis/UpdateNonStockInbounddata`;
 
@@ -136,6 +155,13 @@ const UpdateStockInward = (props) => {
                             onChange={handleInputChange}
                             value={formData.orderNumber}
                         />
+                        <Textfield
+                            name="poNumber"
+                            label="PO Number"
+                            placeholder="Enter PO Number"
+                            onChange={handleInputChange}
+                            value={formData.poNumber}
+                        />
                         <Datefield
                             label="Inward Date"
                             name="inwardDate"
@@ -170,6 +196,22 @@ const UpdateStockInward = (props) => {
                             placeholder="Enter rack location"
                             onChange={handleInputChange}
                             value={formData.rackLocation}
+                        />
+                        <DropdownField
+                            name="location"
+                            label={<span>Location<span className="error">*</span></span>}
+                            placeholder="Select Location"
+                            onChange={handleInputChange}
+                            value={formData.location}
+                            options={locationOptions}
+                        />
+                        <DropdownField
+                            name="status"
+                            label={<span>Status<span className="error">*</span></span>}
+                            placeholder="Select Status"
+                            onChange={handleInputChange}
+                            value={formData.status}
+                            options={statusOptions}
                         />
                     </div>
 

@@ -139,12 +139,13 @@ const UpdateReturnDetails = (props) => {
                             placeholder="Enter order number"
                             onChange={handleInputChange}
                         />
-                        <Textfield
-                            label="Return Location"
+                        <DropdownField
+                            label={<span>Return Location<span className="error">*</span></span>}
                             name="ReturnLocation"
                             value={formData.ReturnLocation}
-                            placeholder="Enter return location"
+                            placeholder="Select Location"
                             onChange={handleInputChange}
+                            options={["SIFI-Warehouse", "SIFI-Poststelle", "UT-CollectionPoint", "UT-ITPunktNeckartal", "SIFI-S2D", "Deizisau", "Transport"]}
                         />
                         <Datefield
                             label="Return Date"

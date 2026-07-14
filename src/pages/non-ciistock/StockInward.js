@@ -326,7 +326,7 @@ const StockInward = (props) => {
                             sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                         )}
                     </div>
-                    <div className="table-header text-left w-[12%]" onClick={() => handleSort("inwardDate")}>
+                    <div className="table-header text-left w-[14%]" onClick={() => handleSort("inwardDate")}>
                         Inward Date
                         {sortConfig.key === "inwardDate" && (
                             sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
@@ -335,6 +335,12 @@ const StockInward = (props) => {
                     <div className="table-header text-left w-[13%]" onClick={() => handleSort("sourceLocation")}>
                         Inward From
                         {sortConfig.key === "sourceLocation" && (
+                            sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
+                        )}
+                    </div>
+                    <div className="table-header text-left w-[18%]" onClick={() => handleSort("location")}>
+                        Location
+                        {sortConfig.key === "location" && (
                             sortConfig.direction === "asc" ? <UpArrow /> : <DownArrow />
                         )}
                     </div>
@@ -377,8 +383,9 @@ const StockInward = (props) => {
                             </div>
                             <div className="table-data text-left w-[15%]">{item["deliveryNumber"]}</div>
                             <div className="table-data text-left w-[15%]">{item["orderNumber"]}</div>
-                            <div className="table-data text-left w-[12%]">{formatDate(item["inwardDate"])}</div>
+                            <div className="table-data text-left w-[14%]">{formatDate(item["inwardDate"])}</div>
                             <div className="table-data text-left w-[13%]">{item["sourceLocation"]}</div>
+                            <div className="table-data text-left w-[18%]">{item["location"]}</div>
                             <div className="table-data text-left w-[12%]">{item["totalQuantity"]}</div>
                             <div className="table-data text-left w-[12%]">{item["deliveredQuantity"]}</div>
                             <div className="table-data text-left w-[10%]">{item["receivedBy"]}</div>

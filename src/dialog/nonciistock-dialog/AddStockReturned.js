@@ -9,6 +9,7 @@ import { ReactComponent as Packageplus } from "../../assets/svg/packageplus.svg"
 import { ReactComponent as Closebutton } from "../../assets/svg/closebutton.svg";
 import { useLocation } from "react-router-dom";
 import Textfield from "../../utils/Textfield";
+import DropdownField from "../../utils/DropDown";
 import Datefield from "../../utils/Datefield";
 import Description from "../../utils/Description";
 import SaveAlert from "../SaveAlert";
@@ -102,12 +103,13 @@ const AddStockReturned = (props) => {
                             onChange={handleInputChange}
                             value={formData.orderNumber}
                         />
-                        <Textfield
-                            name="returnLocation"
+                        <DropdownField
                             label={<span>Return Location<span className="error">*</span></span>}
-                            placeholder="Enter return location"
-                            onChange={handleInputChange}
+                            name="returnLocation"
                             value={formData.returnLocation}
+                            placeholder="Select Location"
+                            onChange={handleInputChange}
+                            options={["SIFI-Warehouse", "SIFI-Poststelle", "UT-CollectionPoint", "UT-ITPunktNeckartal", "SIFI-S2D", "Deizisau", "Transport"]}
                         />
                         <Datefield
                             name="returnDate"

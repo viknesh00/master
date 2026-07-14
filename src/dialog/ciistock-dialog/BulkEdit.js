@@ -37,11 +37,11 @@ const BulkEdit = (props) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
-            setFormData({
-                ...formData,
-                SentBy: fullName,
-            });
-        }, [fullName]);
+        setFormData({
+            ...formData,
+            SentBy: fullName,
+        });
+    }, [fullName]);
 
     const handleClose = () => {
         props.handleOpenBulkEditStock();
@@ -63,10 +63,10 @@ const BulkEdit = (props) => {
         if (isSubmitting) return; // prevent double click
 
         if (!formData.RackLocation && !formData.statusChange) {
-        ToastError("Please enter at least one field (Rack Location or Status)");
-        return;
-    }
-            setIsSubmitting(true);
+            ToastError("Please enter at least one field (Rack Location or Status)");
+            return;
+        }
+        setIsSubmitting(true);
         let Data = {};
         Data = {
             ...Data,
@@ -76,7 +76,7 @@ const BulkEdit = (props) => {
             RackLocation: formData.RackLocation || "",
             status: formData.statusChange || "",
         }
-        
+
 
         const url = `SmInboundStockNonCiis/bulk-update`;
 
@@ -162,7 +162,7 @@ const BulkEdit = (props) => {
                             value={formData.editType || "Bulk Edit Rack Location & Status"}
                             placeholder="Select Bulk Edit Type"
                             onChange={handleInputChange}
-                            options={["Bulk Edit Rack Location & Status", "Bulk Outward"]}
+                            options={["Bulk Edit Rack Location & Status", "Outward"]}
                         />) : ""}
                 </DialogTitle>
                 <DialogContent sx={{ padding: "0px 32px 40px 32px" }}>
@@ -195,12 +195,12 @@ const BulkEdit = (props) => {
                                     value={formData.statusChange}
                                     placeholder="Select Device status"
                                     onChange={handleInputChange}
-                                    options={["Used", "Damaged", "BreakFix"]}
+                                    options={["New", "Used", "Return", "Repair","Break Fix", "For Data Wipe", "For Lease Return", "Damaged", "Retired", "Clearing", "Transport"]}
                                 />
                             </>
                         )}
 
-                        {formData.editType === "Bulk Outward" && (
+                        {formData.editType === "Outward" && (
                             <>
                                 <Textfield
                                     label={<span>Order Number<span className="error">*</span></span>}
@@ -220,12 +220,20 @@ const BulkEdit = (props) => {
                                     placeholder="Enter receiver name"
                                     onChange={handleInputChange}
                                 />
-                                <Textfield
+                                <DropdownField
+                                    label={<span>Location<span className="error">*</span></span>}
+                                    name="Target Location"
+                                    value={formData.Location}
+                                    placeholder="Select Location"
+                                    onChange={handleInputChange}
+                                    options={["SIFI-Warehouse", "SIFI-Poststelle", "UT-CollectionPoint", "UT-ITPunktNeckartal", "SIFI-S2D", "Deizisau", "Transport"]}
+                                />
+                                {/* <Textfield
                                     label="Target Location"
                                     name="TargetLocation"
                                     placeholder="Enter target location"
                                     onChange={handleInputChange}
-                                />
+                                /> */}
                                 <Textfield
                                     label="Sent By"
                                     name="SentBy"
@@ -244,7 +252,7 @@ const BulkEdit = (props) => {
                     <button
                         className="submit-btn"
                         onClick={
-                            formData.editType === "Bulk Outward"
+                            formData.editType === "Outward"
                                 ? handleBulkOutward   // your outward API
                                 : handleBulkEditStock
                         }

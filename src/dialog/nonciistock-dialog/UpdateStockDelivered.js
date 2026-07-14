@@ -9,6 +9,7 @@ import { ReactComponent as Packageplus } from "../../assets/svg/packageplus.svg"
 import { ReactComponent as Closebutton } from "../../assets/svg/closebutton.svg";
 import { useLocation } from "react-router-dom";
 import Textfield from "../../utils/Textfield";
+import DropdownField from "../../utils/DropDown";
 import Datefield from "../../utils/Datefield";
 import SaveAlert from "../SaveAlert";
 import { postRequest } from "../../services/ApiService";
@@ -154,12 +155,13 @@ const UpdateStockDelivered = (props) => {
                             onChange={handleInputChange}
                             value={formData.receiverName}
                         />
-                        <Textfield
+                        <DropdownField
+                            label={<span>Location<span className="error">*</span></span>}
                             name="targetLocation"
-                            label="Target Location"
-                            placeholder="Enter target location"
-                            onChange={handleInputChange}
                             value={formData.targetLocation}
+                            placeholder="Select Location"
+                            onChange={handleInputChange}
+                            options={["SIFI-Warehouse", "SIFI-Poststelle", "UT-CollectionPoint", "UT-ITPunktNeckartal", "SIFI-S2D", "Deizisau", "Transport"]}
                         />
                         <Textfield
                             name="deliveredQuantity"

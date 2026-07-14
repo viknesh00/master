@@ -64,7 +64,7 @@ const MovedAlert = (props) => {
                 value={formData.statusChange}
                 placeholder="Select Device status"
                 onChange={handleInputChange}
-                options={["Used", "Damaged", "BreakFix"]}
+                options={["New", "Used", "Return", "Repair","Break Fix", "For Data Wipe", "For Lease Return", "Damaged", "Retired", "Clearing", "Transport"]}
               />
           <div className="dialog-description-alert">Are you sure want to Change the Status?</div>
         </DialogTitle>

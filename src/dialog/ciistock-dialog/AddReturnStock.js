@@ -130,11 +130,13 @@ const AddReturnStock = (props) => {
                             placeholder="Enter order number"
                             onChange={handleInputChange}
                         />
-                        <Textfield
-                            label="Return Location"
+                        <DropdownField
+                            label={<span>Return Location<span className="error">*</span></span>}
                             name="ReturnLocation"
-                            placeholder="Enter return location"
+                            value={formData.returnLocation}
+                            placeholder="Select Location"
                             onChange={handleInputChange}
+                            options={["SIFI-Warehouse", "SIFI-Poststelle", "UT-CollectionPoint", "UT-ITPunktNeckartal", "SIFI-S2D", "Deizisau", "Transport"]}
                         />
                         <Datefield
                             label="Return Date"
