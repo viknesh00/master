@@ -4,8 +4,18 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
+    Chip,
+    Tooltip,
 } from "@mui/material";
 import { useDropzone } from "react-dropzone";
+import * as XLSX from "xlsx";
 import { ReactComponent as Packageplus } from "../../assets/svg/packageplus.svg";
 import { ReactComponent as Closebutton } from "../../assets/svg/closebutton.svg";
 import DropdownField from "../../utils/DropDown";
@@ -30,6 +40,17 @@ const locationOptions = [
 
 const statusOptions = ["New", "Used", "Transport"];
 
+const getFriendlyMessage = (rawMessage, success) => {
+    if (success) return rawMessage;
+    if (!rawMessage) return "Import failed due to an unknown error.";
+
+    const msg = rawMessage.toLowerCase();
+    if (msg.includes("unique key") || msg.includes("duplicate key")) {
+        return "Duplicate entry — this record already exists.";
+    }
+    return rawMessage;
+};
+
 const AddBulkNonciistock = (props) => {
     const [open] = useState(props.value);
     const { name, fullName } = useUser();
@@ -40,6 +61,10 @@ const AddBulkNonciistock = (props) => {
     const [uploadProgress, setUploadProgress] = useState(0);
     const [uploadedFile, setUploadedFile] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // --- Results dialog state ---
+    const [resultDialogOpen, setResultDialogOpen] = useState(false);
+    const [importSummary, setImportSummary] = useState(null);
 
     useEffect(() => {
         setFormData((prevData) => ({
@@ -106,8 +131,6 @@ const AddBulkNonciistock = (props) => {
         if (
             !formData.DeliveryNumber ||
             !formData.PoNumber ||
-            // !formData.QuantityReceived ||
-            // !formData.Status ||
             !formData.Location ||
             !formData.InwardDate ||
             !(formData.ReceivedBy || fullName)
@@ -128,9 +151,6 @@ const AddBulkNonciistock = (props) => {
         data.append("RackLocation", formData.RackLocation || "");
         data.append("UserName", name);
         data.append("PoNumber", formData.PoNumber || "");
-        //data.append("QuantityReceived", formData.QuantityReceived || "");
-        //data.append("Status", formData.Status || "");
-        //data.append("MaterialDescription", formData.MaterialDescription || "");
         data.append("Location", formData.Location || "");
 
         const url = `SmInboundStockNonCiis/BulkImportNonCII`;
@@ -138,18 +158,73 @@ const AddBulkNonciistock = (props) => {
         postRequest(url, data)
             .then((res) => {
                 if (res.status === 200) {
-                    ToastSuccess("Stock Added Successfully");
-                    props.handleOpenAddBulkMaterial();
+                    const body = res.data;
+
+                    if (body && Array.isArray(body.results)) {
+                        setImportSummary({
+                            totalRows: body.totalRows ?? body.results.length,
+                            successCount:
+                                body.successCount ?? body.results.filter((r) => r.success).length,
+                            failCount:
+                                body.failCount ?? body.results.filter((r) => !r.success).length,
+                            results: body.results,
+                        });
+                        setResultDialogOpen(true);
+
+                        if (body.failCount > 0) {
+                            ToastError(
+                                `Imported with ${body.failCount} error(s). See details for row-level results.`
+                            );
+                        } else {
+                            ToastSuccess("Stock Added Successfully");
+                        }
+                    } else {
+                        // Fallback for the old { success, message } shape
+                        ToastSuccess("Stock Added Successfully");
+                        props.handleOpenAddBulkMaterial();
+                    }
                 }
             })
             .catch((error) => {
-                ToastError(error.response?.data || "Bulk upload failed. Please try again.");
+                ToastError(error.response?.data?.Message || error.response?.data || "Bulk upload failed. Please try again.");
+            })
+            .finally(() => {
                 setIsSubmitting(false);
             });
     };
 
     const handleUploadClick = () => {
         setView("upload");
+    };
+
+    const handleCloseResultDialog = () => {
+        setResultDialogOpen(false);
+        props.handleOpenAddBulkMaterial();
+    };
+
+    const handleDownloadResults = () => {
+        if (!importSummary || !importSummary.results?.length) return;
+
+        const exportRows = importSummary.results.map((r) => ({
+            "Row Number": r.rowNumber,
+            "Material Number": r.materialNumber,
+            "Status": r.success ? "Success" : "Failed",
+            "Message": getFriendlyMessage(r.message, r.success),
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(exportRows);
+        worksheet["!cols"] = [
+            { wch: 10 },
+            { wch: 18 },
+            { wch: 10 },
+            { wch: 60 },
+        ];
+
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Import Results");
+
+        const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+        XLSX.writeFile(workbook, `NonCIIBulkImportResults_${timestamp}.xlsx`);
     };
 
     return (
@@ -194,7 +269,7 @@ const AddBulkNonciistock = (props) => {
                                 onChange={handleInputChange}
                             />
                             <Textfield
-                                label="Order Number"
+                                label={<span>Order Number<span className="error">*</span></span>}
                                 name="OrderNumber"
                                 value={formData.OrderNumber || ""}
                                 placeholder="Enter order number"
@@ -229,28 +304,6 @@ const AddBulkNonciistock = (props) => {
                                 placeholder="Enter rack location"
                                 onChange={handleInputChange}
                             />
-                            {/* <Textfield
-                                label={<span>Quantity Received<span className="error">*</span></span>}
-                                name="QuantityReceived"
-                                value={formData.QuantityReceived || ""}
-                                placeholder="Enter quantity received"
-                                onChange={handleInputChange}
-                            />
-                            <DropdownField
-                                label={<span>Status<span className="error">*</span></span>}
-                                name="Status"
-                                value={formData.Status || ""}
-                                placeholder="Select Status"
-                                onChange={handleInputChange}
-                                options={statusOptions}
-                            /> */}
-                            {/* <Textfield
-                                label="Material Description"
-                                name="MaterialDescription"
-                                value={formData.MaterialDescription || ""}
-                                placeholder="Enter material description"
-                                onChange={handleInputChange}
-                            /> */}
                             <Textfield
                                 label={<span>Received By<span className="error">*</span></span>}
                                 name="ReceivedBy"
@@ -320,10 +373,88 @@ const AddBulkNonciistock = (props) => {
                                 disabled={isSubmitting || files.length === 0 || uploadProgress !== 100}
                                 onClick={handleBulkUpload}
                             >
-                                Submit
+                                {isSubmitting ? "Uploading..." : "Submit"}
                             </button>
                         </>
                     )}
+                </DialogActions>
+            </Dialog>
+
+            {/* --- Import Results Dialog --- */}
+            <Dialog open={resultDialogOpen} onClose={handleCloseResultDialog} maxWidth="md" fullWidth scroll="paper">
+                <DialogTitle>
+                    <div className="dialog-title">Bulk Import Results</div>
+                    {importSummary && (
+                        <div style={{ display: "flex", gap: "12px", marginTop: "8px" }}>
+                            <Chip label={`Total: ${importSummary.totalRows}`} />
+                            <Chip label={`Success: ${importSummary.successCount}`} color="success" />
+                            <Chip label={`Failed: ${importSummary.failCount}`} color="error" />
+                        </div>
+                    )}
+                </DialogTitle>
+                <DialogContent
+                    dividers
+                    sx={{
+                        padding: "16px 24px",
+                        display: "flex",
+                        flexDirection: "column",
+                        overflow: "hidden",
+                    }}
+                >
+                    <TableContainer
+                        component={Paper}
+                        sx={{
+                            maxHeight: "60vh",
+                            overflow: "auto",
+                            border: "1px solid rgba(0,0,0,0.08)",
+                        }}
+                    >
+                        <Table stickyHeader size="small">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Row</TableCell>
+                                    <TableCell>Material Number</TableCell>
+                                    <TableCell>Status</TableCell>
+                                    <TableCell>Message</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {importSummary?.results.map((row) => (
+                                    <TableRow
+                                        key={`${row.rowNumber}-${row.materialNumber}`}
+                                        sx={{
+                                            backgroundColor: row.success
+                                                ? "inherit"
+                                                : "rgba(211, 47, 47, 0.08)",
+                                        }}
+                                    >
+                                        <TableCell>{row.rowNumber}</TableCell>
+                                        <TableCell>{row.materialNumber}</TableCell>
+                                        <TableCell>
+                                            <Chip
+                                                label={row.success ? "Success" : "Failed"}
+                                                color={row.success ? "success" : "error"}
+                                                size="small"
+                                            />
+                                        </TableCell>
+                                        <TableCell style={{ whiteSpace: "pre-wrap" }}>
+                                            <Tooltip title={row.message} arrow placement="top-start">
+                                                <span>{getFriendlyMessage(row.message, row.success)}</span>
+                                            </Tooltip>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </DialogContent>
+                <DialogActions sx={{ padding: "16px 24px" }}>
+                    <button className="cancel-btn" onClick={handleDownloadResults}>
+                        Download as Excel
+                    </button>
+                    <button className="submit-btn" onClick={handleCloseResultDialog}>
+                        Close
+                    </button>
                 </DialogActions>
             </Dialog>
         </div>

@@ -4,8 +4,18 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
+    Chip,
+    Tooltip,
 } from "@mui/material";
 import { useDropzone } from "react-dropzone";
+import * as XLSX from "xlsx";
 import { ReactComponent as Packageplus } from "../../assets/svg/packageplus.svg";
 import { ReactComponent as Closebutton } from "../../assets/svg/closebutton.svg";
 import DropdownField from "../../utils/DropDown";
@@ -18,6 +28,23 @@ import { useUser } from "../../UserContext";
 import { ReactComponent as Delete } from "../../assets/svg/delete.svg";
 import { ToastError, ToastSuccess } from "../../services/ToastMsg";
 
+// Maps raw backend/SQL error messages to user-friendly text.
+// Kept here as a defense-in-depth layer even though the backend now
+// returns friendly messages directly.
+const getFriendlyMessage = (rawMessage, success) => {
+    if (success) return rawMessage;
+    if (!rawMessage) return "Import failed due to an unknown error.";
+
+    const msg = rawMessage.toLowerCase();
+    if (msg.includes("uq_serialnumber") || (msg.includes("unique") && msg.includes("serial"))) {
+        return "Serial Number already exists.";
+    }
+    if (msg.includes("unique key") || msg.includes("duplicate key")) {
+        return "Duplicate entry — this record already exists.";
+    }
+    return rawMessage;
+};
+
 const AddStock = (props) => {
     const [open] = useState(props.value);
     const { name, fullName } = useUser();
@@ -29,6 +56,10 @@ const AddStock = (props) => {
     const [uploadProgress, setUploadProgress] = useState(0);
     const [uploadedFile, setUploadedFile] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // --- Results dialog state (Bulk upload only) ---
+    const [resultDialogOpen, setResultDialogOpen] = useState(false);
+    const [importSummary, setImportSummary] = useState(null);
 
     useEffect(() => {
         setFormData({
@@ -63,15 +94,15 @@ const AddStock = (props) => {
         }));
     };
 
+    // --- Single upload: unchanged behavior, toast only, no results table ---
     const handleSingleAddStock = () => {
-
-            if (isSubmitting) return; // prevent double click
+        if (isSubmitting) return;
 
         if (!formData.serialNumber || !formData.quantity || !formData.status || !formData.Location) {
             ToastError("Please enter Serial Number, Quantity, Status, and Location");
             return;
         }
-         setIsSubmitting(true);
+        setIsSubmitting(true);
         let Data = {};
         Data = {
             ...Data,
@@ -101,27 +132,31 @@ const AddStock = (props) => {
                 }
             })
             .catch((error) => {
-                ToastError(error.response.data);
+                ToastError(error.response?.data || "Failed to add stock.");
+            })
+            .finally(() => {
                 setIsSubmitting(false);
             });
     }
 
+    // --- Bulk upload: shows results dialog + Excel download ---
     const handleBulkAddStock = () => {
-        // 
-        
-        if (isSubmitting) return; // prevent double click
-        setIsSubmitting(true);
+        if (isSubmitting) return;
 
         if (!formData.Location) {
             ToastError("Please enter Location");
             return;
         }
 
-        if(!files[0]){
+        if (!files[0]) {
             ToastError("Please Upload Excel File");
+            return;
         }
+
+        setIsSubmitting(true);
+
         const data = new FormData();
-        data.append("file", files[0]); // Add the uploaded file
+        data.append("file", files[0]);
         data.append("DeliveryNumber", formData.DeliveryNumber || "");
         data.append("MaterialNumber", materialNumber);
         data.append("MaterialDescription", materialDescription);
@@ -139,12 +174,36 @@ const AddStock = (props) => {
         postRequest(url, data)
             .then((res) => {
                 if (res.status === 200) {
-                    ToastSuccess("Stock Added Successfully");
-                    props.handleOpenAddStock();
+                    const body = res.data;
+
+                    if (body && Array.isArray(body.results)) {
+                        setImportSummary({
+                            totalRows: body.totalRows ?? body.results.length,
+                            successCount:
+                                body.successCount ?? body.results.filter((r) => r.success).length,
+                            failCount:
+                                body.failCount ?? body.results.filter((r) => !r.success).length,
+                            results: body.results,
+                        });
+                        setResultDialogOpen(true);
+
+                        if (body.failCount > 0) {
+                            ToastError(
+                                `Imported with ${body.failCount} error(s). See details for row-level results.`
+                            );
+                        } else {
+                            ToastSuccess("Stock Added Successfully");
+                        }
+                    } else {
+                        ToastSuccess("Stock Added Successfully");
+                        props.handleOpenAddStock();
+                    }
                 }
             })
             .catch((error) => {
-                ToastError(error.response.data);
+                ToastError(error.response?.data || "Bulk upload failed. Please try again.");
+            })
+            .finally(() => {
                 setIsSubmitting(false);
             });
     }
@@ -172,17 +231,43 @@ const AddStock = (props) => {
         }
     };
 
+    const handleCloseResultDialog = () => {
+        setResultDialogOpen(false);
+        props.handleOpenAddStock();
+    };
+
+    const handleDownloadResults = () => {
+        if (!importSummary || !importSummary.results?.length) return;
+
+        const exportRows = importSummary.results.map((r) => ({
+            "Row Number": r.rowNumber,
+            "Material Number": r.materialNumber,
+            "Serial Number": r.serialNumber,
+            "Status": r.success ? "Success" : "Failed",
+            "Message": getFriendlyMessage(r.message, r.success),
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(exportRows);
+        worksheet["!cols"] = [
+            { wch: 10 },
+            { wch: 18 },
+            { wch: 16 },
+            { wch: 10 },
+            { wch: 60 },
+        ];
+
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Import Results");
+
+        const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+        XLSX.writeFile(workbook, `BulkStockImportResults_${timestamp}.xlsx`);
+    };
+
     return (
         <div>
             {showAlert && <SaveAlert value={showAlert} handleAlert={handleAlert} handleClose={handleClose} />}
             <Dialog open={open} onClose={handleClose} maxWidth={"xl"}>
                 <DialogTitle sx={{ padding: "32px 32px 32px 32px" }}>
-                    {/* <div className="dialog-title-contianer">
-                                                <div className="dialog-icon">
-                            <Packageplus />
-                        </div>
-                        <Closebutton className="cursor" onClick={handleClose} />
-                    </div> */}
                     <div className="dialog-title">Add Stock Inward</div>
                     {view === "form" ? (
                     <DropdownField
@@ -338,7 +423,6 @@ const AddStock = (props) => {
                                             </span>
                                         </div>
                                         <Delete className="cursor" onClick={() => setFiles([])} />
-                                        {/* <button className="remove-file-btn" onClick={() => setFiles([])}>Remove</button> */}
                                     </div>
                                     {uploadProgress > 0 && uploadProgress < 100 && (
                                         <div className="progress-bar-container">
@@ -381,10 +465,90 @@ const AddStock = (props) => {
                                     className={`submit-btn ${files.length === 0 || uploadProgress !== 100 ? "disabled-btn" : ""}`}
                                     disabled={isSubmitting} onClick={handleBulkAddStock}
                                 >
-                                    Submit
+                                    {isSubmitting ? "Uploading..." : "Submit"}
                                 </button>
                         </>
                     )}
+                </DialogActions>
+            </Dialog>
+
+            {/* --- Import Results Dialog (Bulk upload only) --- */}
+            <Dialog open={resultDialogOpen} onClose={handleCloseResultDialog} maxWidth="md" fullWidth scroll="paper">
+                <DialogTitle>
+                    <div className="dialog-title">Bulk Import Results</div>
+                    {importSummary && (
+                        <div style={{ display: "flex", gap: "12px", marginTop: "8px" }}>
+                            <Chip label={`Total: ${importSummary.totalRows}`} />
+                            <Chip label={`Success: ${importSummary.successCount}`} color="success" />
+                            <Chip label={`Failed: ${importSummary.failCount}`} color="error" />
+                        </div>
+                    )}
+                </DialogTitle>
+                <DialogContent
+                    dividers
+                    sx={{
+                        padding: "16px 24px",
+                        display: "flex",
+                        flexDirection: "column",
+                        overflow: "hidden",
+                    }}
+                >
+                    <TableContainer
+                        component={Paper}
+                        sx={{
+                            maxHeight: "60vh",
+                            overflow: "auto",
+                            border: "1px solid rgba(0,0,0,0.08)",
+                        }}
+                    >
+                        <Table stickyHeader size="small">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Row</TableCell>
+                                    <TableCell>Material Number</TableCell>
+                                    <TableCell>Serial Number</TableCell>
+                                    <TableCell>Status</TableCell>
+                                    <TableCell>Message</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {importSummary?.results.map((row) => (
+                                    <TableRow
+                                        key={`${row.rowNumber}-${row.serialNumber}`}
+                                        sx={{
+                                            backgroundColor: row.success
+                                                ? "inherit"
+                                                : "rgba(211, 47, 47, 0.08)",
+                                        }}
+                                    >
+                                        <TableCell>{row.rowNumber}</TableCell>
+                                        <TableCell>{row.materialNumber}</TableCell>
+                                        <TableCell>{row.serialNumber}</TableCell>
+                                        <TableCell>
+                                            <Chip
+                                                label={row.success ? "Success" : "Failed"}
+                                                color={row.success ? "success" : "error"}
+                                                size="small"
+                                            />
+                                        </TableCell>
+                                        <TableCell style={{ whiteSpace: "pre-wrap" }}>
+                                            <Tooltip title={row.message} arrow placement="top-start">
+                                                <span>{getFriendlyMessage(row.message, row.success)}</span>
+                                            </Tooltip>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </DialogContent>
+                <DialogActions sx={{ padding: "16px 24px" }}>
+                    <button className="cancel-btn" onClick={handleDownloadResults}>
+                        Download as Excel
+                    </button>
+                    <button className="submit-btn" onClick={handleCloseResultDialog}>
+                        Close
+                    </button>
                 </DialogActions>
             </Dialog>
         </div>
