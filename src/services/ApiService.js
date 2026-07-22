@@ -1,10 +1,33 @@
 import axios from "axios";
+import {
+  clearSession,
+  getAccessToken,
+  getRefreshToken,
+  storeSession,
+} from "./TokenStorage";
 
 // Base URL from environment variables
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 // Set Axios default timeout to 20 seconds
 axios.defaults.timeout = 20000;
+
+/**
+ * Bare client used for the refresh call itself. It deliberately has none of the
+ * interceptors below, so a failing refresh cannot recurse into another refresh.
+ */
+const refreshClient = axios.create({ timeout: 20000 });
+
+/** Endpoints reachable without a token; a 401 from these is an answer, not an expiry. */
+const ANONYMOUS_PATHS = [
+  "Login/Login",
+  "Login/Refresh",
+  "Login/Logout",
+  "Login/ResetPassword",
+];
+
+const isAnonymousPath = (url = "") =>
+  ANONYMOUS_PATHS.some((path) => url.includes(path));
 
 /* -------------------------------------------------------------------------- *
  * Standard API envelope
@@ -75,8 +98,100 @@ export const getApiTraceId = (error) =>
   null;
 
 /* -------------------------------------------------------------------------- *
+ * Session handling
+ *
+ * Access tokens are short lived. Rather than tracking their expiry, the client
+ * simply reacts to the API's 401: refresh once, then replay the request. The API
+ * marks a recoverable 401 with the `Token-Expired` response header.
+ * -------------------------------------------------------------------------- */
+
+/** Single in-flight refresh. Parallel 401s all await this one promise. */
+let refreshPromise = null;
+
+/** Callers can subscribe to be told the session ended (see App/Layout wiring). */
+const sessionExpiredListeners = new Set();
+
+export const onSessionExpired = (listener) => {
+  sessionExpiredListeners.add(listener);
+  return () => sessionExpiredListeners.delete(listener);
+};
+
+const endSession = () => {
+  clearSession();
+
+  let notified = 0;
+  sessionExpiredListeners.forEach((listener) => {
+    try {
+      listener();
+      notified += 1;
+    } catch (listenerError) {
+      console.error("Session-expired listener failed:", listenerError);
+    }
+  });
+
+  // ProtectedRoute subscribes and redirects through the router, which keeps the
+  // toast on screen. The hard redirect is only a fallback for when nothing is
+  // listening - during startup, say - and is skipped on the login screen itself
+  // so it cannot loop.
+  if (notified === 0) {
+    const path = window.location.pathname;
+    if (path !== "/" && path !== "/login") {
+      window.location.replace("/login");
+    }
+  }
+};
+
+const refreshSession = () => {
+  if (!refreshPromise) {
+    const refreshToken = getRefreshToken();
+
+    refreshPromise = refreshClient
+      .post(`${BASE_URL}Login/Refresh`, { refreshToken })
+      .then((response) => {
+        // refreshClient has no interceptors, so this is the raw envelope.
+        const auth = isApiEnvelope(response.data) ? response.data.data : response.data;
+
+        if (!auth?.accessToken) {
+          throw new Error("Refresh response did not contain an access token.");
+        }
+
+        storeSession(auth);
+        return auth.accessToken;
+      })
+      .finally(() => {
+        refreshPromise = null;
+      });
+  }
+
+  return refreshPromise;
+};
+
+/** True when this failure is a recoverable "access token expired". */
+const canRefresh = (error) => {
+  const config = error?.config;
+
+  if (error?.response?.status !== 401) return false;
+  if (!config || config.__isRetry) return false;
+  if (isAnonymousPath(config.url)) return false;
+
+  return Boolean(getRefreshToken());
+};
+
+/* -------------------------------------------------------------------------- *
  * Interceptors
  * -------------------------------------------------------------------------- */
+
+// Attach the bearer token to every outgoing request.
+axios.interceptors.request.use((config) => {
+  const token = getAccessToken();
+
+  if (token && !isAnonymousPath(config.url)) {
+    config.headers = config.headers || {};
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
 
 // Helper to handle API errors
 const handleApiError = (error) => {
@@ -136,18 +251,49 @@ const handleApiError = (error) => {
 // Success: replace the envelope with its payload so existing components that
 // read `response.data` keep working untouched. Blob downloads carry a Blob
 // rather than an envelope, so they pass through unchanged.
-axios.interceptors.response.use((response) => {
-  const body = response.data;
+axios.interceptors.response.use(
+  (response) => {
+    const body = response.data;
 
-  if (isApiEnvelope(body)) {
-    response.apiResponse = body;
-    response.message = body.message;
-    response.traceId = body.traceId;
-    response.data = body.data;
+    if (isApiEnvelope(body)) {
+      response.apiResponse = body;
+      response.message = body.message;
+      response.traceId = body.traceId;
+      response.data = body.data;
+    }
+
+    return response;
+  },
+  async (error) => {
+    // An expired access token is recoverable: renew it once, then replay the
+    // original request. Concurrent 401s share the single refresh above, so a
+    // page firing six requests triggers one refresh, not six.
+    if (canRefresh(error)) {
+      try {
+        const accessToken = await refreshSession();
+
+        const retryConfig = {
+          ...error.config,
+          __isRetry: true,
+          headers: {
+            ...(error.config.headers || {}),
+            Authorization: `Bearer ${accessToken}`,
+          },
+        };
+
+        return await axios(retryConfig);
+      } catch (refreshError) {
+        // The refresh token is gone, expired, or was revoked - the session is
+        // genuinely over.
+        console.warn("Session refresh failed; signing out.", refreshError?.message);
+        endSession();
+        return handleApiError(error);
+      }
+    }
+
+    return handleApiError(error);
   }
-
-  return response;
-}, handleApiError);
+);
 
 /* -------------------------------------------------------------------------- *
  * Requests
@@ -180,4 +326,29 @@ export const putRequest = async (endpoint, data) => {
 export const deleteRequest = async (endpoint) => {
   const response = await axios.delete(`${BASE_URL}${endpoint}`);
   return response;
+};
+
+/* -------------------------------------------------------------------------- *
+ * Sign out
+ * -------------------------------------------------------------------------- */
+
+/**
+ * Revokes the refresh token server-side, then clears local state.
+ *
+ * The local clear happens even if the network call fails - the user asked to
+ * sign out, so the browser must forget the session regardless. The server-side
+ * token then simply lapses at its own expiry.
+ */
+export const logout = async () => {
+  const refreshToken = getRefreshToken();
+
+  if (refreshToken) {
+    try {
+      await refreshClient.post(`${BASE_URL}Login/Logout`, { refreshToken });
+    } catch (error) {
+      console.warn("Sign-out call failed; clearing the local session anyway.", error?.message);
+    }
+  }
+
+  clearSession();
 };

@@ -1,9 +1,18 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import LeftSideMenu from "./LeftSideMenu";
 import { ReactComponent as LogoutIcon } from "../assets/svg/logout.svg";
+import { logout } from "../services/ApiService";
+import LogoutAlert from "../dialog/LogoutAlert";
 const Sidebar = (props) => {
     const { handleToggleMenu, isCollapsed } = props;
+    const navigate = useNavigate();
+    const [showLogoutAlert, setShowLogoutAlert] = useState(false);
+
+    const handleLogout = async () => {
+        await logout();
+        navigate("/login", { replace: true });
+    };
 
     return (
         <aside className={`h-screen flex flex-col transition-all duration-300 fixed top-0 left-0 ${isCollapsed ? "sidebar-minimize" : "sidebar-layout"
@@ -32,7 +41,11 @@ const Sidebar = (props) => {
                         <li className="menu-item">
                             <div className="tooltip-container">
                                 <NavLink
-                                    to={"/login"}
+                                    to={"/logout"}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setShowLogoutAlert(true);
+                                    }}
                                     className={({ isActive }) =>
                                         isActive ? "active block" : "inactive block"
                                     }
@@ -74,6 +87,11 @@ const Sidebar = (props) => {
                     )}
                 </div>
             </div>
+            <LogoutAlert
+                open={showLogoutAlert}
+                onClose={() => setShowLogoutAlert(false)}
+                onConfirm={handleLogout}
+            />
         </aside>
     );
 };

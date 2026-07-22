@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { postRequest, getApiErrorMessage } from "../services/ApiService";
+import { hasSession, storeSession } from "../services/TokenStorage";
 import { useUser } from "../UserContext.js";
 import Resetpassword from "../ResetPassword.js";
 import { cookieKeys,getCookie } from ".././services/Cookies";
@@ -15,8 +16,25 @@ const Login = (props) => {
       const [open] = useState(props.value);
       const [showAlert, setShowAlert] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
     const { setName, setFullName  } = useUser();
     const [loading, setLoading] = useState(false);
+
+    // Where ProtectedRoute bounced the user from, so sign-in can put them back.
+    // Guarded against a value that would bounce straight back here.
+    const requestedPath = location.state?.from;
+    const returnTo =
+        requestedPath && requestedPath !== "/" && !requestedPath.startsWith("/login")
+            ? requestedPath
+            : "/dashboard";
+
+    // Someone with a live session has no business on the login screen - send
+    // them straight through instead of asking them to sign in again.
+    useEffect(() => {
+        if (hasSession()) {
+            navigate(returnTo, { replace: true });
+        }
+    }, [navigate, returnTo]);
 
    const handleLogin = (e) => {
     e.preventDefault();
@@ -38,28 +56,39 @@ const Login = (props) => {
     postRequest("Login/Login", Data)
         .then((res) => {
             if (res.status === 200) {
-                if (res.data[0].userStatus == null) {
+                // The API now answers with a token pair alongside the user:
+                // { accessToken, refreshToken, expiresIn, expiresAtUtc, user }
+                const auth = res.data;
+                const user = auth?.user;
+
+                if (!user) {
+                    ToastError("Login failed. Please check your credentials.");
+                    return;
+                }
+
+                if (user.userStatus == null) {
+                    // First sign-in: the password must be changed before a
+                    // session is established, so no tokens are stored yet.
                     setShowAlert(true);
                 } else {
-                    localStorage.setItem("isAuthenticated", "true");
-                    localStorage.setItem("username", username);
+                    storeSession(auth, username);
 
                     setName(username);
-                    setFullName(res.data[0].userName);
+                    setFullName(user.userName);
 
                     const userData = {
-                        userName: res.data[0].userName,
-                        userCode: res.data[0].userCode,
-                        email: res.data[0].email,
-                        userType: res.data[0].userType,
-                        isActive: res.data[0].isActive,
-                        accessLevel: res.data[0].accessLevel
+                        userName: user.userName,
+                        userCode: user.userCode,
+                        email: user.email,
+                        userType: user.userType,
+                        isActive: user.isActive,
+                        accessLevel: user.accessLevel
                     };
 
                     cookieKeys({ ...userData });
 
                     ToastSuccess("Login Successfully"); // ✅ only once
-                    navigate("/dashboard");
+                    navigate(returnTo, { replace: true });
                 }
             } else {
                 ToastError("Login failed. Please check your credentials.");

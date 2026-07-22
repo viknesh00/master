@@ -15,6 +15,7 @@ import {
   ListTodo,
   ChevronDown
 } from "lucide-react";
+import { getRequest } from "../services/ApiService";
 
 const LeftSideMenu = (props) => {
   const { isCollapsed } = props;
@@ -22,6 +23,36 @@ const LeftSideMenu = (props) => {
 
   // State to track which parent sections are open in the sidebar
   const [openSections, setOpenSections] = useState({});
+
+  // Unread badge on the Notification item.
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadUnreadCount = () => {
+      getRequest("Notifications/unread-count")
+        .then((res) => {
+          if (!cancelled && res.status === 200) {
+            setUnreadCount(res.data?.unreadCount || 0);
+          }
+        })
+        .catch(() => {
+          // A failing badge must never disrupt navigation; leave the last value.
+        });
+    };
+
+    loadUnreadCount();
+
+    // Refresh on navigation (covers "user just read them all") and on a slow
+    // poll so events raised by colleagues show up without a reload.
+    const timer = setInterval(loadUnreadCount, 60000);
+
+    return () => {
+      cancelled = true;
+      clearInterval(timer);
+    };
+  }, [location.pathname]);
 
   const menu = [
     {
@@ -195,6 +226,8 @@ const LeftSideMenu = (props) => {
               }
 
               // Handle regular standalone menu items
+              const badgeCount = link.path === "/notifications" ? unreadCount : 0;
+
               return (
                 <li key={linkIndex} className="menu-item">
                   <div className="tooltip-container">
@@ -206,6 +239,14 @@ const LeftSideMenu = (props) => {
                     >
                       {link.icon}
                       {!isCollapsed && link.name}
+                      {badgeCount > 0 && (
+                        <span
+                          className="menu-badge"
+                          title={`${badgeCount} unread notification${badgeCount === 1 ? "" : "s"}`}
+                        >
+                          {badgeCount > 99 ? "99+" : badgeCount}
+                        </span>
+                      )}
                     </NavLink>
                     {isCollapsed && <span className="tooltip">{link.name}</span>}
                   </div>
