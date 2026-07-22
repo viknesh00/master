@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { postRequest } from "../services/ApiService";
+import { postRequest, getApiErrorMessage } from "../services/ApiService";
 import { useUser } from "../UserContext.js";
 import Resetpassword from "../ResetPassword.js";
 import { cookieKeys,getCookie } from ".././services/Cookies";
@@ -66,7 +66,9 @@ const Login = (props) => {
             }
         })
         .catch((error) => {
-            ToastError("Login failed. Please check your credentials.");
+            // The API distinguishes bad credentials (401) from a disabled
+            // account (403); show whichever message it sent.
+            ToastError(getApiErrorMessage(error, "Login failed. Please check your credentials."));
             console.error("API Error:", error);
         })
         .finally(() => {

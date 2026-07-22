@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { ReactComponent as Packageplus } from "././assets/svg/packageplus.svg";
 import { ReactComponent as Closebutton } from "././assets/svg/closebutton.svg";
 import Textfield from "././utils/Textfield";
-import { postRequest } from "././services/ApiService";
+import { postRequest, getApiErrorMessage } from "././services/ApiService";
 import { ToastError, ToastSuccess } from "./services/ToastMsg";
 
 export default function ResetPassword(props){
@@ -51,8 +51,9 @@ export default function ResetPassword(props){
                           }
                       })
                       .catch((error) => {
-                        ToastError("Password does not match With Confirm Password");
-                          
+                        // 401 when the existing password is wrong, 400 with the
+                        // field list when something was left blank.
+                        ToastError(getApiErrorMessage(error, "Password reset failed. Please check your existing password."));
                       });
       }
 
