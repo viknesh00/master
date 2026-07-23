@@ -69,7 +69,7 @@ const StockDelivered = (props) => {
     const fetchMaterialDetails = () => {
         // 
                 setLoading(true);
-                const url = `SmInboundStockNonCiis/DeliveredDataList/${materialNumber}`
+                const url = `SmInboundStockNonCiis/DeliveredDataList/${materialNumber}/${name}`;
                 getRequest(url)
                     .then((res) => {
                         if (res.status === 200) {

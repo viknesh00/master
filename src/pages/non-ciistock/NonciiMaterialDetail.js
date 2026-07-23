@@ -10,10 +10,12 @@ import StockDelivered from "./StockDelivered";
 import StockReturned from "./StockReturned";
 import StockUsed from "./StockUsed";
 import { getRequest, postRequest } from "../../services/ApiService";
+import { useUser } from "../../UserContext";
 
 const NonciiMaterialDetail = () => {
     const location = useLocation();
     const materialNumber = location.pathname.split('/').pop();
+    const { name } = useUser();
     const [analyticsData, setAnalyticsData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isPanelVisible, setPanelVisible] = useState(true);
@@ -35,7 +37,7 @@ const NonciiMaterialDetail = () => {
 
     const fetchMaterialAnalysiticsNonCiiData = () => {
         setLoading(true);
-            const url = `SmInboundStockNonCiis/AnalyticsNonCII/${materialNumber}`
+            const url = `SmInboundStockNonCiis/AnalyticsNonCII/${materialNumber}/${name}`;
             postRequest(url)
                 .then((res) => {
                     if (res.status === 200) {

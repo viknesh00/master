@@ -96,7 +96,7 @@ const MaterialDetail = () => {
 
       const fetchMaterialAnalysiticsCiiData = () => {
         setLoading(true);
-        const url = `SmInboundStockNonCiis/AnalyticsCII/${materialNumber}`
+        const url = `SmInboundStockNonCiis/AnalyticsCII/${materialNumber}/${name}`
         postRequest(url)
             .then((res) => {
                 if (res.status === 200) {

@@ -146,7 +146,7 @@ const AddStockDelivered = (props) => {
                         <DropdownField
                             label={<span>Location<span className="error">*</span></span>}
                             name="targetLocation"
-                            value={formData.Location}
+                            value={formData.targetLocation}
                             placeholder="Select Location"
                             onChange={handleInputChange}
                             options={["SIFI-Warehouse", "SIFI-Poststelle", "UT-CollectionPoint", "UT-ITPunktNeckartal", "SIFI-S2D", "Deizisau", "Transport"]}
