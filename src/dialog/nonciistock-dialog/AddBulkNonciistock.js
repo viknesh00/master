@@ -130,12 +130,12 @@ const AddBulkNonciistock = (props) => {
         // Validate mandatory fields
         if (
             !formData.DeliveryNumber ||
-            !formData.PoNumber ||
+            !formData.PoNumber ||!formData.OrderNumber ||
             !formData.Location ||
             !formData.InwardDate ||
             !(formData.ReceivedBy || fullName)
         ) {
-            ToastError("Please enter all mandatory fields (PO Number, Delivery Number, Location, Inward Date, User)");
+            ToastError("Please enter all mandatory fields (PO Number, Delivery Number, Order Number, Location, Inward Date, User)");
             return;
         }
 
